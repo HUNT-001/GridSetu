@@ -6,3 +6,5 @@ web/dist/
 web/dist-demo/
 web/src/snapshot.gen.json
 *.egg-info/
+
+web/tsconfig.tsbuildinfo
