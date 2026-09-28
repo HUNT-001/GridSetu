@@ -1,0 +1,14 @@
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+matplotlib>=3.8
+pyyaml>=6
+pyomo>=6.7
+highspy>=1.7
+lightgbm>=4.3
+pandapower>=2.14
+pytest>=8
+fastapi>=0.110
+uvicorn>=0.29
+orjson>=3.9
+numba>=0.59   # optional, makes pandapower power flow ~10x faster
