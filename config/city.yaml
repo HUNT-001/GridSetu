@@ -1,0 +1,171 @@
+# GridSetu Phase 1 scenario: "Setu Nagar", a synthetic peri-urban city modelled on the
+# Coimbatore periphery (Tamil Nadu). Every number here is an ENGINEERING ASSUMPTION unless
+# a comment says otherwise. Change values here, not in code.
+
+simulation:
+  start: "2026-09-14 00:00"     # Monday, late south-west monsoon
+  days: 7
+  step_minutes: 15              # matches IEX day-ahead market blocks (96 per day)
+  seed: 42
+  history_weeks: 8              # synthetic history used to train the forecasters
+  latitude_deg: 11.0
+  longitude_deg: 76.96
+
+# ---------------------------------------------------------------- load classes
+# priority: 1 = never shed, higher = shed earlier.
+# shed_cost_inr_kwh: value-of-lost-load used by the dispatch LP to rank shedding.
+# demand_factor: max demand / connected load (used to derive connected load).
+load_classes:
+  # Revenue-driven shedding order typical of a cash-strapped DISCOM: agri and domestic
+  # (subsidised) feeders are cut before commercial and industrial (cross-subsidising) ones.
+  traction:   {priority: 1, shed_cost_inr_kwh: 1000, demand_factor: 0.75, temp_sensitivity: 0.00}
+  municipal:  {priority: 1, shed_cost_inr_kwh: 1000, demand_factor: 0.80, temp_sensitivity: 0.00}
+  industrial: {priority: 2, shed_cost_inr_kwh: 18,   demand_factor: 0.70, temp_sensitivity: 0.005}
+  commercial: {priority: 3, shed_cost_inr_kwh: 16,   demand_factor: 0.60, temp_sensitivity: 0.015}
+  domestic:   {priority: 4, shed_cost_inr_kwh: 12,   demand_factor: 0.45, temp_sensitivity: 0.020}
+  irrigation: {priority: 5, shed_cost_inr_kwh: 11,   demand_factor: 0.85, temp_sensitivity: 0.00}
+
+# ---------------------------------------------------------------- regions (bid areas)
+# Peak demand of each class in each region, MW (non-coincident class peaks).
+regions:
+  R1:
+    name: North Industrial
+    peak_mw: {industrial: 140, traction: 25, domestic: 30, commercial: 10, municipal: 5, irrigation: 0}
+    rooftop_solar_mwp: 3
+  R2:
+    name: Central Urban
+    peak_mw: {industrial: 20, traction: 15, domestic: 65, commercial: 55, municipal: 12, irrigation: 0}
+    rooftop_solar_mwp: 12
+  R3:
+    name: South Peri-urban & Agri
+    peak_mw: {industrial: 10, traction: 0, domestic: 55, commercial: 10, municipal: 8, irrigation: 35}
+    rooftop_solar_mwp: 10
+    domestic_feeder_groups: 20   # rotational load-shedding groups; the pilot feeder is in one
+    pilot_feeder_group: 7
+
+# Available transfer capability between bid areas (MW, both directions), IEX market-splitting style.
+# km sets the physical impedance for the AC power-flow check (loop flows follow impedance, not ATC).
+interties:
+  - {from: R1, to: R2, mw: 120, km: 40}
+  - {from: R2, to: R3, mw: 50,  km: 45}
+  - {from: R1, to: R3, mw: 30,  km: 140}
+
+# ---------------------------------------------------------------- generation
+# kind: thermal | gas | hydro | solar | wind | import
+# mc_inr_kwh: marginal cost offer. ramp_mw_per_step for 15-min steps.
+generators:
+  G1A: {kind: thermal, region: R1, pmax_mw: 125, pmin_mw: 60, mc_inr_kwh: 3.1, ramp_mw_per_step: 10, inertia_h_s: 5.0}
+  G1B: {kind: thermal, region: R1, pmax_mw: 125, pmin_mw: 60, mc_inr_kwh: 3.3, ramp_mw_per_step: 10, inertia_h_s: 5.0}
+  G2:  {kind: gas,     region: R2, pmax_mw: 80,  pmin_mw: 0,  mc_inr_kwh: 8.2, ramp_mw_per_step: 30, inertia_h_s: 4.0}
+  H1:  {kind: hydro,   region: R3, pmax_mw: 30,  pmin_mw: 0,  mc_inr_kwh: 0.5, ramp_mw_per_step: 30, inertia_h_s: 3.0,
+        daily_energy_mwh: 300}
+  S1:  {kind: solar,   region: R3, pmax_mw: 100, pmin_mw: 0,  mc_inr_kwh: 0.0}
+  W1:  {kind: wind,    region: R3, pmax_mw: 60,  pmin_mw: 0,  mc_inr_kwh: 0.0}
+  IMP: {kind: import,  region: R1, pmax_mw: 90,  pmin_mw: 0}   # national grid tie, priced at the exchange curve
+
+# Forced outage used as the stress event (unforeseen in that day's day-ahead market).
+forced_outages:
+  - {unit: G1B, start: "2026-09-17 18:00", end: "2026-09-18 23:45"}
+
+# Exchange price curve for the national-grid import (INR/kWh), shaped like an IEX DAM day.
+exchange_price:
+  offpeak: 3.0
+  solar_hours: 2.6
+  evening_peak: 9.8
+  price_cap: 10.0       # IEX DAM price ceiling (INR 10/kWh)
+
+# ---------------------------------------------------------------- coordinated (proposed) resources
+coordination:
+  irrigation_shift_to_solar_hours: true     # PM-KUSUM style solar-hour agri supply
+  industrial_dr_mw: 15                      # interruptible contracts, R1
+  industrial_dr_price_inr_kwh: 9.0
+  gridsetu_feeder_share_r3: 0.25            # share of R3 domestic feeders running GridSetu
+  gridsetu_battery_kw_per_feeder_peak_kw: 0.294   # 100 kW battery / 340 kW feeder peak
+  gridsetu_battery_hours: 2.0
+
+# ---------------------------------------------------------------- pilot feeder (GridSetu)
+pilot_feeder:
+  households: 420
+  micro_enterprises: 35
+  opt_in_share_tier2: 0.6        # micro-enterprises with prior opt-in for Tier-2 shifting
+  refusal_prob_tier3: 0.10       # household overrides a Tier-3 request
+  shiftable_share_tier3: 0.6     # share of curtailed Tier-3 energy that comes back later
+  tier3_share_of_household: 0.14 # AC boost, water heating, 2W/EV charging
+  target_peak_kw: 340
+  critical_loads_kw:            # Tier 1
+    health_subcentre: 12
+    school: 8
+    water_pumping: 15
+    street_lighting_core: 6
+  rooftop_solar_kwp: 90          # behind household meters
+  community_solar_kwp: 60        # on the battery site
+  export_limit_kw: 25            # distribution-transformer reverse-power limit
+  capacity_kw: 300               # aggregate DT thermal rating: the evening peak overloads it (RDSS "overloaded DT" case)
+  import_target_margin: 0.97     # GridSetu keeps import below this share of capacity
+  tier1_island_hours: 2.0        # battery energy never used for anything except Tier-1 islanding
+  overload_trip:                 # protection model shared by both scenarios
+    full_prob_at_overload: 0.10  # trip probability ramps to its max at 10 % overload
+    max_prob_per_step: 0.25
+    restore_steps: 4             # 1 h for a lineman to replace the fuse / reclose
+  evening_window: ["17:30", "19:30"]
+  battery:
+    energy_kwh: 200
+    power_kw: 100
+    soc_min: 0.10
+    soc_max: 0.95
+    soc_init: 0.50
+    eta_charge: 0.95
+    eta_discharge: 0.95
+    degradation_cost_inr_kwh: 1.5
+  reserve:
+    k_sigma: 1.0                 # reserve energy = k * (q90 - q10) spread over the window
+    risk_threshold: 0.20         # P(shortfall > reserve) above this widens the reserve
+    widen_factor: 1.5
+  peak_charge_inr_kw_day: 12.0   # DISCOM demand-charge proxy used by the day-ahead LP
+
+# Communication slices (slice layer). loss = per-message packet loss probability.
+comm_slices:
+  urllc_protection: {latency_ms: 10,   loss: 0.001, retries: 3}
+  mmtc_ami:         {latency_ms: 2000, loss: 0.15,  retries: 0}
+  control_2g4g:     {latency_ms: 800,  loss: 0.15,  retries: 3}
+  embb_dashboard:   {latency_ms: 100,  loss: 0.01,  retries: 1}
+
+# ---------------------------------------------------------------- isolated microgrid
+island_microgrid:
+  name: Kallar Hamlet (no grid connection)
+  households: 120
+  peak_kw: 95
+  solar_kwp: 120
+  battery_kwh: 300
+  battery_kw: 80
+  diesel_kw: 60
+  diesel_min_load: 0.30
+  diesel_l_per_kwh: 0.30
+  diesel_price_inr_l: 92
+
+# ---------------------------------------------------------------- frequency / UFLS (WAMS study)
+frequency:
+  nominal_hz: 50.0
+  load_damping_pu: 1.5            # % load change per % frequency change
+  governor_droop: 0.05
+  governor_tau_s: 6.0
+  ffr_tau_s: 0.2                  # inverter fast-frequency response time constant
+  # CEA-style UFLS stages: trip frequency and share of sheddable load removed
+  ufls_stages:
+    - {hz: 49.4, share: 0.10}
+    - {hz: 49.2, share: 0.10}
+    - {hz: 49.0, share: 0.10}
+    - {hz: 48.8, share: 0.10}
+  pilot_feeder_ufls_stage: 2      # the pilot feeder is wired to UFLS stage 2
+  restoration_minutes: 30
+  national_equivalent:            # rest of the Indian grid seen through the tie
+    frc_mw_per_hz: 6000           # frequency response characteristic
+    inertia_h_s: 4.5
+    base_mw: 250000
+  tie:
+    thermal_limit_mw: 150         # SPS arms above this import
+    sps_arm_seconds: 1.0
+    sps_target_mw: 135
+    sync_coeff_mw_per_rad: 300     # gives a ~1 Hz inter-area mode
+    damping_mw_per_hz: 150        # inter-area mode damping (PSS / asynchronous torque), zeta ~ 0.15
+  pilot_in_sps_block: true
