@@ -1,0 +1,21 @@
+GridSetu Phase 1: pilot feeder, SIMULATION (synthetic data, not field measurement)
+Monthly composite = 3 representative weeks + 1 stress week; mean over 3 seeds
+
+Metric                                               Unit   Baseline   GridSetu   Change  +City coord
+-----------------------------------------------------------------------------------------------------
+Unserved energy, evening ramp 17:30-19:30       kWh/month     2713.3      546.3     -80%        403.3
+Unserved energy, all hours (net of rebound)     kWh/month     3824.9      810.7     -79%        572.4
+Critical-load (Tier-1) outage                     h/month       13.6        0.0    -100%          0.0
+Whole-feeder outage                               h/month       13.6        2.9     -79%          2.0
+Feeder peak import                                     kW      340.0      291.0     -14%        291.0
+Solar utilisation                                       %      100.0      100.0      +0%        100.0
+Battery cycles                                  per month        0.0       17.6      n/a         17.6
+
+Fairness (stress week): 420 households shared Tier-3 curtailment, max 4.00 h each, Gini 0.04, 654 user overrides honoured
+Forecast (stress week): q10-q90 coverage 83% (nominal 80%), MAPE 3.9%
+City stress week: energy not served 723 MWh baseline -> 494 MWh with solar-hour irrigation + industrial DR
+WAMS case A (G1B trip): SPS shed 62 MW baseline -> 57 MW with GridSetu FFR; case B (islanding) nadir 49.16 -> 49.17 Hz
+Comms degraded (60 % loss, stress week): critical outage 0.0 h, whole-feeder outage 4.2 h (vs 3.8 h nominal)
+Isolated microgrid: unserved 613 -> 114 kWh/week, diesel hours 139 -> 116
+Power flow: max 220 kV line loading 110% (8 samples over 100%)
+Runtime 92.2 s
