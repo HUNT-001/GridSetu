@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/instrument-serif";
+@import "@fontsource/instrument-serif/400-italic.css";
+@import "@fontsource-variable/source-code-pro";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ------------------------------------------------------------------ tokens
+   Night-grid navy base, sodium-lamp amber for lit loads and alerts, Setu teal for
+   anything GridSetu controls. Chart colours validated for colour-vision deficiency
+   against both panel surfaces. */
+:root {
+  --background: #f5f7fa;
+  --panel: #ffffff;
+  --raised: #eef2f7;
+  --border: #dde4ee;
+  --foreground: #13233b;
+  --muted-foreground: #56677f;
+  --faint: #8a98ad;
+  --primary: #0f766e;          /* Setu teal, stepped for light surfaces */
+  --primary-foreground: #ffffff;
+  --amber: #b26b00;            /* sodium, text-safe on light */
+  --amber-fill: #f5a623;
+  --danger: #c2413b;
+  --ring: #0f766e;
+  --series-baseline: #9ca3af;
+  --series-gridsetu: #0f766e;
+  --r1: #2a78d6;
+  --r2: #eb6834;
+  --r3: #1baf7a;
+  --c-traction: #2a78d6;
+  --c-municipal: #eb6834;
+  --c-domestic: #1baf7a;
+  --c-commercial: #eda100;
+  --c-irrigation: #e87ba4;
+  --c-industrial: #008300;
+  --grid: #e6ebf2;
+  --sky-night: #cfd9e8;
+  --radius: 10px;
+}
+
+.dark {
+  --background: #07162a;
+  --panel: #0c1f3a;
+  --raised: #12294b;
+  --border: #1c3657;
+  --foreground: #e6edf5;
+  --muted-foreground: #8fa3bf;
+  --faint: #5d7393;
+  --primary: #14b8a6;
+  --primary-foreground: #04131f;
+  --amber: #f5a623;
+  --amber-fill: #f5a623;
+  --danger: #f0605d;
+  --ring: #2dd4bf;
+  --series-baseline: #7c8698;
+  --series-gridsetu: #2dd4bf;
+  --r1: #3987e5;
+  --r2: #d95926;
+  --r3: #199e70;
+  --c-traction: #3987e5;
+  --c-municipal: #d95926;
+  --c-domestic: #199e70;
+  --c-commercial: #c98500;
+  --c-irrigation: #d55181;
+  --c-industrial: #19a019;
+  --grid: #16304f;
+  --sky-night: #07162a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-panel: var(--panel);
+  --color-raised: var(--raised);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-faint: var(--faint);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-amber: var(--amber);
+  --color-amber-fill: var(--amber-fill);
+  --color-danger: var(--danger);
+  --color-ring: var(--ring);
+  --color-baseline: var(--series-baseline);
+  --color-gridsetu: var(--series-gridsetu);
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-mono: "Source Code Pro Variable", "Source Code Pro", ui-monospace, monospace;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: var(--radius);
+  --radius-xl: 14px;
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
+  --animate-in: fade-in 120ms var(--ease-snap);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(2px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+
+@layer base {
+  * { border-color: var(--border); }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+  ::selection { background: color-mix(in oklab, var(--primary) 35%, transparent); }
+}
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* uPlot, themed */
+.uplot { font-family: var(--font-sans); width: 100%; }
+.uplot .u-legend { display: none; }
+.u-select { background: color-mix(in oklab, var(--primary) 18%, transparent); }
+.u-cursor-x, .u-cursor-y { border-color: var(--faint) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
