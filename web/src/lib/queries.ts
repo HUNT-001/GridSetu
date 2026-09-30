@@ -3,8 +3,8 @@ import { useEffect, useSyncExternalStore } from "react";
 import { api, IS_DEMO } from "./api";
 import { useUI } from "./store";
 import type {
-  CityPayload, FeederPayload, HouseholdsPayload, IslandPayload, Meta, NetworkPayload, RunRecord,
-  Summary, WamsPayload, Week,
+  CityPayload, FeederPayload, FleetPayload, HouseholdsPayload, IslandPayload, MapPayload, Meta,
+  NetworkPayload, RunRecord, Summary, UcPayload, WamsPayload, Week,
 } from "./types";
 
 export const queryClient = new QueryClient({
@@ -35,7 +35,8 @@ export function useActiveRun(): { id: string | null; run: RunRecord | undefined;
   return { id, run, ready: run?.status === "ready" };
 }
 
-const WEEKLY = new Set(["city", "feeder", "households", "island", "network"]);
+const STUDIES = new Set(["fleet", "uc", "map"]);
+const WEEKLY = new Set(["city", "feeder", "households", "island", "network", "fleet", "uc"]);
 const key = (id: string | null, resource: string, week?: Week) =>
   ["res", id, resource, WEEKLY.has(resource) ? (resource === "network" ? "stress" : week) : null] as const;
 
@@ -60,6 +61,25 @@ export const useFeeder = (week?: Week) => useResource<FeederPayload>("feeder", w
 export const useHouseholds = (week?: Week) => useResource<HouseholdsPayload>("households", week);
 export const useIsland = (week?: Week) => useResource<IslandPayload>("island", week);
 
+/** Phase 2 studies exist only on runs that computed them (meta.studies lists which). */
+function useStudy<T>(resource: string, week?: Week) {
+  const { id, ready } = useActiveRun();
+  const { data: meta } = useMeta();
+  const current = useUI((s) => s.week);
+  const w = week ?? current;
+  const has = !!meta?.studies?.includes(resource);
+  const q = useQuery({
+    queryKey: key(id, resource, w),
+    queryFn: () => api.resource<T>(id!, resource, w),
+    enabled: !!id && ready && has,
+    placeholderData: keepPreviousData,
+  });
+  return { ...q, available: has, metaLoaded: !!meta };
+}
+export const useFleet = (week?: Week) => useStudy<FleetPayload>("fleet", week);
+export const useUc = (week?: Week) => useStudy<UcPayload>("uc", week);
+export const useMap = () => useStudy<MapPayload>("map");
+
 /** Warm every payload of the active run while the browser is idle, current week first,
  *  so page and week switches are instant. */
 export function usePrefetchRun() {
@@ -73,6 +93,7 @@ export function usePrefetchRun() {
       ["meta", undefined], ["summary", undefined], ["city", week], ["feeder", week],
       ["households", week], ["wams", undefined], ["island", week], ["network", undefined],
       ["city", other], ["feeder", other], ["households", other], ["island", other],
+      ["fleet", week], ["map", undefined], ["uc", week], ["fleet", other], ["uc", other],
     ];
     let cancelled = false;
     const idle = (cb: () => void) =>
@@ -80,6 +101,8 @@ export function usePrefetchRun() {
     const run = (i: number) => {
       if (cancelled || i >= jobs.length) return;
       const [r, w] = jobs[i];
+      const studies = qc.getQueryData<Meta>(key(id, "meta", undefined))?.studies ?? [];
+      if (STUDIES.has(r) && !studies.includes(r)) { idle(() => run(i + 1)); return; }
       qc.prefetchQuery({ queryKey: key(id, r, w), queryFn: () => api.resource(id, r, w) })
         .finally(() => idle(() => run(i + 1)));
     };
