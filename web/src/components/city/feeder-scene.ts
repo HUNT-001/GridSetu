@@ -111,7 +111,7 @@ export class FeederScene {
         ctx.fillText(label, x, y0 + 36);
       });
       // import meter + battery
-      const imp = at(v.series.import, step);
+      const imp = tripped ? 0 : Math.max(0, at(v.series.import, step));
       const soc = at(v.series.soc_pct, step);
       const bat = at(v.series.battery_kw, step);
       const bx = pn.x + 262, by = y0 - 2;
