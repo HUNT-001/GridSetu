@@ -4,6 +4,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Legend, TimeChart, type ChartSeries } from "@/components/charts/time-chart";
 import { PairBar } from "@/components/charts/spark";
+import { UcCard } from "@/components/uc-card";
 import { useCity, useIsland, useMeta, useSummary } from "@/lib/queries";
 import { useUI } from "@/lib/store";
 import { f0, f1, f2, pct } from "@/lib/format";
@@ -35,11 +36,12 @@ export default function CityPage() {
         ]} />
       </div>
       <Dispatch />
-      <div className="grid gap-4 lg:grid-cols-2">
+      <UcCard />
+      <div className="grid gap-4 @[47rem]:grid-cols-2">
         <Prices />
         <Flows />
       </div>
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid gap-4 @[47rem]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Shedding />
         <SystemFactors />
       </div>
@@ -326,7 +328,7 @@ function Island() {
           <CardDescription>No grid connection. Legacy runs the diesel set for every gap; GridSetu covers gaps from the battery and only then starts the diesel at an efficient load.</CardDescription>
         </div>
       </CardHeader>
-      <CardContent className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <CardContent className="grid gap-5 @[47rem]:grid-cols-[minmax(0,1fr)_300px]">
         <div className="space-y-2">
           <Legend items={series.map((s) => ({ label: s.label, color: s.color }))} />
           <TimeChart ariaLabel="Isolated microgrid dispatch" t0={isl.t0} yLabel="kW" height={220} series={series} />
