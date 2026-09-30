@@ -63,6 +63,12 @@ generators:
   W1:  {kind: wind,    region: R3, pmax_mw: 60,  pmin_mw: 0,  mc_inr_kwh: 0.0}
   IMP: {kind: import,  region: R1, pmax_mw: 90,  pmin_mw: 0}   # national grid tie, priced at the exchange curve
 
+# Unit commitment (Phase 2 study, PyPSA MILP). Start costs in INR, times in hours.
+unit_commitment:
+  G1A: {min_up_h: 8, min_down_h: 8, start_cost_inr: 900000, shut_cost_inr: 0}
+  G1B: {min_up_h: 8, min_down_h: 8, start_cost_inr: 900000, shut_cost_inr: 0}
+  G2:  {min_up_h: 1, min_down_h: 1, start_cost_inr: 60000,  shut_cost_inr: 0, pmin_mw: 20}
+
 # Forced outage used as the stress event (unforeseen in that day's day-ahead market).
 forced_outages:
   - {unit: G1B, start: "2026-09-17 18:00", end: "2026-09-18 23:45"}
