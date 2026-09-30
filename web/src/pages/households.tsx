@@ -61,7 +61,7 @@ export default function HouseholdsPage() {
   return (
     <div className="space-y-4">
       <Card>
-        <CardContent className="grid grid-cols-2 gap-5 pt-4 md:grid-cols-4">
+        <CardContent className="grid grid-cols-2 gap-5 pt-4 @[31rem]:grid-cols-4">
           <Kpi label="Homes that shared curtailment" format={f0} value={fs.households_ever_curtailed ?? 0} unit={`of ${rows.length}`} />
           <Kpi label="Most hours paused, any home" unit="h" format={f2} value={fs.max_household_hours ?? 0} />
           <Kpi label="Gini of paused hours" format={f2} value={fs.gini_curtailment_hours ?? 0} hint="0 means perfectly even" />
@@ -159,7 +159,7 @@ function Enterprises() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-5 gap-2 sm:grid-cols-7 lg:grid-cols-12">
+        <div className="grid grid-cols-5 gap-2 @[38rem]:grid-cols-7 @[47rem]:grid-cols-12">
           {e.id.map((id, i) => (
             <div key={id} className="rounded-md border bg-background/40 px-2 py-1.5 text-[11.5px]">
               <div className="num">{id}</div>
