@@ -30,6 +30,8 @@ class WeekResult:
     city: dict           # scenario -> {"inputs", "da", "rt"}
     feeder: dict         # variant -> FeederResult
     signals: dict        # scenario -> FeederSignals
+    model: object = None          # trained FeederForecaster (reused by the fleet study)
+    history_last: object = None   # last history week (lag features for day 1)
 
 
 def feeder_signals(sc: Scenario, inp, da, rt) -> FeederSignals:
@@ -83,7 +85,7 @@ def run_week(sc: Scenario, label: str, cloudy_days: list[int] | None = None,
                                      ("gridsetu_coordinated", "gridsetu", "coordinated")):
         log(f"[{label}] simulating pilot feeder: {variant}")
         feeders[variant] = simulate_feeder(sc, fl, fc, signals[city_name], mode, draws, comm_cfg)
-    return WeekResult(label, sc, wx, fl, fc, skill, city, feeders, signals)
+    return WeekResult(label, sc, wx, fl, fc, skill, city, feeders, signals, model, hist[0])
 
 
 def stress_and_representative(config_path=None, overrides: dict | None = None,
