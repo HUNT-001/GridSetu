@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Segmented } from "@/components/ui/segmented";
 import { Tooltip } from "@/components/ui/tooltip";
 import { useCity } from "@/lib/queries";
+import { useLive } from "@/lib/live";
+import { IS_DEMO } from "@/lib/api";
+import { f0 } from "@/lib/format";
 import { useUI } from "@/lib/store";
 import { clamp } from "@/lib/utils";
 
@@ -107,6 +110,36 @@ export function PlaybackBar() {
         </div>
       </div>
       <Segmented label="Playback speed" size="sm" value={String(speed)} onChange={(v) => setSpeed(Number(v))} options={SPEEDS} />
+      {!IS_DEMO && <LiveToggle />}
+    </div>
+  );
+}
+
+function LiveToggle() {
+  const on = useLive((s) => s.on);
+  return (
+    <Tooltip content={on ? "Stop the live telemetry replay" : "Replay the run as live telemetry from the server"}>
+      <Button size="sm" variant={on ? "secondary" : "outline"} aria-pressed={on}
+        onClick={() => (on ? useLive.getState().stop() : useLive.getState().start())}>
+        <span className={on ? "size-2 animate-pulse rounded-full bg-danger" : "size-2 rounded-full bg-faint"} />Live
+      </Button>
+    </Tooltip>
+  );
+}
+
+/** Latest telemetry while Live is on: what the control room would be receiving. */
+export function LiveTicker() {
+  const { on, scada, ami, city, messages, mqtt, reserve, error } = useLive();
+  if (error && !on) return <p className="text-[12.5px] text-amber">{error}</p>;
+  if (!on) return null;
+  return (
+    <div className="animate-in flex flex-wrap items-center gap-x-5 gap-y-1 rounded-md border bg-background/50 px-3 py-2 text-[12.5px]" role="status">
+      <span className="flex items-center gap-1.5 font-medium"><span className="size-2 animate-pulse rounded-full bg-danger" />Live replay</span>
+      {scada && <span><span className="text-muted-foreground">F07 SCADA </span><span className="num">{f0(scada.import_kw)} kW, SOC {f0(scada.soc_pct)}%{scada.critical_on ? "" : ", critical loads off"}</span></span>}
+      {ami && <span><span className="text-muted-foreground">AMI </span><span className="num">{ami.reads_received}/{ami.meters} reads</span></span>}
+      {city && <span><span className="text-muted-foreground">City </span><span className="num">{f0(city.demand_mw)} MW{city.shed_mw > 0.5 ? `, ${f0(city.shed_mw)} MW shed` : ""}</span></span>}
+      {reserve && <span className="text-primary">{reserve}</span>}
+      <span className="num ml-auto text-faint">{messages.toLocaleString("en-IN")} messages{mqtt ? " · also on MQTT" : ""}</span>
     </div>
   );
 }
