@@ -12,6 +12,10 @@ for (const r of ["meta", "summary", "wams"]) payloads[r] = await get(`/runs/${id
 for (const w of ["stress", "representative"])
   for (const r of ["city", "feeder", "households", "island"]) payloads[`${r}:${w}`] = await get(`/runs/${id}/${r}?week=${w}`);
 payloads["network:stress"] = await get(`/runs/${id}/network`);
+for (const study of payloads.meta.studies ?? []) {          // Phase 2: fleet, uc, map
+  if (study === "map") payloads.map = await get(`/runs/${id}/map`);
+  else for (const w of ["stress", "representative"]) payloads[`${study}:${w}`] = await get(`/runs/${id}/${study}?week=${w}`);
+}
 const defaults = await get("/lab/defaults");
 const out = JSON.stringify({ runs: { reference: id, runs: [ref] }, payloads, defaults });
 writeFileSync(new URL("../src/snapshot.gen.json", import.meta.url), out);
