@@ -12,7 +12,7 @@ import { FeederScene } from "./feeder-scene";
 /** Drives a canvas scene from the global playhead: one rAF loop, paused when the canvas
  *  is off screen or the tab is hidden. React only re-renders the HTML overlay, and only
  *  when the 15-minute step changes. */
-function useCanvasLoop(
+export function useCanvasLoop(
   ref: React.RefObject<HTMLCanvasElement | null>,
   make: (c: HTMLCanvasElement) => { render: (step: number, dt: number) => void; resize: (w: number) => void; onTheme: () => void },
   deps: unknown[],
@@ -31,11 +31,14 @@ function useCanvasLoop(
     const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
     io.observe(c);
     let raf = 0, last = performance.now();
+    let warned = false;
     const loop = (now: number) => {
+      raf = requestAnimationFrame(loop);        // schedule first: one bad frame must not stop the loop
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
-      if (visible && !document.hidden) scene.render(useUI.getState().step, dt);
-      raf = requestAnimationFrame(loop);
+      if (!visible || document.hidden) return;
+      try { scene.render(useUI.getState().step, dt); }
+      catch (e) { if (!warned) { warned = true; console.warn("canvas frame skipped", e); } }
     };
     raf = requestAnimationFrame(loop);
     const unsubTheme = useUI.subscribe((s, prev) => { if (s.theme !== prev.theme) scene.onTheme(); });
