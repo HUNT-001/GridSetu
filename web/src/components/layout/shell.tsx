@@ -11,6 +11,7 @@ import { useUI } from "@/lib/store";
 import type { IconName } from "@/icons/sprite.gen";
 import type { Week } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { CopilotButton } from "@/components/copilot/panel";
 
 export const NAV: { href: string; label: string; icon: IconName; title: string; blurb: string }[] = [
   { href: "/", label: "Control room", icon: "layout-dashboard", title: "Control room",
@@ -19,6 +20,8 @@ export const NAV: { href: string; label: string; icon: IconName; title: string; 
     blurb: "Generation, the day-ahead market, transmission and who gets shed." },
   { href: "/feeder", label: "Pilot feeder", icon: "zap", title: "Pilot feeder F07",
     blurb: "Battery, tiers, curtailment requests and the Reliability Reserve." },
+  { href: "/fleet", label: "City map", icon: "map", title: "City map and fleet",
+    blurb: "GridSetu on 1 feeder or all 20: what the rollout buys the city." },
   { href: "/households", label: "Households", icon: "users", title: "Households and fairness",
     blurb: "Every home on the feeder and every curtailment it received." },
   { href: "/wams", label: "Protection", icon: "activity", title: "Protection and WAMS",
@@ -108,6 +111,7 @@ export function Topbar() {
           { value: "representative", label: "Normal week", title: "No outage" },
         ]} />
         <RunPicker />
+        <CopilotButton />
         <Tooltip content={theme === "dark" ? "Switch to light" : "Switch to dark"}>
           <Button variant="ghost" size="icon-sm" onClick={toggleTheme} aria-label="Toggle colour theme">
             <Icon name={theme === "dark" ? "sun" : "moon"} />
