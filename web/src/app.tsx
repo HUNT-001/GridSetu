@@ -19,6 +19,10 @@ import HouseholdsPage from "@/pages/households";
 import WamsPage from "@/pages/wams";
 import ArchitecturePage from "@/pages/architecture";
 import LabPage from "@/pages/lab";
+import FleetPage from "@/pages/fleet";
+import { CopilotPanel } from "@/components/copilot/panel";
+import { useCopilot } from "@/lib/copilot";
+import { cn } from "@/lib/utils";
 
 /** Lenis smooth scrolling driven by the GSAP ticker (one clock for scroll and tweens). */
 function useSmoothScroll() {
@@ -43,6 +47,7 @@ export default function App() {
 }
 
 function Shell() {
+  const copilotOpen = useCopilot((s) => s.open);
   const lenis = useSmoothScroll();
   const [loc] = useLocation();
   usePrefetchRun();
@@ -61,15 +66,17 @@ function Shell() {
       </a>
       <div className="flex min-h-dvh">
         <Sidebar />
-        <div className="flex min-w-0 flex-1 flex-col">
+        <div className={cn("flex min-w-0 flex-1 flex-col transition-[padding] duration-150 ease-[var(--ease-snap)]",
+          copilotOpen && "xl:pr-[420px]")}>
           <Topbar />
-          <main id="main" className="mx-auto w-full max-w-[1480px] flex-1 px-4 py-4 md:px-6">
+          <main id="main" className="@container mx-auto w-full max-w-[1480px] flex-1 px-4 py-4 md:px-6">
             <Gate>
               <div key={loc} className="animate-in">
                 <Switch>
                   <Route path="/" component={Overview} />
                   <Route path="/city" component={CityPage} />
                   <Route path="/feeder" component={FeederPage} />
+                  <Route path="/fleet" component={FleetPage} />
                   <Route path="/households" component={HouseholdsPage} />
                   <Route path="/wams" component={WamsPage} />
                   <Route path="/architecture" component={ArchitecturePage} />
@@ -82,6 +89,7 @@ function Shell() {
           <MobileNav />
         </div>
       </div>
+      <CopilotPanel />
     </TooltipProvider>
   );
 }
