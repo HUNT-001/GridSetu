@@ -14,7 +14,8 @@ const ICONS = [
   "chevron-right", "search", "arrow-up-down", "arrow-up", "arrow-down", "sliders-horizontal", "cpu",
   "network", "timer", "signal", "refresh-cw", "info", "panel-left", "loader-circle", "check",
   "house", "lightbulb", "flame", "waves", "clock", "trending-down", "trending-up", "split",
-  "server", "rows-3", "circle-dot", "gauge-circle", "plug-zap", "circle-pause",
+  "server", "rows-3", "circle-dot", "gauge-circle", "plug-zap", "circle-pause", "map", "map-pin", "route",
+  "sparkles", "square", "trash-2", "corner-down-left", "radio", "arrow-right",
 ];
 const symbols = [];
 for (const name of ICONS) {
