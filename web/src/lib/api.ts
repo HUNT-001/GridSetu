@@ -33,13 +33,13 @@ async function http<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  async runs(): Promise<{ reference: string; runs: RunRecord[] }> {
+  async runs(): Promise<{ reference: string; lab_reference?: string; runs: RunRecord[] }> {
     if (IS_DEMO) return (await loadSnapshot()).runs;
     return http("/runs");
   },
   async resource<T>(runId: string, resource: string, week?: string): Promise<T> {
     if (IS_DEMO) {
-      const key = week && resource !== "meta" && resource !== "summary" && resource !== "wams"
+      const key = week && !["meta", "summary", "wams", "map"].includes(resource)
         ? `${resource}:${resource === "network" ? "stress" : week}` : resource;
       const p = (await loadSnapshot()).payloads[key];
       if (!p) throw new ApiError(404, `${key} is not in the snapshot`);
