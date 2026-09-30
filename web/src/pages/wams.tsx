@@ -57,7 +57,7 @@ export default function WamsPage() {
             <CardDescription className="max-w-[80ch]">{CASES[c].text}</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-5 lg:grid-cols-2">
+        <CardContent className="grid gap-5 @[47rem]:grid-cols-2">
           <div className="space-y-2">
             <Legend items={freq!.map((s) => ({ label: s.label, color: s.color, dash: !!s.dash }))} />
             <TimeChart ariaLabel="Frequency after the event" xKind="seconds" x={b.t} yLabel="Hz" height={240}
@@ -71,7 +71,7 @@ export default function WamsPage() {
           </div>
         </CardContent>
       </Card>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 @[31rem]:grid-cols-2">
         {[b, g].map((r) => {
           const s = r.summary;
           return (
