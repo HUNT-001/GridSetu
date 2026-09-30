@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Segmented } from "@/components/ui/segmented";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CityView, FeederInset, FeederStateLine } from "@/components/city/city-view";
-import { PlaybackBar } from "@/components/city/playback";
+import { LiveTicker, PlaybackBar } from "@/components/city/playback";
 import { Kpi } from "@/components/kpi";
 import { Legend, TimeChart } from "@/components/charts/time-chart";
 import { useCity, useFeeder, useMeta, useSummary } from "@/lib/queries";
@@ -18,15 +18,16 @@ export default function Overview() {
   const { setCityScenario, setVariant } = useUI.getState();
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-4 @[62rem]:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-3">
           <CityView />
           <PlaybackBar />
+          <LiveTicker />
         </div>
         <LiveCity />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+      <div className="grid gap-4 @[62rem]:grid-cols-[minmax(0,1fr)_420px]">
         <Card>
           <CardHeader>
             <div>
@@ -58,7 +59,7 @@ export default function Overview() {
             { value: "coordinated", label: "Coordinated city", title: "Solar-hour irrigation and industrial demand response" },
           ]} />
         </CardHeader>
-        <CardContent className="grid gap-5 lg:grid-cols-2">
+        <CardContent className="grid gap-5 @[47rem]:grid-cols-2">
           <CityBalanceChart />
           <FeederImportChart />
         </CardContent>
