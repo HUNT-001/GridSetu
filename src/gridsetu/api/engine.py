@@ -28,8 +28,9 @@ from ..network import run_power_flow
 from ..runner import VARIANTS, _agg, monthly_composite
 from ..simulate import stress_and_representative
 from ..wams import wams_study
+from ..citymap import build_map
 
-ENGINE_VERSION = "1.0.0"
+ENGINE_VERSION = "1.1.0"
 WEEKS = ("stress", "representative")
 STATE_CODES = ["normal", "cap", "sps_relief", "rotation_trip", "sps_trip", "cap_shortfall_trip",
                "cap_shortfall_trip+island", "rotation_trip+island", "sps_trip+island",
@@ -38,6 +39,9 @@ STATE_CODES = ["normal", "cap", "sps_relief", "rotation_trip", "sps_trip", "cap_
 
 def run_id_for(overrides: dict | None, seeds: int, config_path=None) -> str:
     cfg = Path(config_path or DEFAULT_CONFIG).read_bytes()
+    from ..citymap import OSM_FILE
+    if OSM_FILE.exists():                 # real streets change the map, so they change the run id
+        cfg += hashlib.sha1(OSM_FILE.read_bytes()).digest()
     blob = json.dumps({"o": overrides or {}, "s": seeds, "v": ENGINE_VERSION}, sort_keys=True).encode()
     return hashlib.sha1(cfg + blob).hexdigest()[:12]
 
@@ -226,10 +230,15 @@ def _clean(o):
 
 
 def compute_run(overrides: dict | None, label: str, seeds: int, progress: Callable[[str, float], None],
-                pf_every: int = 2, config_path=None) -> dict[str, bytes]:
-    """Run the study and return {resource_key: gzipped JSON bytes}."""
+                pf_every: int = 2, config_path=None, studies: bool | None = None) -> dict[str, bytes]:
+    """Run the study and return {resource_key: gzipped JSON bytes}.
+
+    studies: also run the Phase 2 fleet and unit-commitment studies (default: only for
+    multi-seed reference runs, to keep one-seed lab runs quick)."""
     t0 = time.time()
-    stages = 6 + seeds
+    if studies is None:
+        studies = seeds > 1
+    stages = 6 + seeds + (2 if studies else 0)
     k = [0]
 
     def step(msg):
@@ -261,6 +270,16 @@ def compute_run(overrides: dict | None, label: str, seeds: int, progress: Callab
     cf = class_factors(sc, c["inputs"].loads)
     pl = plant_factors(sc, c["rt"])
 
+    extra = {}
+    if studies:
+        step("City-wide fleet: 20 feeders under baseline and GridSetu")
+        for wk, w in (("stress", stress), ("representative", rep)):
+            extra[f"fleet:{wk}"] = fleet_payload(w)
+        extra["map"] = build_map(extra["fleet:stress"]["feeders"])
+        step("Unit commitment with PyPSA (day-ahead MILP)")
+        for wk, w in (("stress", stress), ("representative", rep)):
+            extra[f"uc:{wk}"] = uc_payload(w)
+
     step("Packing payloads")
     weeks_meta = {}
     for wk, w in (("stress", stress), ("representative", rep)):
@@ -268,6 +287,7 @@ def compute_run(overrides: dict | None, label: str, seeds: int, progress: Callab
                           "outages": w.sc.raw.get("forced_outages", [])}
     cfg = sc.raw
     meta = {
+        "studies": sorted({k.split(":")[0] for k in extra}),
         "engine": ENGINE_VERSION, "label": label, "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "seeds": seeds, "overrides": overrides or {}, "weeks": weeks_meta, "state_codes": STATE_CODES,
         "config": {"regions": {r: {"name": v["name"], "peak_mw": v["peak_mw"],
@@ -307,7 +327,40 @@ def compute_run(overrides: dict | None, label: str, seeds: int, progress: Callab
         payloads[f"feeder:{wk}"] = feeder_payload(w)
         payloads[f"households:{wk}"] = households_payload(w)
         payloads[f"island:{wk}"] = island[wk]
+    payloads.update(extra)
     return {k: _pack(_clean(v)) for k, v in payloads.items()}
+
+
+def fleet_payload(w) -> dict:
+    from ..fleet import run_fleet
+    r = run_fleet(w)
+    code = {st: i for i, st in enumerate(STATE_CODES)}
+    groups = [row["group"] for row in r["feeders"]]
+    states, imports = {}, {}
+    for m in ("baseline", "gridsetu"):
+        st = np.array([[code.get(x, 0) for x in r["series"][(g, m)]["state"]] for g in groups], dtype=np.uint8)
+        imp = np.array([np.nan_to_num(r["series"][(g, m)]["import"]) for g in groups]).round().astype(np.int16)
+        states[m] = base64.b64encode(st.tobytes()).decode()       # [feeder][step]
+        imports[m] = base64.b64encode(imp.tobytes()).decode()     # int16 little-endian kW
+    return {**_week_axis(w), "state_codes": STATE_CODES, "feeders": r["feeders"], "curve": r["curve"],
+            "states_b64": states, "import_b64": imports, "note": r["note"]}
+
+
+def uc_payload(w) -> dict:
+    from ..uc import lp_cost, run_uc
+    c = w.city["baseline"]
+    u = run_uc(w.sc, c["inputs"])
+    cap = w.sc.raw["exchange_price"]["price_cap"]
+    lp = lp_cost(w.sc, c["inputs"], c["da"])
+    lp_shed = float(sum(c["da"].shed[r].sum().sum() for r in c["da"].shed) * w.sc.dt_h)
+    return {**_week_axis(w), "status": {g: u.status[g].astype(int).tolist() for g in u.status},
+            "gen_uc": {g: _r(u.gen[g], 1) for g in u.gen}, "gen_lp": {g: _r(c["da"].gen[g], 1) for g in u.status},
+            "price_uc": {r: _r(u.price[r].clip(upper=cap), 2) for r in u.price},
+            "price_lp": {r: _r(c["da"].mcp(cap)[r], 2) for r in u.price},
+            "startups": u.startups, "cost_uc_inr": u.cost_inr, "cost_lp_inr": lp,
+            "shed_uc_mwh": float(u.shed.sum() * w.sc.dt_h), "shed_lp_mwh": lp_shed,
+            "hours_on": {g: float(u.status[g].sum() * w.sc.dt_h) for g in u.status},
+            "note": "Day-ahead schedules on the forecast. Ramp limits are left out of the commitment problem."}
 
 
 def load_scenario_defaults(config_path=None) -> dict:
