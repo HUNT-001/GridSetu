@@ -37,11 +37,15 @@ from pydantic import BaseModel, Field
 
 from .engine import ENGINE_VERSION, compute_run, knobs_to_overrides, load_scenario_defaults, run_id_for
 
+from ..envfile import load_env  # noqa: E402
+
+load_env()   # API keys and settings from .env, before anything reads the environment
+
 ROOT = Path(__file__).resolve().parents[3]
 CACHE = Path(os.environ.get("GRIDSETU_CACHE", ROOT / ".cache" / "runs"))
 WEB_DIST = Path(os.environ.get("GRIDSETU_WEB", ROOT / "web" / "dist"))
-RESOURCES = {"meta", "summary", "wams", "city", "feeder", "households", "island", "network"}
-WEEKLY = {"city", "feeder", "households", "island", "network"}
+RESOURCES = {"meta", "summary", "wams", "city", "feeder", "households", "island", "network", "fleet", "uc", "map"}
+WEEKLY = {"city", "feeder", "households", "island", "network", "fleet", "uc"}
 DEFAULT_SEEDS = int(os.environ.get("GRIDSETU_SEEDS", "3"))
 
 
@@ -135,6 +139,9 @@ class RunStore:
 
 store = RunStore(CACHE)
 REFERENCE_ID = run_id_for({}, DEFAULT_SEEDS)
+# Lab runs use one seed, so they are compared against a one-seed reference (same weather and
+# load draws); otherwise seed-to-seed noise would show up as a scenario effect.
+LAB_REFERENCE_ID = run_id_for({}, 1)
 adms_inbox: list[dict] = []
 
 app = FastAPI(title="GridSetu API", version=ENGINE_VERSION)
@@ -151,6 +158,8 @@ def j(data, status=200, headers=None) -> Response:
 @app.on_event("startup")
 def _startup():
     store.submit({}, "Reference scenario", DEFAULT_SEEDS)
+    if LAB_REFERENCE_ID != REFERENCE_ID:
+        store.submit({}, "Reference, 1 seed (lab baseline)", 1)
 
 
 @app.get("/api/v1/health")
@@ -162,7 +171,7 @@ def health():
 @app.get("/api/v1/runs")
 def list_runs():
     runs = sorted(store.runs.values(), key=lambda r: r.created_at)
-    return j({"reference": REFERENCE_ID, "runs": [r.public() for r in runs]})
+    return j({"reference": REFERENCE_ID, "lab_reference": LAB_REFERENCE_ID, "runs": [r.public() for r in runs]})
 
 
 class LabRequest(BaseModel):
@@ -275,6 +284,118 @@ def adms_ingest(r: ReserveIn):
 @app.get("/api/v1/adms/inbox")
 def adms_list():
     return j({"items": adms_inbox})
+
+
+# ---------------------------------------------------------------- operator copilot
+from ..copilot import agent as copilot_agent  # noqa: E402
+from ..copilot.data import RunData  # noqa: E402
+from ..copilot.live import MqttBridge, stream as live_stream  # noqa: E402
+from ..copilot.tools import Context as CopilotContext  # noqa: E402
+
+_rundata: dict[str, RunData] = {}
+
+
+def open_run(rid: str) -> RunData:
+    rec = store.runs.get(rid)
+    if not rec or rec.status != "ready":
+        raise KeyError(f"Run {rid} is not available or not finished")
+    if rid not in _rundata:
+        _rundata[rid] = RunData(rid, lambda key, r=rid: store.payload(r, key))
+    return _rundata[rid]
+
+
+class ChatMessage(BaseModel):
+    role: str = Field(pattern="^(user|assistant)$")
+    content: str = Field(max_length=8000)
+
+
+class ChatContext(BaseModel):
+    run_id: str | None = None
+    week: str = Field(default="stress", pattern="^(stress|representative)$")
+    step: int = Field(default=0, ge=0, le=100000)
+    page: str = "/"
+
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage] = Field(min_length=1, max_length=40)
+    context: ChatContext = Field(default_factory=ChatContext)
+    provider: str | None = Field(default=None, pattern="^(auto|claude|openai|ollama|offline)$")
+
+
+@app.get("/api/v1/copilot/status")
+def copilot_status():
+    return j(copilot_agent.status())
+
+
+@app.post("/api/v1/copilot/chat")
+async def copilot_chat(req: ChatRequest, request: Request):
+    rid = req.context.run_id or REFERENCE_ID
+    rec = store.runs.get(rid)
+    if not rec or rec.status != "ready":
+        raise HTTPException(409, "That run is not ready yet")
+    ctx = CopilotContext(
+        run_id=rid, reference_id=REFERENCE_ID, lab_reference_id=LAB_REFERENCE_ID, week=req.context.week,
+        step=min(req.context.step, 671), page=req.context.page, open_run=open_run,
+        submit_run=lambda ov, label, knobs: store.submit(ov, label, seeds=1, knobs=knobs),
+        get_record=lambda r: store.runs.get(r), list_records=lambda: sorted(store.runs.values(), key=lambda x: x.created_at),
+    )
+    history = [m.model_dump() for m in req.messages][-20:]
+    loop = asyncio.get_running_loop()
+    queue: asyncio.Queue = asyncio.Queue()
+    emit = lambda ev: loop.call_soon_threadsafe(queue.put_nowait, ev)  # noqa: E731
+    provider = copilot_agent.pick_provider(req.provider) if req.provider else None
+    fut = loop.run_in_executor(None, copilot_agent.run_turn, ctx, history, emit, provider)
+
+    async def gen():
+        while True:
+            if await request.is_disconnected():
+                return
+            try:
+                ev = await asyncio.wait_for(queue.get(), timeout=15)
+            except asyncio.TimeoutError:
+                yield ": keep-alive\n\n"
+                continue
+            yield f"data: {orjson.dumps(ev).decode()}\n\n"
+            if ev["type"] in ("done", "error"):
+                await fut
+                return
+
+    return StreamingResponse(gen(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"})
+
+
+@app.get("/api/v1/live/stream")
+async def live(request: Request, run: str | None = None, week: str = "stress", start: int = 0,
+               speed: float = 4.0):
+    rid = run or REFERENCE_ID
+    d = open_run(rid)
+    if week not in ("stress", "representative"):
+        raise HTTPException(400, "week must be stress or representative")
+    speed = max(0.25, min(speed, 48.0))
+    broker = os.environ.get("GRIDSETU_MQTT")
+    bridge = None
+    if broker:
+        try:
+            bridge = MqttBridge(broker, rid)
+        except Exception:
+            bridge = None
+    loop = asyncio.get_running_loop()
+    it = live_stream(d, week, start, speed)
+
+    async def gen():
+        try:
+            yield f"data: {orjson.dumps({'type': 'hello', 'run': rid, 'week': week, 'speed': speed, 'mqtt': bool(bridge)}).decode()}\n\n"
+            while not await request.is_disconnected():
+                step, msgs = await loop.run_in_executor(None, next, it)
+                if bridge:
+                    bridge.publish(msgs)
+                yield f"data: {orjson.dumps({'type': 'tick', 'step': step, 'messages': [{'topic': t, 'payload': p} for t, p in msgs]}).decode()}\n\n"
+        finally:
+            if bridge:
+                bridge.close()
+
+    return StreamingResponse(gen(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"})
 
 
 # ---------------------------------------------------------------- built front end (optional)
