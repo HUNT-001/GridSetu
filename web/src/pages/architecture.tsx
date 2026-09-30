@@ -81,7 +81,7 @@ export default function ArchitecturePage() {
           the playhead, <span className="num">{fmtStep(city.t0, city.dt_min, step)}</span>. Select a layer to see its parts.
         </p>
       </div>
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid gap-4 @[62rem]:grid-cols-[minmax(0,1fr)_380px]">
         <div className="space-y-2">
           {layers.map((l, i) => {
             const active = open === l.id;
