@@ -44,7 +44,7 @@ export default function LabPage() {
   const changed = (Object.keys(d) as (keyof LabKnobs)[]).filter((k) => d[k] !== knobs[k]);
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[440px_minmax(0,1fr)]">
+    <div className="grid gap-4 @[62rem]:grid-cols-[440px_minmax(0,1fr)]">
       <Card className="self-start">
         <CardHeader>
           <div>
@@ -110,7 +110,8 @@ export default function LabPage() {
             </CardContent>
           </Card>
         )}
-        <Compare jobId={job?.status === "ready" ? job.id : null} reference={runs?.reference ?? null} />
+        <Compare jobId={job?.status === "ready" ? job.id : null} reference={runs?.reference ?? null}
+          labReference={runs?.runs.find((r) => r.id === runs.lab_reference && r.status === "ready")?.id ?? null} />
       </div>
     </div>
   );
@@ -138,8 +139,10 @@ const ROWS: [string, string, (v: number) => string][] = [
   ["battery_cycles", "Battery cycles", f1],
 ];
 
-function Compare({ jobId, reference }: { jobId: string | null; reference: string | null }) {
-  const ref = useQuery({ queryKey: ["res", reference, "summary", null], queryFn: () => api.resource<Summary>(reference!, "summary"), enabled: !!reference });
+function Compare({ jobId, reference, labReference }: { jobId: string | null; reference: string | null; labReference: string | null }) {
+  // a one-seed lab run is compared with the one-seed reference (same weather and loads)
+  const base = labReference ?? reference;
+  const ref = useQuery({ queryKey: ["res", base, "summary", null], queryFn: () => api.resource<Summary>(base!, "summary"), enabled: !!base });
   const lab = useQuery({ queryKey: ["res", jobId, "summary", null], queryFn: () => api.resource<Summary>(jobId!, "summary"), enabled: !!jobId });
   if (!ref.data) return <Skeleton className="h-80" />;
   const R = ref.data.monthly, L = lab.data?.monthly;
@@ -148,7 +151,9 @@ function Compare({ jobId, reference }: { jobId: string | null; reference: string
       <CardHeader>
         <div>
           <CardTitle>A month on F07, reference versus your scenario</CardTitle>
-          <CardDescription>GridSetu figures. The reference averages {ref.data.monthly.baseline.critical_outage_hours.max !== ref.data.monthly.baseline.critical_outage_hours.min ? "several seeds" : "one seed"}; lab runs use one, so small differences can be noise.</CardDescription>
+          <CardDescription>GridSetu figures. {labReference
+            ? "Both runs use the same single seed, so differences come from your settings, not the weather."
+            : "The one-seed reference is still computing, so this compares against the three-seed average; small differences can be noise."}</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="overflow-x-auto">
