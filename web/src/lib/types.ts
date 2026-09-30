@@ -18,6 +18,7 @@ export interface Generator {
 }
 
 export interface Meta {
+  studies?: string[];
   engine: string; label: string; created_at: string; seeds: number;
   overrides: Record<string, unknown>; state_codes: string[];
   weeks: Record<Week, Axis & { label: string; outages: { unit: string; start: string; end: string }[] }>;
@@ -151,4 +152,48 @@ export interface NetworkPayload {
 export interface LabKnobs {
   battery_kwh: number; battery_kw: number; capacity_kw: number; tier1_island_hours: number;
   control_loss: number; forced_outage: boolean; irrigation_shift: boolean; industrial_dr_mw: number;
+}
+
+// ------------------------------------------------------------ Phase 2: fleet, UC, map
+export interface FleetOutcome {
+  critical_outage_hours: number; feeder_outage_hours: number; total_unserved_kwh: number;
+  evening_unserved_kwh: number; overload_trips: number; peak_import_kw: number;
+  household_dark_hours: number; critical_sites: number;
+}
+export interface FleetFeederRow {
+  group: number; id: string; households: number; peak_kw: number; rating_kw: number;
+  rooftop_kwp: number; community_kwp: number; critical: Record<string, number>; sps_member: boolean;
+  battery_kw: number; battery_kwh: number; is_pilot: boolean; rank: number;
+  baseline: FleetOutcome; gridsetu: FleetOutcome;
+}
+export interface FleetCurvePoint {
+  adoption: number; feeders: number; critical_outage_hours: number; feeder_outage_hours: number;
+  total_unserved_kwh: number; evening_unserved_kwh: number; overload_trips: number;
+  household_dark_hours: number; critical_site_hours: number; r3_feeder_head_peak_kw: number;
+  batteries_kwh: number;
+}
+export interface FleetPayload extends Axis {
+  state_codes: string[]; feeders: FleetFeederRow[]; curve: FleetCurvePoint[];
+  states_b64: Record<"baseline" | "gridsetu", string>;   // uint8 [feeder][step]
+  import_b64: Record<"baseline" | "gridsetu", string>;   // int16 LE kW [feeder][step]
+  note: string;
+}
+export interface UcPayload extends Axis {
+  status: Record<string, number[]>; gen_uc: Record<string, Series>; gen_lp: Record<string, Series>;
+  price_uc: Record<string, Series>; price_lp: Record<string, Series>; startups: Record<string, number>;
+  cost_uc_inr: Record<"energy" | "startup" | "shed" | "total", number>;
+  cost_lp_inr: Record<"energy" | "startup" | "shed" | "total", number>;
+  shed_uc_mwh: number; shed_lp_mwh: number; hours_on: Record<string, number>; note: string;
+}
+export type Pt = [number, number];
+export interface MapPayload {
+  width: number; height: number; source: "osm" | "procedural"; km_per_unit: number; attribution: string;
+  bbox?: [number, number, number, number];
+  roads: { cls: string; pts: Pt[] }[];
+  regions: Record<string, { label_at: Pt }>;
+  substations: Record<string, Pt>;
+  plants: Record<string, { kind: string; at: Pt }>;
+  lines_220kv: [string, string][];
+  feeders: { group: number; x: number; y: number; radius: number; dots: Pt[]; line: Pt[] }[];
+  zones: { region: string; dots: [number, number, string, number][] }[];
 }
