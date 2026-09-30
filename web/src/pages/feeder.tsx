@@ -24,7 +24,7 @@ export default function FeederPage() {
   return (
     <div className="space-y-4">
       <WeekKpis right={right} />
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid gap-4 @[62rem]:grid-cols-2">
         <ImportChart right={right} />
         <CurtailChart right={right} />
         <SocChart right={right} />
@@ -43,7 +43,7 @@ function WeekKpis({ right }: { right: Variant }) {
   const b = s.weekly[week].baseline, g = s.weekly[week][right];
   return (
     <Card>
-      <CardContent className="grid grid-cols-2 gap-5 pt-4 sm:grid-cols-3 xl:grid-cols-6">
+      <CardContent className="grid grid-cols-2 gap-5 pt-4 @[38rem]:grid-cols-3 @[62rem]:grid-cols-6">
         <Kpi label="Evening-ramp unserved" unit="kWh" hint="17:30 to 19:30" format={f0} value={g.evening_window_unserved_kwh} baseline={b.evening_window_unserved_kwh} />
         <Kpi label="Critical-load outage" unit="h" format={f1} value={g.critical_outage_hours} baseline={b.critical_outage_hours} />
         <Kpi label="Whole feeder dark" unit="h" format={f1} value={g.feeder_outage_hours} baseline={b.feeder_outage_hours} />
@@ -216,7 +216,7 @@ function ReserveTimeline({ right }: { right: Variant }) {
       </CardHeader>
       <CardContent className="space-y-4">
         {!f ? <Skeleton className="h-36" /> : (
-          <ol className="grid gap-3 md:grid-cols-5">
+          <ol className="grid gap-3 @[31rem]:grid-cols-5">
             {dayItems.map((r, i) => (
               <li key={r.stage} className="relative rounded-lg border bg-background/40 p-3">
                 <div className="flex items-center justify-between">
