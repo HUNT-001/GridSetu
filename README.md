@@ -6,7 +6,7 @@
 
 Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliability and renewable intermittency
 
-[Live demo](https://claude.ai/artifact/212NufWD9xhznBwTKwGAYc) · [Run it locally](#run-it-locally) · [How it works](#how-it-works) · [Results](#results) · [City-wide fleet](#city-map-and-fleet)
+[Run it locally](#run-it-locally) · [How it works](#how-it-works) · [Results](#results) · [City-wide fleet](#city-map-and-fleet)
 
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
