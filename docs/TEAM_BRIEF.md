@@ -50,7 +50,8 @@ the number answers a narrower question than a control-room operator would assume
 headline figures move by 1–3%. Within one environment the run is fully deterministic: two runs
 give an identical `results.json`. `requirements-lock.txt` pins every library, the committed
 `outputs/` were produced under it, and `scripts/reproduce.sh` re-runs the study and fails if any
-committed value changes. CI runs it on every pull request.
+committed value changes by more than one part in a billion (smaller differences are floating-point
+noise between processors). CI runs it on every pull request.
 
 ## `matlab_export.py`: feeder F07 for the MATLAB model
 

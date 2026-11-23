@@ -512,7 +512,7 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 | `pytest -q` | 54 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
-| `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes (install `requirements-lock.txt` first) |
+| `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
 | `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
 | `python -m gridsetu fetch-osm` | Download real OpenStreetMap streets for the city map (`--bbox south,west,north,east` to choose the area) |
 | `python -m gridsetu replay --broker host:1883` | Publish a run as live telemetry to MQTT |
