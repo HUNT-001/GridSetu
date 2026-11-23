@@ -83,6 +83,13 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
         add(f"pilot.{side}.evening_unserved_seed_range", [round(lo), round(hi)], "kWh/month",
             f"{_num(lo, 0)} to {_num(hi, 0)} kWh", f"results.json:{PILOT}.{side}.evening_window_unserved_kwh.min/max")
 
+    for side in ("baseline", "gridsetu"):        # households fully without supply, and on lifeline
+        for k in ("dark_home_hours", "lifeline_home_hours"):
+            node = res[PILOT][side].get(k)
+            if node is not None:
+                add(f"pilot.{side}.{k}", round(node["mean"]), "home-hours/month", f"{node['mean']:,.0f} home-hours",
+                    f"results.json:{PILOT}.{side}.{k}.mean", check=not (side == "baseline" and k == "lifeline_home_hours"))
+
     fair = res["fairness_stress_week"]
     add("fairness.gini", round(fair["gini_curtailment_hours"], 2), "", f"{fair['gini_curtailment_hours']:.2f}",
         "results.json:fairness_stress_week.gini_curtailment_hours")
@@ -142,6 +149,35 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             add("reserve_calibration.request_over_reserve_median", rq["request_over_reserve_median"], "x",
                 f"{rq['request_over_reserve_median']:.1f} times",
                 "calibration.json:discom_request_evenings.request_over_reserve_median")
+
+    # second confidence: DISCOM calls, as the headline runs them and with calls bounded by the offer
+    for sub, tag in (("calibration", "calls"), ("calibration_bounded", "bounded_calls")):
+        pth = out / sub / "calibration.json"
+        if not pth.exists():
+            continue
+        c = json.loads(pth.read_text(encoding="utf-8"))
+        rq = c.get("discom_request_evenings", {})
+        if "all_calls_met_pct" in rq:
+            add(f"{tag}.n_evenings", rq["n_evenings"], "count", f"{rq['n_evenings']} call evenings",
+                f"{sub}/calibration.json:discom_request_evenings.n_evenings", check=False)
+            add(f"{tag}.met_pct", rq["all_calls_met_pct"], "%", f"{rq['all_calls_met_pct']:.0f}%",
+                f"{sub}/calibration.json:discom_request_evenings.all_calls_met_pct", check=False)
+            met_n = round(rq["all_calls_met_pct"] * rq["n_evenings"] / 100)
+            add(f"{tag}.met_evenings", met_n, "count", f"{met_n} of {rq['n_evenings']}",
+                f"{sub}/calibration.json:discom_request_evenings.all_calls_met_pct x n_evenings")
+            if rq.get("request_over_call_capacity_median") is not None:
+                add(f"{tag}.request_over_call_capacity_median", rq["request_over_call_capacity_median"], "x",
+                    f"{rq['request_over_call_capacity_median']:.2f} times",
+                    f"{sub}/calibration.json:discom_request_evenings.request_over_call_capacity_median",
+                    check=tag == "calls")
+        cc = c.get("call_confidence", {}).get("within_offer")
+        if cc and cc["n_forecasts"]:
+            add(f"{tag}.call_confidence_stated_pct", cc["stated_mean_pct"], "%", f"{cc['stated_mean_pct']:.0f}%",
+                f"{sub}/calibration.json:call_confidence.within_offer.stated_mean_pct", check=False)
+            add(f"{tag}.call_confidence_observed_pct", cc["observed_pct"], "%", f"{cc['observed_pct']:.1f}%",
+                f"{sub}/calibration.json:call_confidence.within_offer.observed_pct")
+            add(f"{tag}.call_confidence_n", cc["n_forecasts"], "count", f"{cc['n_forecasts']:,} forecasts",
+                f"{sub}/calibration.json:call_confidence.within_offer.n_forecasts", check=False)
 
     # low-voltage network study (MATLAB reference results, matlab/run_f07.m)
     lv_path = out.resolve().parent / "matlab" / "results" / "summary.json"
