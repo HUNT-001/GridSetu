@@ -33,6 +33,7 @@ export const hourOf = (dtMin: number, step: number) => ((step * dtMin) / 60) % 2
 export const STATE_LABEL: Record<string, string> = {
   normal: "Normal",
   cap: "Meeting a DISCOM curtailment request",
+  "cap+lifeline": "Meeting a DISCOM request on lifeline: every home keeps lights and fans",
   sps_relief: "Fast relief to the protection scheme",
   rotation_trip: "Tripped by rotational load shedding",
   sps_trip: "Tripped by the special protection scheme",

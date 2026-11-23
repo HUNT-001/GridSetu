@@ -57,12 +57,16 @@ def window_outcomes(feeder_result, week: str, seed: int) -> list[dict]:
         own_resid = (ts["import"][m] - lim).where(own, 0.0).fillna(0.0)
         own_peak_held = bool(own_resid.max() <= TOL_KW and not st.str.startswith("overload_event").any())
         max_req = float(req.max()) if len(req) else 0.0
+        cc = r.get("call_capacity_kw")
         rows.append({"seed": seed, "week": week, "stage": r["stage"], "window_start": str(ws),
                      "confidence_pct": float(r["confidence_pct"]), "reserve_kw": float(r["reserve_kw"]),
                      "held": held, "end_to_end": e2e, "own_peak_held": own_peak_held,
                      "discom_request": max_req > 1e-6, "max_request_kw": round(max_req, 1),
                      "request_over_reserve": round(max_req / r["reserve_kw"], 2) if r["reserve_kw"] else None,
-                     "max_residual_kw": round(float(residual.max()), 2)})
+                     "max_residual_kw": round(float(residual.max()), 2),
+                     "call_capacity_kw": cc, "call_confidence_pct": r.get("call_confidence_pct"),
+                     # the controller must deliver 95% of a request; inside the offer means it said it could
+                     "within_offer": bool(max_req > 1e-6 and cc is not None and 0.95 * max_req <= cc)})
     return rows
 
 
@@ -93,19 +97,35 @@ def _request_stats(df: pd.DataFrame) -> dict:
             "request_over_reserve_median": round(float(d.request_over_reserve.median()), 2),
             "request_over_reserve_min": round(float(d.request_over_reserve.min()), 2),
             "request_over_reserve_max": round(float(d.request_over_reserve.max()), 2),
-            "stated_confidence_mean_pct": round(float(d.confidence_pct.mean()), 1)}
+            "stated_confidence_mean_pct": round(float(d.confidence_pct.mean()), 1),
+            **_offer_stats(d)}
 
 
-def score(df: pd.DataFrame, outcome: str = "held") -> dict:
-    p = df["confidence_pct"].to_numpy() / 100
+def _offer_stats(d: pd.DataFrame) -> dict:
+    """Calls split by whether they fell inside the published call capacity."""
+    if "call_capacity_kw" not in d or d.call_capacity_kw.isna().all():
+        return {}
+    w, a = d[d.within_offer], d[~d.within_offer]
+    return {"within_offer_n": int(len(w)),
+            "within_offer_met_pct": round(100 * float(w.held.mean()), 1) if len(w) else None,
+            "above_offer_n": int(len(a)),
+            "above_offer_met_pct": round(100 * float(a.held.mean()), 1) if len(a) else None,
+            "call_confidence_mean_pct": round(float(d.call_confidence_pct.mean()), 1),
+            "request_over_call_capacity_median": round(float((d.max_request_kw / d.call_capacity_kw).median()), 2),
+            "request_over_call_capacity_max": round(float((d.max_request_kw / d.call_capacity_kw).max()), 2)}
+
+
+def score(df: pd.DataFrame, outcome: str = "held", conf: str = "confidence_pct") -> dict:
+    df = df.rename(columns={conf: "_conf"}) if conf != "confidence_pct" else df.assign(_conf=df["confidence_pct"])
+    p = df["_conf"].to_numpy() / 100
     y = df[outcome].to_numpy().astype(float)
     table = []
-    cut = pd.cut(df["confidence_pct"], BINS, right=False)
+    cut = pd.cut(df["_conf"], BINS, right=False)
     for b, g in df.groupby(cut, observed=True):
         table.append({"bin": f"{b.left:g}-{min(b.right, 100):g}%", "n": int(len(g)),
-                      "stated_mean_pct": round(float(g["confidence_pct"].mean()), 1),
+                      "stated_mean_pct": round(float(g["_conf"].mean()), 1),
                       "observed_pct": round(100 * float(g[outcome].mean()), 1)})
-    hi = df["confidence_pct"] >= 99
+    hi = df["_conf"] >= 99
     return {
         "n_forecasts": int(len(df)),
         "brier": round(float(np.mean((p - y) ** 2)), 4),
@@ -143,6 +163,13 @@ def run_calibration(seeds: int = 30, out_dir: str | Path = "outputs", config_pat
         "by_week": {w: {o: score(df[df.week == w], o) for o in OUTCOMES} for w in sorted(df.week.unique())},
         "discom_request_evenings": _request_stats(df),
     }
+    calls = df[df.discom_request & df.call_confidence_pct.notna()] if "call_confidence_pct" in df else df.iloc[:0]
+    if len(calls):
+        result["about"]["outcome_call_met"] = ("second confidence: on evenings with a DISCOM call, the call was "
+                                               "met (no shortfall trip); scored on calls inside the published "
+                                               "call capacity, which is what the confidence promises")
+        result["call_confidence"] = {"within_offer": score(calls[calls.within_offer], "held", "call_confidence_pct"),
+                                     "all_calls": score(calls, "held", "call_confidence_pct")}
     (out / "calibration.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     plot_reliability(df, out / "reserve_calibration.png", seeds)
     return result
@@ -176,22 +203,25 @@ def plot_reliability(df: pd.DataFrame, path: Path, seeds: int) -> Path:
     ax.grid(axis="x", visible=False)
 
     d = t15[t15.discom_request]
+    xcol = "call_capacity_kw" if "call_capacity_kw" in d and d.call_capacity_kw.notna().all() else "reserve_kw"
+    xname = "published call capacity" if xcol == "call_capacity_kw" else "published reserve"
     if len(d):
         ok, bad = d[d.held], d[~d.held]
-        ax2.scatter(bad.reserve_kw, bad.max_request_kw, s=28, color=AMBER, edgecolor=INK, lw=0.4,
-                    label=f"call not met: feeder rotated off, Tier 1 islanded ({len(bad)})")
+        if len(bad):
+            ax2.scatter(bad[xcol], bad.max_request_kw, s=28, color=AMBER, edgecolor=INK, lw=0.4,
+                        label=f"call not met: feeder switched off, Tier 1 islanded ({len(bad)})")
         if len(ok):
-            ax2.scatter(ok.reserve_kw, ok.max_request_kw, s=28, color=TEAL, edgecolor="white", lw=0.4,
+            ax2.scatter(ok[xcol], ok.max_request_kw, s=28, color=TEAL, edgecolor="white", lw=0.4,
                         label=f"call met ({len(ok)})")
-        top_v = max(d.max_request_kw.max(), d.reserve_kw.max()) * 1.1
+        top_v = max(d.max_request_kw.max(), d[xcol].max()) * 1.1
         ax2.plot([0, top_v], [0, top_v], color=GREY, ls="--", lw=1.2)
-        ax2.text(top_v * 0.62, top_v * 0.55, "request = published reserve", color=MUTED, fontsize=9, rotation=36)
+        ax2.text(top_v * 0.62, top_v * 0.55, f"request = {xname}", color=MUTED, fontsize=9, rotation=36)
         ax2.set_xlim(0, top_v)
         ax2.set_ylim(0, top_v)
         ax2.legend(loc="upper left", fontsize=9)
-    ax2.set_xlabel("Published reserve at T−15 min (kW)")
+    ax2.set_xlabel(f"{xname.capitalize()} at T−15 min (kW)")
     ax2.set_ylabel("Largest DISCOM relief request (kW)")
-    ax2.set_title("Evenings with a DISCOM call: request vs offer", loc="left")
+    ax2.set_title("Evenings with a DISCOM call: request vs what we offered", loc="left")
     fig.suptitle(f"Does the Reliability Reserve keep its word?  {len(df):,} published forecasts, "
                  f"{seeds} seeds × 2 weeks", x=0.01, ha="left", fontsize=14, fontweight="bold", color=INK)
     fig.tight_layout(rect=(0, 0.03, 1, 0.94))

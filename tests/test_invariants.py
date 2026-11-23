@@ -75,7 +75,8 @@ def test_feeder_energy_balance(week):
     ts = week.feeder["gridsetu"].ts
     energized = ~ts["state"].astype(str).str.contains("trip")
     lhs = ts["import"]
-    rhs = ts["net"] - ts["battery_kw"] + ts["spill"] - ts["curtail_t3"] - ts["curtail_t2"] + ts["rebound"]
+    rhs = ts["net"] - ts["battery_kw"] + ts["spill"] - ts["curtail_t3"] - ts["curtail_t2"] - ts["lifeline_kw"] \
+        + ts["rebound"]
     assert np.allclose(lhs[energized], rhs[energized], atol=1e-6)
 
 
