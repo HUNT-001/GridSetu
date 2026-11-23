@@ -16,7 +16,7 @@ from .feeder import FeederSignals, rotation_schedule, simulate_feeder
 from .forecast import FeederForecaster
 from .market import build_city_inputs, run_city
 from .profiles import feeder_loads, history_weeks
-from .weather import make_weather
+from .realdata import weather_for
 
 
 @dataclass
@@ -59,10 +59,10 @@ def run_week(sc: Scenario, label: str, cloudy_days: list[int] | None = None,
     simc = sc.raw["simulation"]
     if log is None:
         log = print if verbose else (lambda *a, **k: None)
-    wx = make_weather(sc.index, simc["latitude_deg"], simc["longitude_deg"], sc.rng_seed,
-                      forced_cloudy_days=cloudy_days)
+    wx = weather_for(sc, sc.index, sc.rng_seed, forced_cloudy_days=cloudy_days)
     fl, hh_scale = feeder_loads(sc, wx, seed=sc.rng_seed + 5)
-    log(f"[{label}] training quantile forecasters on {simc['history_weeks']} synthetic history weeks")
+    log(f"[{label}] training quantile forecasters on {simc['history_weeks']} history weeks"
+        f" ({simc.get('weather_source', 'synthetic')} weather)")
     hist = history_weeks(sc, hh_scale, simc["history_weeks"])
     model = FeederForecaster(sc.steps_per_day, seed=sc.rng_seed).fit(hist)
     fc = model.predict(fl, last_history=hist[0])

@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-23T04:58:52+00:00",
-    "git_commit": "4577d85",
+    "generated_at": "2026-11-23T14:00:47+00:00",
+    "git_commit": "29beb03",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -608,6 +608,97 @@
       "display": "1.41 h",
       "source": "matlab/results/summary.json:representative_gridsetu_distributed.ageing_equivalent_hours",
       "check": false
+    },
+    "real.iex.days_reaching_cap": {
+      "value": 6,
+      "unit": "days",
+      "display": "6 of 7 days",
+      "source": "real_data/real_data.json:prices.iex_2025_09_14_20.days_reaching_cap",
+      "check": true
+    },
+    "real.iex.peak_blocks_at_cap_pct": {
+      "value": 64.9,
+      "unit": "%",
+      "display": "65%",
+      "source": "real_data/real_data.json:prices.iex_2025_09_14_20.peak_blocks_at_cap_pct",
+      "check": false
+    },
+    "real.iex.solar_hours_mean": {
+      "value": 1.166,
+      "unit": "INR/kWh",
+      "display": "₹1.17/kWh",
+      "source": "real_data/real_data.json:prices.iex_2025_09_14_20.solar_10_16_mean_inr_kwh",
+      "check": true
+    },
+    "real.weather.synthetic.insolation": {
+      "value": 5.15,
+      "unit": "kWh/m2/day",
+      "display": "5.15 kWh/m²/day",
+      "source": "real_data/real_data.json:weather.synthetic.insolation_kwh_m2_day_mean",
+      "check": true
+    },
+    "real.backtest.synthetic.net_load_coverage_pct": {
+      "value": 84.8,
+      "unit": "%",
+      "display": "84.8%",
+      "source": "real_data/real_data.json:forecast_backtest.mean.synthetic.net_load.coverage_q10_q90_pct",
+      "check": true
+    },
+    "real.weather.nasa_power.insolation": {
+      "value": 4.13,
+      "unit": "kWh/m2/day",
+      "display": "4.13 kWh/m²/day",
+      "source": "real_data/real_data.json:weather.nasa_power.insolation_kwh_m2_day_mean",
+      "check": true
+    },
+    "real.backtest.nasa_power.net_load_coverage_pct": {
+      "value": 79.2,
+      "unit": "%",
+      "display": "79.2%",
+      "source": "real_data/real_data.json:forecast_backtest.mean.nasa_power.net_load.coverage_q10_q90_pct",
+      "check": true
+    },
+    "real.stress_week.synthetic.baseline.evening_unserved_kwh": {
+      "value": 743,
+      "unit": "kWh/week",
+      "display": "743 kWh",
+      "source": "real_data/real_data.json:stress_week.synthetic.feeders.baseline.evening_window_unserved_kwh",
+      "check": true
+    },
+    "real.stress_week.synthetic.gridsetu.evening_unserved_kwh": {
+      "value": 617,
+      "unit": "kWh/week",
+      "display": "617 kWh",
+      "source": "real_data/real_data.json:stress_week.synthetic.feeders.gridsetu.evening_window_unserved_kwh",
+      "check": true
+    },
+    "real.stress_week.real_weather.baseline.evening_unserved_kwh": {
+      "value": 808,
+      "unit": "kWh/week",
+      "display": "808 kWh",
+      "source": "real_data/real_data.json:stress_week.real_weather.feeders.baseline.evening_window_unserved_kwh",
+      "check": true
+    },
+    "real.stress_week.real_weather.gridsetu.evening_unserved_kwh": {
+      "value": 408,
+      "unit": "kWh/week",
+      "display": "408 kWh",
+      "source": "real_data/real_data.json:stress_week.real_weather.feeders.gridsetu.evening_window_unserved_kwh",
+      "check": true
+    },
+    "real.stress_week.real_weather_and_prices.baseline.evening_unserved_kwh": {
+      "value": 813,
+      "unit": "kWh/week",
+      "display": "813 kWh",
+      "source": "real_data/real_data.json:stress_week.real_weather_and_prices.feeders.baseline.evening_window_unserved_kwh",
+      "check": true
+    },
+    "real.stress_week.real_weather_and_prices.gridsetu.evening_unserved_kwh": {
+      "value": 471,
+      "unit": "kWh/week",
+      "display": "471 kWh",
+      "source": "real_data/real_data.json:stress_week.real_weather_and_prices.feeders.gridsetu.evening_window_unserved_kwh",
+      "check": true
     }
   }
 }

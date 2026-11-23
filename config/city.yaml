@@ -7,7 +7,9 @@ simulation:
   days: 7
   step_minutes: 15              # matches IEX day-ahead market blocks (96 per day)
   seed: 42
-  history_weeks: 8              # synthetic history used to train the forecasters
+  history_weeks: 8              # history weeks used to train the forecasters
+  weather_source: synthetic     # synthetic | nasa_power (real Coimbatore weather, same dates in 2025;
+                                # see docs/DATA_CARD.md). Headline results use synthetic.
   latitude_deg: 11.0
   longitude_deg: 76.96
 
@@ -75,6 +77,7 @@ forced_outages:
 
 # Exchange price curve for the national-grid import (INR/kWh), shaped like an IEX DAM day.
 exchange_price:
+  source: synthetic     # synthetic (curve below) | iex (real IEX DAM prices, same dates in 2025)
   offpeak: 3.0
   solar_hours: 2.6
   evening_peak: 9.8

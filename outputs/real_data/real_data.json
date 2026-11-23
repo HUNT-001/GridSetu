@@ -1,0 +1,609 @@
+{
+  "about": {
+    "label": "REAL weather (NASA POWER) and prices (IEX); household load is synthetic",
+    "real": [
+      "GHI and air temperature: NASA POWER hourly, Coimbatore",
+      "exchange price: IEX DAM 15-minute MCP, 14-20 Sep 2025"
+    ],
+    "synthetic": [
+      "household, enterprise and critical load",
+      "wind",
+      "city generation and outage"
+    ],
+    "date_mapping": "simulated 2026 dates = the same calendar dates in 2025",
+    "weather_forecast_on_real_data": "persistence (yesterday's real weather)"
+  },
+  "prices": {
+    "iex_2025_09_14_20": {
+      "mean_inr_kwh": 3.87,
+      "peak_17_23_mean_inr_kwh": 7.883,
+      "solar_10_16_mean_inr_kwh": 1.166,
+      "max_inr_kwh": 10.0,
+      "min_inr_kwh": 0.2,
+      "blocks_at_cap": 115,
+      "blocks_at_cap_pct": 17.1,
+      "peak_blocks_at_cap_pct": 64.9,
+      "days_reaching_cap": 6,
+      "n_days": 7
+    },
+    "scenario_curve": {
+      "mean_inr_kwh": 4.771,
+      "peak_17_23_mean_inr_kwh": 9.25,
+      "solar_10_16_mean_inr_kwh": 2.6,
+      "max_inr_kwh": 9.8,
+      "min_inr_kwh": 2.6,
+      "blocks_at_cap": 0,
+      "blocks_at_cap_pct": 0.0,
+      "peak_blocks_at_cap_pct": 0.0,
+      "days_reaching_cap": 0,
+      "n_days": 7
+    }
+  },
+  "weather": {
+    "synthetic": {
+      "n_days": 63,
+      "insolation_kwh_m2_day_mean": 5.15,
+      "insolation_kwh_m2_day_p10": 2.59,
+      "insolation_kwh_m2_day_p90": 7.04,
+      "daily_clear_sky_index_mean": 0.66,
+      "overcast_days_pct": 28.6,
+      "temp_mean_c": 25.9,
+      "temp_daily_max_mean_c": 30.0,
+      "temp_daily_min_mean_c": 21.8,
+      "daily_insolation": [
+        6.618,
+        6.803,
+        5.275,
+        3.735,
+        4.688,
+        4.943,
+        7.045,
+        6.961,
+        6.899,
+        2.802,
+        6.567,
+        4.883,
+        5.257,
+        6.934,
+        6.575,
+        2.14,
+        6.967,
+        6.429,
+        5.461,
+        7.241,
+        5.672,
+        7.092,
+        5.362,
+        5.107,
+        3.294,
+        7.228,
+        6.887,
+        3.948,
+        6.886,
+        5.783,
+        7.146,
+        5.012,
+        5.919,
+        2.229,
+        6.375,
+        3.106,
+        6.576,
+        2.648,
+        1.924,
+        3.305,
+        7.3,
+        7.208,
+        2.334,
+        7.001,
+        5.248,
+        3.036,
+        3.122,
+        2.522,
+        2.946,
+        4.853,
+        7.0,
+        6.686,
+        5.798,
+        6.302,
+        3.923,
+        3.033,
+        4.889,
+        6.592,
+        2.581,
+        5.345,
+        3.356,
+        2.498,
+        5.148
+      ],
+      "dates": [
+        "2026-07-20",
+        "2026-07-21",
+        "2026-07-22",
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-25",
+        "2026-07-26",
+        "2026-07-27",
+        "2026-07-28",
+        "2026-07-29",
+        "2026-07-30",
+        "2026-07-31",
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10",
+        "2026-08-11",
+        "2026-08-12",
+        "2026-08-13",
+        "2026-08-14",
+        "2026-08-15",
+        "2026-08-16",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-20",
+        "2026-08-21",
+        "2026-08-22",
+        "2026-08-23",
+        "2026-08-24",
+        "2026-08-25",
+        "2026-08-26",
+        "2026-08-27",
+        "2026-08-28",
+        "2026-08-29",
+        "2026-08-30",
+        "2026-08-31",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11",
+        "2026-09-12",
+        "2026-09-13",
+        "2026-09-14",
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-19",
+        "2026-09-20"
+      ]
+    },
+    "nasa_power": {
+      "n_days": 63,
+      "insolation_kwh_m2_day_mean": 4.13,
+      "insolation_kwh_m2_day_p10": 2.96,
+      "insolation_kwh_m2_day_p90": 5.35,
+      "daily_clear_sky_index_mean": 0.53,
+      "overcast_days_pct": 44.4,
+      "temp_mean_c": 24.2,
+      "temp_daily_max_mean_c": 28.3,
+      "temp_daily_min_mean_c": 21.2,
+      "daily_insolation": [
+        3.365,
+        3.285,
+        3.385,
+        3.609,
+        2.783,
+        2.976,
+        2.463,
+        3.423,
+        3.665,
+        4.003,
+        3.835,
+        4.124,
+        4.376,
+        3.742,
+        4.921,
+        4.665,
+        3.383,
+        5.63,
+        3.917,
+        3.461,
+        3.691,
+        3.617,
+        3.072,
+        4.217,
+        3.115,
+        3.433,
+        2.959,
+        3.125,
+        2.436,
+        2.533,
+        4.505,
+        5.275,
+        5.218,
+        5.213,
+        4.511,
+        6.256,
+        5.692,
+        5.268,
+        3.045,
+        2.564,
+        4.211,
+        4.148,
+        3.916,
+        3.711,
+        4.526,
+        2.927,
+        4.155,
+        4.124,
+        4.859,
+        4.551,
+        5.692,
+        5.07,
+        3.826,
+        5.372,
+        5.971,
+        5.721,
+        4.678,
+        5.166,
+        4.64,
+        4.42,
+        4.859,
+        4.108,
+        4.708
+      ],
+      "dates": [
+        "2026-07-20",
+        "2026-07-21",
+        "2026-07-22",
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-25",
+        "2026-07-26",
+        "2026-07-27",
+        "2026-07-28",
+        "2026-07-29",
+        "2026-07-30",
+        "2026-07-31",
+        "2026-08-01",
+        "2026-08-02",
+        "2026-08-03",
+        "2026-08-04",
+        "2026-08-05",
+        "2026-08-06",
+        "2026-08-07",
+        "2026-08-08",
+        "2026-08-09",
+        "2026-08-10",
+        "2026-08-11",
+        "2026-08-12",
+        "2026-08-13",
+        "2026-08-14",
+        "2026-08-15",
+        "2026-08-16",
+        "2026-08-17",
+        "2026-08-18",
+        "2026-08-19",
+        "2026-08-20",
+        "2026-08-21",
+        "2026-08-22",
+        "2026-08-23",
+        "2026-08-24",
+        "2026-08-25",
+        "2026-08-26",
+        "2026-08-27",
+        "2026-08-28",
+        "2026-08-29",
+        "2026-08-30",
+        "2026-08-31",
+        "2026-09-01",
+        "2026-09-02",
+        "2026-09-03",
+        "2026-09-04",
+        "2026-09-05",
+        "2026-09-06",
+        "2026-09-07",
+        "2026-09-08",
+        "2026-09-09",
+        "2026-09-10",
+        "2026-09-11",
+        "2026-09-12",
+        "2026-09-13",
+        "2026-09-14",
+        "2026-09-15",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-18",
+        "2026-09-19",
+        "2026-09-20"
+      ]
+    },
+    "nasa_clear_sky_vs_model_pct": -13.0
+  },
+  "forecast_backtest": {
+    "history_weeks": 6,
+    "test_weeks": 3,
+    "weeks": [
+      {
+        "weather": "synthetic",
+        "test_week_start": "2026-08-31",
+        "net_load": {
+          "coverage_q10_q90_pct": 84.4,
+          "mape_q50_pct": 3.9,
+          "mae_q50_kw": 6.28
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 87.8,
+          "mape_q50_pct": 55.2,
+          "mae_q50_kw": 2.14
+        }
+      },
+      {
+        "weather": "synthetic",
+        "test_week_start": "2026-09-07",
+        "net_load": {
+          "coverage_q10_q90_pct": 85.3,
+          "mape_q50_pct": 3.8,
+          "mae_q50_kw": 6.22
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 85.9,
+          "mape_q50_pct": 59.5,
+          "mae_q50_kw": 2.18
+        }
+      },
+      {
+        "weather": "synthetic",
+        "test_week_start": "2026-09-14",
+        "net_load": {
+          "coverage_q10_q90_pct": 84.7,
+          "mape_q50_pct": 3.8,
+          "mae_q50_kw": 6.25
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 86.9,
+          "mape_q50_pct": 61.8,
+          "mae_q50_kw": 2.22
+        }
+      },
+      {
+        "weather": "nasa_power",
+        "test_week_start": "2026-08-31",
+        "net_load": {
+          "coverage_q10_q90_pct": 87.4,
+          "mape_q50_pct": 2.6,
+          "mae_q50_kw": 4.86
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 93.2,
+          "mape_q50_pct": 16.7,
+          "mae_q50_kw": 1.11
+        }
+      },
+      {
+        "weather": "nasa_power",
+        "test_week_start": "2026-09-07",
+        "net_load": {
+          "coverage_q10_q90_pct": 68.8,
+          "mape_q50_pct": 4.0,
+          "mae_q50_kw": 6.63
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 74.4,
+          "mape_q50_pct": 20.7,
+          "mae_q50_kw": 1.93
+        }
+      },
+      {
+        "weather": "nasa_power",
+        "test_week_start": "2026-09-14",
+        "net_load": {
+          "coverage_q10_q90_pct": 81.5,
+          "mape_q50_pct": 3.1,
+          "mae_q50_kw": 5.5
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 90.6,
+          "mape_q50_pct": 18.7,
+          "mae_q50_kw": 1.19
+        }
+      }
+    ],
+    "mean": {
+      "synthetic": {
+        "net_load": {
+          "coverage_q10_q90_pct": 84.8,
+          "mape_q50_pct": 3.8
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 86.9,
+          "mape_q50_pct": 58.8
+        }
+      },
+      "nasa_power": {
+        "net_load": {
+          "coverage_q10_q90_pct": 79.2,
+          "mape_q50_pct": 3.2
+        },
+        "community_pv": {
+          "coverage_q10_q90_pct": 86.1,
+          "mape_q50_pct": 18.7
+        }
+      }
+    }
+  },
+  "stress_week": {
+    "synthetic": {
+      "feeders": {
+        "baseline": {
+          "evening_window_unserved_kwh": 742.543,
+          "total_unserved_kwh": 1233.168,
+          "gross_unserved_kwh": 1233.168,
+          "critical_outage_hours": 4.5,
+          "critical_unserved_kwh": 97.95,
+          "feeder_outage_hours": 4.5,
+          "solar_utilisation_pct": 99.917,
+          "feeder_peak_import_kw": 340.0,
+          "battery_cycles": 0.0,
+          "battery_discharge_kwh": 0.0,
+          "tier3_curtailed_kwh": 0.0,
+          "tier2_curtailed_kwh": 0.0,
+          "overload_trips": 0.0,
+          "days": 7.0
+        },
+        "gridsetu": {
+          "evening_window_unserved_kwh": 617.417,
+          "total_unserved_kwh": 1000.638,
+          "gross_unserved_kwh": 1116.023,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 3.75,
+          "solar_utilisation_pct": 99.963,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.649,
+          "battery_discharge_kwh": 790.287,
+          "tier3_curtailed_kwh": 153.049,
+          "tier2_curtailed_kwh": 23.556,
+          "overload_trips": 0.0,
+          "days": 7.0
+        },
+        "gridsetu_coordinated": {
+          "evening_window_unserved_kwh": 445.402,
+          "total_unserved_kwh": 691.661,
+          "gross_unserved_kwh": 830.927,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 2.5,
+          "solar_utilisation_pct": 99.998,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.639,
+          "battery_discharge_kwh": 788.677,
+          "tier3_curtailed_kwh": 176.572,
+          "tier2_curtailed_kwh": 33.323,
+          "overload_trips": 0.0,
+          "days": 7.0
+        }
+      },
+      "forecast_net_load": {
+        "coverage_q10_q90_pct": 82.9,
+        "mape_q50_pct": 3.9
+      }
+    },
+    "real_weather": {
+      "feeders": {
+        "baseline": {
+          "evening_window_unserved_kwh": 807.761,
+          "total_unserved_kwh": 1265.914,
+          "gross_unserved_kwh": 1265.914,
+          "critical_outage_hours": 4.5,
+          "critical_unserved_kwh": 87.0,
+          "feeder_outage_hours": 4.5,
+          "solar_utilisation_pct": 99.939,
+          "feeder_peak_import_kw": 340.0,
+          "battery_cycles": 0.0,
+          "battery_discharge_kwh": 0.0,
+          "tier3_curtailed_kwh": 0.0,
+          "tier2_curtailed_kwh": 0.0,
+          "overload_trips": 1.0,
+          "days": 7.0
+        },
+        "gridsetu": {
+          "evening_window_unserved_kwh": 407.877,
+          "total_unserved_kwh": 647.253,
+          "gross_unserved_kwh": 806.706,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 2.25,
+          "solar_utilisation_pct": 100.0,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.563,
+          "battery_discharge_kwh": 775.63,
+          "tier3_curtailed_kwh": 193.96,
+          "tier2_curtailed_kwh": 43.078,
+          "overload_trips": 0.0,
+          "days": 7.0
+        },
+        "gridsetu_coordinated": {
+          "evening_window_unserved_kwh": 342.222,
+          "total_unserved_kwh": 468.83,
+          "gross_unserved_kwh": 624.464,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 1.5,
+          "solar_utilisation_pct": 100.0,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.462,
+          "battery_discharge_kwh": 758.514,
+          "tier3_curtailed_kwh": 194.398,
+          "tier2_curtailed_kwh": 38.995,
+          "overload_trips": 0.0,
+          "days": 7.0
+        }
+      },
+      "forecast_net_load": {
+        "coverage_q10_q90_pct": 80.7,
+        "mape_q50_pct": 3.1
+      }
+    },
+    "real_weather_and_prices": {
+      "feeders": {
+        "baseline": {
+          "evening_window_unserved_kwh": 812.692,
+          "total_unserved_kwh": 1342.887,
+          "gross_unserved_kwh": 1342.887,
+          "critical_outage_hours": 4.75,
+          "critical_unserved_kwh": 94.05,
+          "feeder_outage_hours": 4.75,
+          "solar_utilisation_pct": 99.887,
+          "feeder_peak_import_kw": 340.0,
+          "battery_cycles": 0.0,
+          "battery_discharge_kwh": 0.0,
+          "tier3_curtailed_kwh": 0.0,
+          "tier2_curtailed_kwh": 0.0,
+          "overload_trips": 2.0,
+          "days": 7.0
+        },
+        "gridsetu": {
+          "evening_window_unserved_kwh": 471.112,
+          "total_unserved_kwh": 729.151,
+          "gross_unserved_kwh": 872.266,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 2.5,
+          "solar_utilisation_pct": 100.0,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.57,
+          "battery_discharge_kwh": 776.883,
+          "tier3_curtailed_kwh": 183.255,
+          "tier2_curtailed_kwh": 33.162,
+          "overload_trips": 0.0,
+          "days": 7.0
+        },
+        "gridsetu_coordinated": {
+          "evening_window_unserved_kwh": 342.387,
+          "total_unserved_kwh": 468.706,
+          "gross_unserved_kwh": 624.902,
+          "critical_outage_hours": 0.0,
+          "critical_unserved_kwh": 0.0,
+          "feeder_outage_hours": 1.5,
+          "solar_utilisation_pct": 100.0,
+          "feeder_peak_import_kw": 291.0,
+          "battery_cycles": 4.485,
+          "battery_discharge_kwh": 762.456,
+          "tier3_curtailed_kwh": 195.189,
+          "tier2_curtailed_kwh": 39.082,
+          "overload_trips": 0.0,
+          "days": 7.0
+        }
+      },
+      "forecast_net_load": {
+        "coverage_q10_q90_pct": 80.7,
+        "mape_q50_pct": 3.1
+      }
+    }
+  }
+}

@@ -29,6 +29,9 @@ DISPATCHABLE = ("thermal", "gas", "hydro", "import")
 
 def exchange_price_curve(sc: Scenario) -> np.ndarray:
     ep = sc.raw["exchange_price"]
+    if ep.get("source", "synthetic") == "iex":
+        from .realdata import iex_price_curve
+        return np.minimum(iex_price_curve(sc.index), ep["price_cap"])
     hourly = [ep["offpeak"]] * 6 + [4.2, 5.0, 4.6] + [ep["solar_hours"]] * 7 + [5.2] \
         + [ep["evening_peak"]] * 5 + [6.5, ep["offpeak"] + 0.8]
     h = sc.index.hour.values

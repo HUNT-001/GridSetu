@@ -222,13 +222,13 @@ def feeder_loads(sc: Scenario, weather: pd.DataFrame, seed: int, hh_scale: float
 
 
 def history_weeks(sc: Scenario, hh_scale: float, n_weeks: int):
-    """Synthetic past weeks (different weather/load seeds) used to train forecasters."""
-    lat = sc.raw["simulation"]["latitude_deg"]
-    lon = sc.raw["simulation"]["longitude_deg"]
+    """Past weeks used to train forecasters: synthetic load, weather from the scenario's source
+    (synthetic seeds, or the real weeks before the simulated one)."""
+    from .realdata import weather_for   # local import: realdata imports weather
     weeks = []
     for w in range(1, n_weeks + 1):
         idx = sc.index - pd.Timedelta(days=7 * w)
-        wx = make_weather(idx, lat, lon, seed=sc.rng_seed + 7919 * w)
+        wx = weather_for(sc, idx, sc.rng_seed + 7919 * w)
         fl, _ = feeder_loads(sc, wx, seed=sc.rng_seed + 104729 * w, hh_scale=hh_scale, index=idx)
         weeks.append(fl)
     return weeks

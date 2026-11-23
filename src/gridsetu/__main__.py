@@ -32,6 +32,8 @@ def main(argv=None):
     lv = sub.add_parser("lv-study", help="low-voltage network study (Python twin of matlab/run_f07.m) + charts")
     lv.add_argument("--in", dest="in_dir", default="outputs/matlab")
     lv.add_argument("--out", default="outputs/lv")
+    rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
+    rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8000)
@@ -92,6 +94,22 @@ def main(argv=None):
     if args.cmd == "export-matlab":
         from .matlab_export import export
         print("wrote", export(args.out, args.config, args.seed))
+        return
+    if args.cmd == "real-data":
+        from .realstudy import run_study
+        r = run_study(args.out)
+        p, w = r["prices"], r["weather"]
+        print("IEX 14-20 Sep 2025:", p["iex_2025_09_14_20"])
+        print("scenario curve:    ", p["scenario_curve"])
+        for k in ("synthetic", "nasa_power"):
+            print(k, {m: v for m, v in w[k].items() if m not in ("daily_insolation", "dates")})
+        print("forecast backtest (mean of test weeks):", r["forecast_backtest"]["mean"])
+        for case, c in r["stress_week"].items():
+            f = c["feeders"]
+            print(f"{case:26s} evening unserved: baseline {f['baseline']['evening_window_unserved_kwh']:.0f} kWh, "
+                  f"gridsetu {f['gridsetu']['evening_window_unserved_kwh']:.0f} kWh; critical outage "
+                  f"{f['baseline']['critical_outage_hours']:.1f} -> {f['gridsetu']['critical_outage_hours']:.1f} h; "
+                  f"forecast coverage {c['forecast_net_load']['coverage_q10_q90_pct']:.0f}%")
         return
     if args.cmd == "lv-study":
         from .lvfigures import make_figures

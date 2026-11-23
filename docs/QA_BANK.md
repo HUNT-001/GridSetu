@@ -66,3 +66,31 @@ fewer overload trips and headroom, not years of life.
 `matlab/f07_params.json`: transformer data from a DISCOM specification to IS 1180 Level 2,
 conductor resistance from a manufacturer's ACSR datasheet, and every assumption (lengths,
 spacing, power factor, voltage limit) marked as one.
+
+## Real data
+
+**Q: Is any of this real data?**
+Weather and exchange prices, yes. NASA POWER sunshine and temperature for Coimbatore, and IEX
+day-ahead prices for the same September week in 2025. Household load is still synthetic. Every
+input is labelled REAL, DERIVED, SOURCED or SYNTHETIC in `docs/DATA_CARD.md`.
+
+**Q: Does GridSetu still work on real weather?**
+Yes. On the real week the critical loads stayed powered and evening unserved energy fell from
+808 to 408 kWh, a bigger cut than in our synthetic week. That's because our synthetic stress
+week forces two overcast days and the real week had none, so we kept the harsher synthetic
+week for the headline.
+
+**Q: Your price assumptions?**
+Real prices are more extreme than ours. In the real week the evening price hit the ₹10/kWh
+ceiling on 6 of 7 days; our curve peaks at ₹9.8. Real midday power averaged ₹1.17/kWh against
+our ₹2.6. A battery that charges at midday and serves the evening is worth more than we
+assumed.
+
+**Q: How good is the forecast on real weather?**
+Backtested on three real weeks with only yesterday's weather as the weather forecast, the
+actual load fell inside our 80% range 79% of the time. On synthetic weather it was 85%, so
+the synthetic number was slightly flattering, and we report the real one.
+
+**Q: How did you get the IEX data?**
+From IEX's public market snapshot page, 15-minute blocks. Each day's 96 prices average exactly
+to IEX's published daily figure, and a test checks it.
