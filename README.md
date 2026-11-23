@@ -499,6 +499,37 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 - **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 7% and lifts the worst voltage from 0.79 to 0.83 pu. This is now the recommended layout.
 - **Voltage stays outside limits on the assumed network in every case.** Long, heavily loaded LT circuits are the cause; GridSetu's bus-level voltage map shows the DISCOM exactly where reconductoring would pay off.
 
+### Checked against real weather and real prices
+
+The scenario is synthetic, so we tested its two most important outside inputs against real data for the same calendar dates in 2025 (`python -m gridsetu real-data`, results in `outputs/real_data/`; sources and checks in [`docs/DATA_CARD.md`](docs/DATA_CARD.md)):
+
+- NASA POWER hourly sunshine and temperature for Coimbatore, 20 Jul to 21 Sep 2025.
+- IEX day-ahead clearing prices for 14–20 Sep 2025, all 672 fifteen-minute blocks.
+
+Household load stays synthetic in every case.
+
+**Prices: the real evening is harsher than our curve.** Real prices reached the ₹10/kWh exchange ceiling on 6 of 7 days, for most of the evening. Our curve stops at ₹9.8 and never reaches it. Midday is far cheaper than we assumed: the real 10:00–16:00 average was ₹1.17/kWh, against our ₹2.6. Both points strengthen the case for storing cheap solar-hour energy for the evening.
+
+<img src="outputs/real_data/charts/iex_prices_vs_scenario.png" alt="IEX day-ahead prices for 14-20 September 2025 against the scenario price curve" width="100%">
+
+**Weather: real monsoon sunshine is lower and steadier than ours.** Over the 63 days, real sunshine averaged 4.13 kWh/m²/day against 5.15 kWh/m²/day in our synthetic weather. Our weather has too many bright days and a few darker ones; part of the gap is that NASA's clear-sky sunshine, which includes Indian aerosol levels, is about 13% below our clear-sky model.
+
+<img src="outputs/real_data/charts/weather_real_vs_synthetic.png" alt="Daily solar energy, NASA POWER against synthetic weather, July to September" width="100%">
+
+**Forecast backtest on real weather.** The forecaster was trained on six weeks and tested on the next, for three test weeks. On real weather, with only yesterday's weather as the weather forecast, the actual net load fell inside the 80% range 79.2% of the time, against 84.8% on synthetic weather. The real-weather test is the honest number, and it is close to the 80% the range promises.
+
+<img src="outputs/real_data/charts/forecast_backtest_real_weather.png" alt="Day-ahead forecast range against actual feeder net load on real weather" width="100%">
+
+**The stress week re-run on real inputs** (same grid outage, evening unserved energy on feeder F07, one week):
+
+| Inputs | Baseline | GridSetu |
+|---|--:|--:|
+| Synthetic weather and prices (as in the results above) | 743 kWh | 617 kWh |
+| Real weather | 808 kWh | 408 kWh |
+| Real weather and real IEX prices | 813 kWh | 471 kWh |
+
+Our synthetic stress week forces two deeply overcast days; the real week of 14–20 September 2025 had none, so GridSetu does better on it. The critical loads stay powered in all three cases. We keep the harsher synthetic week for the headline figures.
+
 ---
 
 ## Run it locally
@@ -527,12 +558,13 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 59 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 63 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
 | `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
 | `python -m gridsetu lv-study` | Low-voltage network study (Python twin of the MATLAB model) and its charts, in `outputs/lv/` |
 | `matlab/run_f07.m`, `matlab/make_figures.m` | The MATLAB low-voltage model and its charts (MATLAB R2019b+ or GNU Octave 7+, no toolboxes) |
+| `python -m gridsetu real-data` | Checks the scenario against real weather (NASA POWER) and real prices (IEX), in `outputs/real_data/` (about 40 seconds) |
 | `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
 | `python -m gridsetu fetch-osm` | Download real OpenStreetMap streets for the city map (`--bbox south,west,north,east` to choose the area) |
 | `python -m gridsetu replay --broker host:1883` | Publish a run as live telemetry to MQTT |
@@ -576,6 +608,8 @@ gridsetu/
 │   ├── uc.py                 day-ahead unit commitment (PyPSA MILP) against the linear market
 │   ├── citymap.py            city map geometry: generated streets or OpenStreetMap (fetch-osm)
 │   ├── envfile.py            .env loader
+│   ├── realdata.py           real weather (NASA POWER) and IEX prices, mapped onto the simulated week
+│   ├── realstudy.py          real-data validation: prices, weather, forecast backtest, stress week
 │   ├── runner.py, plots.py   batch study and deck charts
 │   ├── api/                  FastAPI service and payload packing
 │   └── copilot/              copilot tools, Claude / OpenAI-compatible / Ollama / offline providers, live replay, MQTT
@@ -619,16 +653,16 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - **Shedding order:** revenue-driven, as at a cash-strapped DISCOM. Irrigation and domestic loads go first; traction and municipal are never shed.
 - **Market:** ATC-based market splitting with a ₹10/kWh exchange ceiling. Thermal units stay within ±5 MW of their day-ahead schedule in real time.
 - **Communications:** 15% packet loss on the 2G/4G control slice, with 3 retries.
-- **Forecasts:** trained on 8 synthetic history weeks.
+- **Forecasts:** trained on 8 synthetic history weeks. `simulation.weather_source: nasa_power` and `exchange_price.source: iex` switch to real 2025 weather and prices (see the data card).
 
 ## Limitations
 
-- All data is synthetic. No live DISCOM telemetry or feeder measurement was used.
+- The headline results use synthetic data. Weather and exchange prices have been checked against real 2025 data; household load, the city's generation and the feeder itself are still synthetic. No live DISCOM telemetry or feeder measurement was used.
 - The cooperative ownership model has not had legal review.
 - Feeder results use the linear market. Unit commitment is a separate study, and its schedule leaves ramp limits out. Real time assumes perfect foresight for fast units within each day.
 - In the fleet study, feeders respond to the city but the city does not respond to them: the fleet's reserve is not yet offered back into the market.
 - The frequency model is a two-area aggregate, not a full dynamic network model.
-- The forecasts have not been backtested on real feeder data.
+- The forecasts have been backtested on real weather but not on real feeder load. Real weather is hourly, so it has no within-hour cloud variability, which flatters the solar forecast. A full month on real weather is not possible yet: the NASA file covers only the stress week and its training weeks.
 - The reserve's published confidence covers the feeder's own evening peak, not the DISCOM's relief call. In the simulation the DISCOM can call for more than the reserve offers (up to 4.3 times), and when the feeder is outside the rotation group an unmet call has no modelled consequence.
 - The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
 - With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.

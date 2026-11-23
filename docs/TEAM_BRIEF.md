@@ -94,3 +94,32 @@ each carry about 113 kW at the evening peak: roughly 166 A per phase, above Rabb
 rating. Hand estimate of the drop: 166 A × 0.67 Ω/km × 0.3 km ≈ 33 V of 240 V, about 14%, plus
 the transformer drop, minus the 433 V tap boost. The model agrees. The answer is the network,
 and GridSetu's per-bus map shows where.
+
+## Real data: `realdata.py` and `realstudy.py`
+
+**What it does.** Loads two real datasets for the same calendar dates in 2025:
+- NASA POWER hourly sunshine and temperature for Coimbatore (20 Jul to 21 Sep 2025);
+- IEX day-ahead prices for 14–20 Sep 2025.
+
+It maps the simulated 2026 week onto them. `python -m gridsetu real-data` then runs four checks:
+- our price curve against IEX;
+- our weather against NASA over 63 days;
+- a forecast backtest (train on 6 weeks, test on the next, 3 times);
+- the stress week re-run on real weather, and on real weather plus real prices.
+
+**Why you can trust it.** Each file is checked against a total published by its source:
+- the mean of each IEX day equals IEX's own daily average;
+- the NASA rows match sums taken on the API response;
+- turning hourly sunshine into 15-minute steps keeps every hour's energy exactly.
+
+Tests re-check all of this. The synthetic case inside the study equals the headline stress week exactly.
+
+**What it found.**
+- **Prices:** real evening prices sat at the ₹10 ceiling on 6 of 7 days. Our curve stops at ₹9.8, and real midday prices were much lower than ours (₹1.17 vs ₹2.6/kWh). The real market favours storage more than our scenario does.
+- **Sunshine:** real sunshine was about 20% lower than our synthetic weather and steadier.
+- **Forecast:** on real weather it covered 79% of outcomes with its 80% range.
+- **Stress week:** on the real week GridSetu cut evening unserved energy by half (808 → 408 kWh), because the real week had no deeply overcast day. We keep the harsher synthetic week for the headline.
+
+**Likely question.** *Is your household load real?* No. Weather and prices are real; load is synthetic until we get smart-meter data. The data card lists every input with its label.
+
+**Time zone trap.** NASA's "LST" is UTC+5, not IST. IST = LST + 30 min; we proved it by fitting solar geometry, and a test keeps it that way.

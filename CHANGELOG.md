@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased: real weather and prices (November 2026)
+
+### Added
+- `data/real/`: NASA POWER hourly weather for Coimbatore (20 Jul to 21 Sep 2025) and IEX day-ahead 15-minute prices (14–20 Sep 2025), each checked against totals published by its source.
+- `docs/DATA_CARD.md`: every input labelled REAL, DERIVED, SOURCED or SYNTHETIC, with sources and checks.
+- `simulation.weather_source: nasa_power` and `exchange_price.source: iex` in `config/city.yaml` (defaults unchanged: synthetic).
+- `python -m gridsetu real-data`: price check, weather check, forecast backtest on real weather and the stress week on real inputs. Results and 3 charts in `outputs/real_data/`; figures in `numbers.json`; README section "Checked against real weather and real prices".
+- 4 tests (63 in total). `scripts/reproduce.sh` now also checks `outputs/real_data/real_data.json`.
+
+### Found
+- Real evening prices reached the ₹10/kWh ceiling on 6 of 7 days; our curve stops at ₹9.8. Real midday prices averaged ₹1.17/kWh against our ₹2.6.
+- Real monsoon sunshine averaged 4.13 kWh/m²/day over 63 days against 5.15 in our synthetic weather.
+- Forecast coverage on real weather is 79.2% (84.8% on synthetic weather).
+- On the real stress week GridSetu's evening unserved energy is 408 kWh (617 kWh on the synthetic week, which is harsher).
+
 ## Unreleased: MATLAB low-voltage model (November 2026)
 
 ### Added
