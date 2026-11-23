@@ -14,6 +14,8 @@
     "tier3_kw": 40.7,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 118.4,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -31,6 +33,8 @@
     "tier3_kw": 40.7,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 128.2,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -48,6 +52,8 @@
     "tier3_kw": 40.7,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 131.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -65,6 +71,8 @@
     "tier3_kw": 40.7,
     "tier2_kw": 15.2,
     "delivered_kw": 38.7,
+    "call_capacity_kw": 131.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -82,6 +90,8 @@
     "tier3_kw": 40.7,
     "tier2_kw": 15.2,
     "delivered_kw": 38.7,
+    "call_capacity_kw": 131.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -99,6 +109,8 @@
     "tier3_kw": 41.9,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 139.2,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -116,6 +128,8 @@
     "tier3_kw": 41.9,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 143.3,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -133,6 +147,8 @@
     "tier3_kw": 41.9,
     "tier2_kw": 15.2,
     "delivered_kw": null,
+    "call_capacity_kw": 144.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -150,6 +166,8 @@
     "tier3_kw": 41.9,
     "tier2_kw": 15.2,
     "delivered_kw": 47.0,
+    "call_capacity_kw": 144.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -167,6 +185,8 @@
     "tier3_kw": 41.9,
     "tier2_kw": 15.2,
     "delivered_kw": 47.0,
+    "call_capacity_kw": 144.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -184,6 +204,8 @@
     "tier3_kw": 38.4,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 143.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -201,6 +223,8 @@
     "tier3_kw": 38.4,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 150.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -218,6 +242,8 @@
     "tier3_kw": 38.4,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 150.6,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -235,6 +261,8 @@
     "tier3_kw": 38.4,
     "tier2_kw": 15.0,
     "delivered_kw": 46.9,
+    "call_capacity_kw": 150.6,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -252,6 +280,8 @@
     "tier3_kw": 38.4,
     "tier2_kw": 15.0,
     "delivered_kw": 46.9,
+    "call_capacity_kw": 150.6,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -269,6 +299,8 @@
     "tier3_kw": 40.2,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 130.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -286,6 +318,8 @@
     "tier3_kw": 40.2,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 135.2,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -303,6 +337,8 @@
     "tier3_kw": 40.2,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 136.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -319,7 +355,9 @@
     "battery_kw": 50.1,
     "tier3_kw": 40.2,
     "tier2_kw": 15.3,
-    "delivered_kw": 70.6,
+    "delivered_kw": 79.8,
+    "call_capacity_kw": 136.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -336,7 +374,9 @@
     "battery_kw": 50.1,
     "tier3_kw": 40.2,
     "tier2_kw": 15.3,
-    "delivered_kw": 70.6,
+    "delivered_kw": 79.8,
+    "call_capacity_kw": 136.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -354,6 +394,8 @@
     "tier3_kw": 38.6,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 142.6,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -371,6 +413,8 @@
     "tier3_kw": 38.6,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 140.6,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -388,6 +432,8 @@
     "tier3_kw": 38.6,
     "tier2_kw": 15.0,
     "delivered_kw": null,
+    "call_capacity_kw": 130.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -404,7 +450,9 @@
     "battery_kw": 6.1,
     "tier3_kw": 38.6,
     "tier2_kw": 15.0,
-    "delivered_kw": 38.6,
+    "delivered_kw": 49.0,
+    "call_capacity_kw": 130.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -421,7 +469,9 @@
     "battery_kw": 6.1,
     "tier3_kw": 38.6,
     "tier2_kw": 15.0,
-    "delivered_kw": 38.6,
+    "delivered_kw": 49.0,
+    "call_capacity_kw": 130.8,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -430,15 +480,17 @@
     "issued_at": "2026-09-18 17:30:00",
     "window_start": "2026-09-19 17:30:00",
     "window_end": "2026-09-19 19:30:00",
-    "reserve_kw": 97.4,
-    "energy_kwh": 194.7,
+    "reserve_kw": 100.0,
+    "energy_kwh": 199.9,
     "duration_h": 2.0,
     "confidence_pct": 100.0,
     "cost_inr_kwh": 3.5,
-    "battery_kw": 43.4,
+    "battery_kw": 46.0,
     "tier3_kw": 38.6,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 135.3,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -456,6 +508,8 @@
     "tier3_kw": 38.6,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 139.4,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -464,15 +518,17 @@
     "issued_at": "2026-09-19 17:15:00",
     "window_start": "2026-09-19 17:30:00",
     "window_end": "2026-09-19 19:30:00",
-    "reserve_kw": 101.9,
-    "energy_kwh": 203.8,
+    "reserve_kw": 103.7,
+    "energy_kwh": 207.3,
     "duration_h": 2.0,
     "confidence_pct": 100.0,
     "cost_inr_kwh": 3.5,
-    "battery_kw": 48.0,
+    "battery_kw": 49.7,
     "tier3_kw": 38.6,
     "tier2_kw": 15.3,
     "delivered_kw": null,
+    "call_capacity_kw": 140.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -481,15 +537,17 @@
     "issued_at": "2026-09-19 17:30:00",
     "window_start": "2026-09-19 17:30:00",
     "window_end": "2026-09-19 19:30:00",
-    "reserve_kw": 101.9,
-    "energy_kwh": 203.8,
+    "reserve_kw": 103.7,
+    "energy_kwh": 207.3,
     "duration_h": 2.0,
     "confidence_pct": 100.0,
     "cost_inr_kwh": 3.5,
-    "battery_kw": 48.0,
+    "battery_kw": 49.7,
     "tier3_kw": 38.6,
     "tier2_kw": 15.3,
-    "delivered_kw": 48.0,
+    "delivered_kw": 46.3,
+    "call_capacity_kw": 140.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -498,15 +556,17 @@
     "issued_at": "2026-09-19 19:30:00",
     "window_start": "2026-09-19 17:30:00",
     "window_end": "2026-09-19 19:30:00",
-    "reserve_kw": 101.9,
-    "energy_kwh": 203.8,
+    "reserve_kw": 103.7,
+    "energy_kwh": 207.3,
     "duration_h": 2.0,
     "confidence_pct": 100.0,
     "cost_inr_kwh": 3.5,
-    "battery_kw": 48.0,
+    "battery_kw": 49.7,
     "tier3_kw": 38.6,
     "tier2_kw": 15.3,
-    "delivered_kw": 48.0,
+    "delivered_kw": 46.3,
+    "call_capacity_kw": 140.1,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -524,6 +584,8 @@
     "tier3_kw": 40.1,
     "tier2_kw": 3.0,
     "delivered_kw": null,
+    "call_capacity_kw": 113.2,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -541,6 +603,8 @@
     "tier3_kw": 40.1,
     "tier2_kw": 3.0,
     "delivered_kw": null,
+    "call_capacity_kw": 118.4,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -558,6 +622,8 @@
     "tier3_kw": 40.1,
     "tier2_kw": 3.0,
     "delivered_kw": null,
+    "call_capacity_kw": 120.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -575,6 +641,8 @@
     "tier3_kw": 40.1,
     "tier2_kw": 3.0,
     "delivered_kw": 37.7,
+    "call_capacity_kw": 120.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   },
   {
@@ -592,6 +660,8 @@
     "tier3_kw": 40.1,
     "tier2_kw": 3.0,
     "delivered_kw": 37.7,
+    "call_capacity_kw": 120.0,
+    "call_confidence_pct": 90.0,
     "cim_profile": "IEC 61968-5 DERGroupForecast"
   }
 ]

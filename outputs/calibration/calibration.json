@@ -8,7 +8,8 @@
     ],
     "outcome_held": "import kept at or under the limit for the whole evening window, no overload trip, no trip for a missed DISCOM request",
     "outcome_end_to_end": "held, and no trip from a lost SPS protection message",
-    "outcome_own_peak_held": "what the published confidence models: import kept under the import target in intervals with no DISCOM request, no overload trip"
+    "outcome_own_peak_held": "what the published confidence models: import kept under the import target in intervals with no DISCOM request, no overload trip",
+    "outcome_call_met": "second confidence: every DISCOM request step in the evening window was met (import at or under the requested cap, no shortfall trip); protection-scheme emergency steps excluded. Scored on calls inside the published call capacity, which is what the confidence promises"
   },
   "by_stage": {
     "T-24h": {
@@ -30,33 +31,33 @@
       },
       "held": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       },
       "end_to_end": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       }
@@ -80,33 +81,33 @@
       },
       "held": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       },
       "end_to_end": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       }
@@ -130,33 +131,33 @@
       },
       "held": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       },
       "end_to_end": {
         "n_forecasts": 420,
-        "brier": 0.1429,
+        "brier": 0.1238,
         "stated_mean_pct": 100.0,
-        "observed_pct": 85.7,
+        "observed_pct": 87.6,
         "n_stated_ge_99": 420,
-        "observed_when_stated_ge_99_pct": 85.7,
+        "observed_when_stated_ge_99_pct": 87.6,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 420,
             "stated_mean_pct": 100.0,
-            "observed_pct": 85.7
+            "observed_pct": 87.6
           }
         ]
       }
@@ -181,33 +182,33 @@
     },
     "held": {
       "n_forecasts": 1260,
-      "brier": 0.1429,
+      "brier": 0.1238,
       "stated_mean_pct": 100.0,
-      "observed_pct": 85.7,
+      "observed_pct": 87.6,
       "n_stated_ge_99": 1260,
-      "observed_when_stated_ge_99_pct": 85.7,
+      "observed_when_stated_ge_99_pct": 87.6,
       "reliability_table": [
         {
           "bin": "99-100%",
           "n": 1260,
           "stated_mean_pct": 100.0,
-          "observed_pct": 85.7
+          "observed_pct": 87.6
         }
       ]
     },
     "end_to_end": {
       "n_forecasts": 1260,
-      "brier": 0.1429,
+      "brier": 0.1238,
       "stated_mean_pct": 100.0,
-      "observed_pct": 85.7,
+      "observed_pct": 87.6,
       "n_stated_ge_99": 1260,
-      "observed_when_stated_ge_99_pct": 85.7,
+      "observed_when_stated_ge_99_pct": 87.6,
       "reliability_table": [
         {
           "bin": "99-100%",
           "n": 1260,
           "stated_mean_pct": 100.0,
-          "observed_pct": 85.7
+          "observed_pct": 87.6
         }
       ]
     }
@@ -282,33 +283,33 @@
       },
       "held": {
         "n_forecasts": 630,
-        "brier": 0.2857,
+        "brier": 0.2476,
         "stated_mean_pct": 100.0,
-        "observed_pct": 71.4,
+        "observed_pct": 75.2,
         "n_stated_ge_99": 630,
-        "observed_when_stated_ge_99_pct": 71.4,
+        "observed_when_stated_ge_99_pct": 75.2,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 630,
             "stated_mean_pct": 100.0,
-            "observed_pct": 71.4
+            "observed_pct": 75.2
           }
         ]
       },
       "end_to_end": {
         "n_forecasts": 630,
-        "brier": 0.2857,
+        "brier": 0.2476,
         "stated_mean_pct": 100.0,
-        "observed_pct": 71.4,
+        "observed_pct": 75.2,
         "n_stated_ge_99": 630,
-        "observed_when_stated_ge_99_pct": 71.4,
+        "observed_when_stated_ge_99_pct": 75.2,
         "reliability_table": [
           {
             "bin": "99-100%",
             "n": 630,
             "stated_mean_pct": 100.0,
-            "observed_pct": 71.4
+            "observed_pct": 75.2
           }
         ]
       }
@@ -317,10 +318,52 @@
   "discom_request_evenings": {
     "n_evenings": 60,
     "share_of_all_evenings_pct": 14.3,
-    "held_pct": 0.0,
-    "request_over_reserve_median": 2.03,
-    "request_over_reserve_min": 1.22,
-    "request_over_reserve_max": 4.26,
-    "stated_confidence_mean_pct": 100.0
+    "held_pct": 13.3,
+    "request_over_reserve_median": 2.33,
+    "request_over_reserve_min": 1.56,
+    "request_over_reserve_max": 4.59,
+    "stated_confidence_mean_pct": 100.0,
+    "within_offer_n": 1,
+    "within_offer_met_pct": 100.0,
+    "above_offer_n": 59,
+    "above_offer_met_pct": 32.2,
+    "all_calls_met_pct": 33.3,
+    "call_confidence_mean_pct": 90.0,
+    "request_over_call_capacity_median": 1.58,
+    "request_over_call_capacity_max": 1.97
+  },
+  "call_confidence": {
+    "within_offer": {
+      "n_forecasts": 4,
+      "brier": 0.01,
+      "stated_mean_pct": 90.0,
+      "observed_pct": 100.0,
+      "n_stated_ge_99": 0,
+      "observed_when_stated_ge_99_pct": null,
+      "reliability_table": [
+        {
+          "bin": "90-95%",
+          "n": 4,
+          "stated_mean_pct": 90.0,
+          "observed_pct": 100.0
+        }
+      ]
+    },
+    "all_calls": {
+      "n_forecasts": 180,
+      "brier": 0.5433,
+      "stated_mean_pct": 90.0,
+      "observed_pct": 33.3,
+      "n_stated_ge_99": 0,
+      "observed_when_stated_ge_99_pct": null,
+      "reliability_table": [
+        {
+          "bin": "90-95%",
+          "n": 180,
+          "stated_mean_pct": 90.0,
+          "observed_pct": 33.3
+        }
+      ]
+    }
   }
 }

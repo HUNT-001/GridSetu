@@ -78,6 +78,7 @@ These come from documents, not from our feeder. Details and links are in
 | ACSR Rabbit conductor resistance 0.5426 Ω/km at 20 °C | Apar Industries ACSR datasheet |
 | Transformer thermal model and ageing law | IEC 60076-7. Distribution-transformer default constants are used and marked as still to be confirmed against the standard. |
 | ₹10/kWh exchange price ceiling | IEX day-ahead market rules (confirmed in the IEX data above) |
+| Smart meters with a utility-set load limit, automatic disconnect and reconnect, and remote connect/disconnect (used by lifeline mode) | MSEDCL smart prepaid meter specification, which follows IS 16444 (clauses 6.34, 6.35, 13.01, 13.02, 6.41.01). Remote real-time changes to the limit are not stated explicitly and must be confirmed. |
 
 ## Synthetic
 
@@ -92,6 +93,8 @@ These come from documents, not from our feeder. Details and links are in
 | Communications loss | `comm_slices` in `config/city.yaml` | No |
 | Low-voltage network layout (lengths, buses, power factor, ±6% limit) | `matlab/f07_params.json` | No; to be checked with a DISCOM engineer |
 | Household responses (overrides, fairness) | `src/gridsetu/fairness.py` | No |
+| Lifeline allowance 200 W per home; 5% of limited homes exceed it and trip | `pilot_feeder.lifeline` in `config/city.yaml` | No. Sensitivity: at 400 W lifeline helps far less |
+| How the DISCOM sizes a call (full share of the shortage, or bounded by the day-ahead offer) | `pilot_feeder.discom_calls_bounded_by_offer` | No; a policy choice, both cases reported |
 
 ## Use and limits
 

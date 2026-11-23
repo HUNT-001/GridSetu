@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-23T14:00:47+00:00",
-    "git_commit": "29beb03",
+    "generated_at": "2026-11-23T17:00:31+00:00",
+    "git_commit": "b35b7a7",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -27,16 +27,16 @@
       "check": true
     },
     "pilot.gridsetu.evening_unserved_kwh": {
-      "value": 529.0,
+      "value": 484.0,
       "unit": "kWh/month",
-      "display": "529 kWh",
+      "display": "484 kWh",
       "source": "results.json:pilot_feeder_monthly.gridsetu.evening_window_unserved_kwh.mean",
       "check": true
     },
     "pilot.change.evening_unserved_kwh": {
-      "value": "−80%",
+      "value": "−82%",
       "unit": "%",
-      "display": "−80%",
+      "display": "−82%",
       "source": "derived from pilot.baseline/gridsetu.evening_unserved_kwh",
       "check": false
     },
@@ -48,16 +48,16 @@
       "check": true
     },
     "pilot.gridsetu.all_hours_unserved_kwh": {
-      "value": 792.0,
+      "value": 620.0,
       "unit": "kWh/month",
-      "display": "792 kWh",
+      "display": "620 kWh",
       "source": "results.json:pilot_feeder_monthly.gridsetu.total_unserved_kwh.mean",
       "check": true
     },
     "pilot.change.all_hours_unserved_kwh": {
-      "value": "−79%",
+      "value": "−84%",
       "unit": "%",
-      "display": "−79%",
+      "display": "−84%",
       "source": "derived from pilot.baseline/gridsetu.all_hours_unserved_kwh",
       "check": false
     },
@@ -90,16 +90,16 @@
       "check": true
     },
     "pilot.gridsetu.feeder_outage_h": {
-      "value": 2.8,
+      "value": 0.5,
       "unit": "h/month",
-      "display": "2.8 h",
+      "display": "0.5 h",
       "source": "results.json:pilot_feeder_monthly.gridsetu.feeder_outage_hours.mean",
       "check": true
     },
     "pilot.change.feeder_outage_h": {
-      "value": "−79%",
+      "value": "−96%",
       "unit": "%",
-      "display": "−79%",
+      "display": "−96%",
       "source": "derived from pilot.baseline/gridsetu.feeder_outage_h",
       "check": false
     },
@@ -157,32 +157,60 @@
     },
     "pilot.gridsetu.evening_unserved_seed_range": {
       "value": [
-        400,
-        617
+        398,
+        602
       ],
       "unit": "kWh/month",
-      "display": "400 to 617 kWh",
+      "display": "398 to 602 kWh",
       "source": "results.json:pilot_feeder_monthly.gridsetu.evening_window_unserved_kwh.min/max",
       "check": true
     },
+    "pilot.baseline.dark_home_hours": {
+      "value": 5740,
+      "unit": "home-hours/month",
+      "display": "5,740 home-hours",
+      "source": "results.json:pilot_feeder_monthly.baseline.dark_home_hours.mean",
+      "check": true
+    },
+    "pilot.baseline.lifeline_home_hours": {
+      "value": 0,
+      "unit": "home-hours/month",
+      "display": "0 home-hours",
+      "source": "results.json:pilot_feeder_monthly.baseline.lifeline_home_hours.mean",
+      "check": false
+    },
+    "pilot.gridsetu.dark_home_hours": {
+      "value": 291,
+      "unit": "home-hours/month",
+      "display": "291 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.dark_home_hours.mean",
+      "check": true
+    },
+    "pilot.gridsetu.lifeline_home_hours": {
+      "value": 2138,
+      "unit": "home-hours/month",
+      "display": "2,138 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.lifeline_home_hours.mean",
+      "check": true
+    },
     "fairness.gini": {
-      "value": 0.04,
+      "value": 0.03,
       "unit": "",
-      "display": "0.04",
+      "display": "0.03",
       "source": "results.json:fairness_stress_week.gini_curtailment_hours",
       "check": true
     },
     "fairness.max_hours_per_home": {
-      "value": 4.0,
+      "value": 6.5,
       "unit": "h/stress week",
-      "display": "4.0 hours",
+      "display": "6.5 hours",
       "source": "results.json:fairness_stress_week.max_household_hours",
       "check": true
     },
     "fairness.overrides_honoured": {
-      "value": 654,
+      "value": 1083,
       "unit": "count",
-      "display": "654",
+      "display": "1,083",
       "source": "results.json:fairness_stress_week.refusals",
       "check": true
     },
@@ -194,9 +222,9 @@
       "check": true
     },
     "fairness.back_to_back_relaxations": {
-      "value": 4,
+      "value": 22,
       "unit": "intervals/stress week",
-      "display": "4",
+      "display": "22",
       "source": "results.json:fairness_stress_week.consecutive_interval_violations",
       "check": false
     },
@@ -278,9 +306,9 @@
       "check": false
     },
     "reserve_calibration.stress.call_met_pct": {
-      "value": 71.4,
+      "value": 75.2,
       "unit": "%",
-      "display": "71%",
+      "display": "75%",
       "source": "calibration.json:by_week.stress.held.observed_pct",
       "check": false
     },
@@ -292,28 +320,126 @@
       "check": true
     },
     "reserve_calibration.call_evenings_met_pct": {
-      "value": 0.0,
+      "value": 13.3,
       "unit": "%",
-      "display": "0%",
+      "display": "13%",
       "source": "calibration.json:discom_request_evenings.held_pct",
       "check": false
     },
     "reserve_calibration.request_over_reserve_range": {
       "value": [
-        1.22,
-        4.26
+        1.56,
+        4.59
       ],
       "unit": "x",
-      "display": "1.2 to 4.3 times",
+      "display": "1.6 to 4.6 times",
       "source": "calibration.json:discom_request_evenings.request_over_reserve_min/max",
       "check": true
     },
     "reserve_calibration.request_over_reserve_median": {
-      "value": 2.03,
+      "value": 2.33,
       "unit": "x",
-      "display": "2.0 times",
+      "display": "2.3 times",
       "source": "calibration.json:discom_request_evenings.request_over_reserve_median",
       "check": true
+    },
+    "calls.n_evenings": {
+      "value": 60,
+      "unit": "count",
+      "display": "60 call evenings",
+      "source": "calibration/calibration.json:discom_request_evenings.n_evenings",
+      "check": false
+    },
+    "calls.met_pct": {
+      "value": 33.3,
+      "unit": "%",
+      "display": "33%",
+      "source": "calibration/calibration.json:discom_request_evenings.all_calls_met_pct",
+      "check": false
+    },
+    "calls.met_evenings": {
+      "value": 20,
+      "unit": "count",
+      "display": "20 of 60",
+      "source": "calibration/calibration.json:discom_request_evenings.all_calls_met_pct x n_evenings",
+      "check": true
+    },
+    "calls.request_over_call_capacity_median": {
+      "value": 1.58,
+      "unit": "x",
+      "display": "1.58 times",
+      "source": "calibration/calibration.json:discom_request_evenings.request_over_call_capacity_median",
+      "check": true
+    },
+    "calls.call_confidence_stated_pct": {
+      "value": 90.0,
+      "unit": "%",
+      "display": "90%",
+      "source": "calibration/calibration.json:call_confidence.within_offer.stated_mean_pct",
+      "check": false
+    },
+    "calls.call_confidence_observed_pct": {
+      "value": 100.0,
+      "unit": "%",
+      "display": "100.0%",
+      "source": "calibration/calibration.json:call_confidence.within_offer.observed_pct",
+      "check": false
+    },
+    "calls.call_confidence_n": {
+      "value": 4,
+      "unit": "count",
+      "display": "4 forecasts",
+      "source": "calibration/calibration.json:call_confidence.within_offer.n_forecasts",
+      "check": false
+    },
+    "bounded_calls.n_evenings": {
+      "value": 60,
+      "unit": "count",
+      "display": "60 call evenings",
+      "source": "calibration_bounded/calibration.json:discom_request_evenings.n_evenings",
+      "check": false
+    },
+    "bounded_calls.met_pct": {
+      "value": 96.7,
+      "unit": "%",
+      "display": "97%",
+      "source": "calibration_bounded/calibration.json:discom_request_evenings.all_calls_met_pct",
+      "check": false
+    },
+    "bounded_calls.met_evenings": {
+      "value": 58,
+      "unit": "count",
+      "display": "58 of 60",
+      "source": "calibration_bounded/calibration.json:discom_request_evenings.all_calls_met_pct x n_evenings",
+      "check": true
+    },
+    "bounded_calls.request_over_call_capacity_median": {
+      "value": 0.98,
+      "unit": "x",
+      "display": "0.98 times",
+      "source": "calibration_bounded/calibration.json:discom_request_evenings.request_over_call_capacity_median",
+      "check": false
+    },
+    "bounded_calls.call_confidence_stated_pct": {
+      "value": 90.0,
+      "unit": "%",
+      "display": "90%",
+      "source": "calibration_bounded/calibration.json:call_confidence.within_offer.stated_mean_pct",
+      "check": false
+    },
+    "bounded_calls.call_confidence_observed_pct": {
+      "value": 97.6,
+      "unit": "%",
+      "display": "97.6%",
+      "source": "calibration_bounded/calibration.json:call_confidence.within_offer.observed_pct",
+      "check": true
+    },
+    "bounded_calls.call_confidence_n": {
+      "value": 170,
+      "unit": "count",
+      "display": "170 forecasts",
+      "source": "calibration_bounded/calibration.json:call_confidence.within_offer.n_forecasts",
+      "check": false
     },
     "lv.stress.baseline.technical_loss_kwh": {
       "value": 2203.68,
@@ -365,23 +491,23 @@
       "check": false
     },
     "lv.stress.gridsetu.technical_loss_kwh": {
-      "value": 2215.17,
+      "value": 2225.64,
       "unit": "kWh/week",
-      "display": "2,215 kWh",
+      "display": "2,226 kWh",
       "source": "matlab/results/summary.json:stress_gridsetu.technical_loss_kwh",
       "check": true
     },
     "lv.stress.gridsetu.technical_loss_pct": {
-      "value": 7.722,
+      "value": 7.704,
       "unit": "%",
       "display": "7.7%",
       "source": "matlab/results/summary.json:stress_gridsetu.technical_loss_pct",
       "check": false
     },
     "lv.stress.gridsetu.voltage_violation_bus_hours": {
-      "value": 677.5,
+      "value": 664,
       "unit": "bus-hours/week",
-      "display": "678 bus-hours",
+      "display": "664 bus-hours",
       "source": "matlab/results/summary.json:stress_gridsetu.voltage_violation_bus_hours",
       "check": true
     },
@@ -407,30 +533,30 @@
       "check": true
     },
     "lv.stress.gridsetu.ageing_equivalent_hours": {
-      "value": 1.011,
+      "value": 1.028,
       "unit": "h/week",
-      "display": "1.01 h",
+      "display": "1.03 h",
       "source": "matlab/results/summary.json:stress_gridsetu.ageing_equivalent_hours",
       "check": false
     },
     "lv.stress.gridsetu_distributed.technical_loss_kwh": {
-      "value": 2041.58,
+      "value": 2046.98,
       "unit": "kWh/week",
-      "display": "2,042 kWh",
+      "display": "2,047 kWh",
       "source": "matlab/results/summary.json:stress_gridsetu_distributed.technical_loss_kwh",
       "check": true
     },
     "lv.stress.gridsetu_distributed.technical_loss_pct": {
-      "value": 7.16,
+      "value": 7.129,
       "unit": "%",
-      "display": "7.2%",
+      "display": "7.1%",
       "source": "matlab/results/summary.json:stress_gridsetu_distributed.technical_loss_pct",
       "check": false
     },
     "lv.stress.gridsetu_distributed.voltage_violation_bus_hours": {
-      "value": 645.75,
+      "value": 630,
       "unit": "bus-hours/week",
-      "display": "646 bus-hours",
+      "display": "630 bus-hours",
       "source": "matlab/results/summary.json:stress_gridsetu_distributed.voltage_violation_bus_hours",
       "check": true
     },
@@ -456,9 +582,9 @@
       "check": true
     },
     "lv.stress.gridsetu_distributed.ageing_equivalent_hours": {
-      "value": 0.93,
+      "value": 0.946,
       "unit": "h/week",
-      "display": "0.93 h",
+      "display": "0.95 h",
       "source": "matlab/results/summary.json:stress_gridsetu_distributed.ageing_equivalent_hours",
       "check": false
     },
@@ -666,9 +792,9 @@
       "check": true
     },
     "real.stress_week.synthetic.gridsetu.evening_unserved_kwh": {
-      "value": 617,
+      "value": 602,
       "unit": "kWh/week",
-      "display": "617 kWh",
+      "display": "602 kWh",
       "source": "real_data/real_data.json:stress_week.synthetic.feeders.gridsetu.evening_window_unserved_kwh",
       "check": true
     },
@@ -680,9 +806,9 @@
       "check": true
     },
     "real.stress_week.real_weather.gridsetu.evening_unserved_kwh": {
-      "value": 408,
+      "value": 423,
       "unit": "kWh/week",
-      "display": "408 kWh",
+      "display": "423 kWh",
       "source": "real_data/real_data.json:stress_week.real_weather.feeders.gridsetu.evening_window_unserved_kwh",
       "check": true
     },
@@ -694,9 +820,9 @@
       "check": true
     },
     "real.stress_week.real_weather_and_prices.gridsetu.evening_unserved_kwh": {
-      "value": 471,
+      "value": 523,
       "unit": "kWh/week",
-      "display": "471 kWh",
+      "display": "523 kWh",
       "source": "real_data/real_data.json:stress_week.real_weather_and_prices.feeders.gridsetu.evening_window_unserved_kwh",
       "check": true
     }

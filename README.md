@@ -53,18 +53,21 @@ Schneider's EcoStruxure ADMS/DERMS already dispatches DERs it has a metered, con
 |---|---|---|
 | Evening peak | Transformer overloads and trips | Battery shaves the peak under the rating |
 | DISCOM asks for relief | Whole feeder tripped in rotation | Relief delivered from battery, then Tier-3, then consented Tier-2 loads |
-| Relief not possible | Feeder dark | Feeder tripped, **critical loads islanded on the battery** |
-| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row unless relief would otherwise fall short (4 logged intervals in the stress week) |
-| What the control room sees | Nothing until it fails | A reserve with kW, duration, confidence and cost, updated at T−24h, T−1h, T−15min, real time and post-event |
+| Request larger than that | Feeder dark | **Lifeline:** every home's smart meter is capped at 200 W (lights, a fan, phone charging) so the request is met and nobody goes dark |
+| Relief still not possible | Feeder dark | Feeder tripped, **critical loads islanded on the battery** |
+| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row unless relief would otherwise fall short (22 logged intervals in the stress week) |
+| What the control room sees | Nothing until it fails | A reserve with kW, duration, confidence and cost, plus a firm **call capacity** with its own confidence, updated at T−24h, T−1h, T−15min, real time and post-event |
 
 **Load tiers on the pilot feeder**
 - **Tier 1, critical:** health sub-centre, school, water pumping, street lighting. Never curtailed; islanded on the battery if the feeder trips.
 - **Tier 2, important:** micro-enterprise motors. Shifted only with prior opt-in (26 of 35 workshops).
 - **Tier 3, flexible:** AC boost, water heating, two-wheeler charging. Paused in 15-minute slots by the fairness ledger, and any household can override.
 
+**Lifeline mode.** When the DISCOM's request is larger than the battery and flexible loads can give, a normal feeder is switched off and every home goes dark. GridSetu instead sets a common load limit on every home's smart meter, as low as 200 W, just low enough to meet the request. Indian prepaid smart-meter specifications already include a utility-programmable load limit with automatic disconnect and reconnect ([MSEDCL specification, following IS 16444](https://www.mahadiscom.in/supplier/wp-content/uploads/2020/05/Approved-10-60-Amp_1Ph_Prepaid_Meter_13.05.2020.pdf)). We assume 5% of limited homes exceed it and are disconnected by their meter.
+
 ![Baseline and GridSetu feeders side by side through the Thursday evening](docs/images/feeder-rotation.gif)
 
-<sub>The same 420 homes through Thursday evening. Left: the baseline feeder is tripped in rotation and every home goes dark. Right: GridSetu pauses Tier-3 appliances (teal outlines), rotating which homes carry it. When the DISCOM's request exceeds what the feeder can give, it is tripped too, but the clinic, school, pump and street lights stay on the battery.</sub>
+<sub>The same 420 homes through Thursday evening. Left: the baseline feeder is tripped in rotation and every home goes dark. Right: GridSetu pauses Tier-3 appliances (teal outlines), rotating which homes carry it. When the DISCOM's request exceeds what the feeder can give, it is tripped too, but the clinic, school, pump and street lights stay on the battery. (Recorded before lifeline mode; now most of those steps keep every home on a 200 W lifeline instead.)</sub>
 
 ---
 
@@ -418,22 +421,24 @@ Data flows one way. The server payloads are immutable, so each is fetched once a
 
 Monthly composite of three normal weeks and one stress week (a forced 125 MW coal outage and two overcast monsoon days), averaged over three weather and load seeds.
 
-![Baseline against GridSetu on four metrics](docs/images/results-baseline-vs-gridsetu.png)
+![Baseline against GridSetu on four metrics](outputs/charts/slide8_baseline_vs_proposed.png)
 
 | Metric, per month | Baseline | GridSetu | Change | + city DR |
 |---|--:|--:|--:|--:|
-| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 529 kWh | −80% | 386 kWh |
-| Unserved energy, all hours (net of rebound) | 3,846 kWh | 792 kWh | −79% | 569 kWh |
+| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 484 kWh | −82% | 369 kWh |
+| Unserved energy, all hours (net of rebound) | 3,846 kWh | 620 kWh | −84% | 414 kWh |
 | Critical-load outage | 13.7 h | 0.0 h | −100% | 0.0 h |
-| Whole-feeder outage | 13.7 h | 2.8 h | −79% | 2.0 h |
+| Whole-feeder outage | 13.7 h | 0.5 h | −96% | 0.1 h |
+| Homes fully without supply | 5,740 home-hours | 291 home-hours | −95% | 101 home-hours |
+| Homes on the 200 W lifeline instead | – | 2,138 home-hours | | 1,986 home-hours |
 | Transformer overload trips | 10 | 0 | −100% | 0 |
 | Peak drawn from the grid | 340 kW | 291 kW | −14% | 291 kW |
-| Battery cycles | – | 17.6 | | 17.6 |
+| Battery cycles | – | 17.5 | | 17.5 |
 
-*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,314 to 3,388 kWh; GridSetu 400 to 617 kWh.
+*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,314 to 3,388 kWh; GridSetu 398 to 602 kWh.
 
 **Other studies (stress week)**
-- **Fairness:** all 420 homes shared Tier-3 curtailment, at most 4.0 hours each. Gini of paused hours 0.04, with 654 user overrides honoured.
+- **Fairness:** all 420 homes shared Tier-3 curtailment, at most 6.5 hours each. Gini of paused hours 0.03, with 1,083 user overrides honoured.
 - **Forecast:** the q10 to q90 band covered the actual 83% of the time (nominal 80%), with a median error of 3.9%.
 - **City:** energy not served fell from 723 MWh to 494 MWh with solar-hour irrigation and industrial DR. Traction, municipal, commercial and industrial loads were never shed.
 - **Protection:** in Case A the frequency nadir was 49.70 Hz and GridSetu's fast response cut special-protection shedding from 62 to 57 MW. In Case B (islanding) the nadir was 49.16 Hz, with two under-frequency stages operating.
@@ -448,13 +453,13 @@ All 20 R3 domestic feeders (about 8,700 homes; 18 of 20 transformers overloaded 
 | GridSetu on | Critical-site hours dark | Home-hours dark | Unserved energy | Overload trips | Batteries |
 |---|--:|--:|--:|--:|--:|
 | 0 of 20 feeders | 278 | 41,041 | 27,012 kWh | 13 | – |
-| 5 (25%) | 184 | 38,079 | 25,008 kWh | 8 | 1,040 kWh |
-| 10 (50%) | 102 | 34,465 | 22,546 kWh | 2 | 2,020 kWh |
-| 15 (75%) | 44 | 32,422 | 21,338 kWh | 0 | 3,020 kWh |
-| 20 (100%) | 0 | 30,394 | 20,205 kWh | 0 | 4,080 kWh |
+| 5 (25%) | 184 | 33,003 | 24,221 kWh | 8 | 1,040 kWh |
+| 10 (50%) | 102 | 25,002 | 21,105 kWh | 2 | 2,020 kWh |
+| 15 (75%) | 44 | 17,494 | 18,796 kWh | 0 | 3,020 kWh |
+| 20 (100%) | 0 | 10,230 | 16,804 kWh | 0 | 4,080 kWh |
 
 - **Critical loads:** the first quarter of the rollout removes a third of the critical-site outage hours, because it targets the most overloaded feeders with clinics first. Full adoption removes all of them.
-- **Homes dark:** falls by only 26% at full adoption in the stress week. The 30-hour generation shortfall is larger than feeder batteries can cover, so most feeders are still rotated off for part of it.
+- **Homes dark:** falls by 75% at full adoption in the stress week. The 30-hour generation shortfall is larger than feeder batteries can cover; lifeline lets most feeders meet their share by capping homes at 200 W instead of being rotated off. Before lifeline the fall was only 26%.
 - **Normal week:** at 75% adoption no home is dark at all (19,315 home-hours at 0%), because transformer overload trips, the main cause of outages in a normal week, disappear.
 
 ### Unit commitment study
@@ -468,7 +473,7 @@ Feeder results use the linear market so they stay comparable with Phase 1.
 
 **Where the model disagrees with earlier estimates**
 - **Solar utilisation:** the earlier figure of 61% to 84% is not supported. Daytime load on this feeder always exceeds its 150 kWp of solar, so both scenarios already use about 100% of it.
-- **Stress events:** during a 30-hour, 125 MW shortfall a 200 kWh battery cannot supply all the relief requested. The feeder is still tripped for part of the event, but its critical loads stay on.
+- **Stress events:** during a 30-hour, 125 MW shortfall a 200 kWh battery cannot supply all the relief requested. Lifeline covers most of the gap, but on the largest requests the feeder is still switched off for a few 15-minute steps, with its critical loads kept on.
 - **Frequency support:** about 6 MW of fast response from a quarter of the peri-urban feeders is real but small at city scale. Fairness and critical-load protection are the stronger results.
 
 ### Does the Reliability Reserve keep its word?
@@ -478,8 +483,9 @@ Every evening GridSetu publishes a reserve with a confidence. We checked all 1,2
 <img src="outputs/calibration/reserve_calibration.png" alt="Stated vs observed reserve outcomes, and DISCOM requests vs published reserve" width="100%">
 
 - **What the confidence covers, it delivers.** The published confidence is the chance of holding the feeder's own evening peak under the transformer limit. It said 100% every time, and the peak was held on every evening in both normal and stress weeks.
-- **What it does not cover, it does not warn about.** On 60 evenings (two per stress week, after the coal unit trips) the DISCOM asked this feeder for relief. Every request was 1.2 to 4.3 times the published reserve (median 2.0 times), GridSetu could not deliver 95% of it, and the feeder was rotated off like its neighbours, with the clinic, school and pump islanded on the battery. The confidence still read 100%, because it never looked at the DISCOM's call.
-- **What we are changing.** The reserve will carry a second confidence for meeting the expected DISCOM call, and a call into the reserve will be bounded by what was published. That is the point of publishing it.
+- **The DISCOM's call needs its own promise.** On 60 evenings (two per stress week, after the coal unit trips) the DISCOM asked this feeder for relief, at 1.6 to 4.6 times the published reserve (median 2.3 times). The first version of GridSetu met none of these calls. So the reserve now carries a second number: a firm **call capacity** (battery spread over the evening, consented Tier 2, and what lifeline can free) with a **call confidence** of 90%.
+- **With calls as the DISCOM makes them today** (its full share of the shortage, not what we offered), requests were a median 1.58 times our call capacity. Lifeline still met the call on 20 of 60 evenings; on the rest the feeder was switched off for part of the evening, with the clinic, school and pump on the battery.
+- **With calls bounded by the day-ahead offer**, as in an ADMS/DERMS dispatch contract, the call was met on 58 of 60 evenings. The 90% call confidence held 97.6% of the time over 170 forecasts, so it is slightly cautious. Run it with `python -m gridsetu calibrate --seeds 30 --bounded-calls`.
 
 ### Losses, voltage and transformer ageing (MATLAB low-voltage model)
 
@@ -487,8 +493,8 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 
 | Stress week | Baseline | GridSetu, battery at the transformer | GridSetu, storage split across the 3 circuits |
 |---|--:|--:|--:|
-| Technical losses (lines + transformer) | 2,204 kWh | 2,215 kWh | 2,042 kWh |
-| Voltage violations (±6 %) | 673 bus-hours | 678 bus-hours | 646 bus-hours |
+| Technical losses (lines + transformer) | 2,204 kWh | 2,226 kWh | 2,047 kWh |
+| Voltage violations (±6 %) | 673 bus-hours | 664 bus-hours | 630 bus-hours |
 | Peak transformer loading | 1.37 pu | 1.19 pu | 1.14 pu |
 | Peak transformer hot-spot | 82.8 °C | 73.7 °C | 71.5 °C |
 
@@ -524,9 +530,9 @@ Household load stays synthetic in every case.
 
 | Inputs | Baseline | GridSetu |
 |---|--:|--:|
-| Synthetic weather and prices (as in the results above) | 743 kWh | 617 kWh |
-| Real weather | 808 kWh | 408 kWh |
-| Real weather and real IEX prices | 813 kWh | 471 kWh |
+| Synthetic weather and prices (as in the results above) | 743 kWh | 602 kWh |
+| Real weather | 808 kWh | 423 kWh |
+| Real weather and real IEX prices | 813 kWh | 523 kWh |
 
 Our synthetic stress week forces two deeply overcast days; the real week of 14–20 September 2025 had none, so GridSetu does better on it. The critical loads stay powered in all three cases. We keep the harsher synthetic week for the headline figures.
 
@@ -653,6 +659,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - **Shedding order:** revenue-driven, as at a cash-strapped DISCOM. Irrigation and domestic loads go first; traction and municipal are never shed.
 - **Market:** ATC-based market splitting with a ₹10/kWh exchange ceiling. Thermal units stay within ±5 MW of their day-ahead schedule in real time.
 - **Communications:** 15% packet loss on the 2G/4G control slice, with 3 retries.
+- **Lifeline:** a 200 W floor per home, with 5% of limited homes exceeding it and being disconnected by their meter. At a 400 W floor lifeline helps far less, so the floor matters. The DISCOM's calls are its full share of the shortage unless `discom_calls_bounded_by_offer` is set.
 - **Forecasts:** trained on 8 synthetic history weeks. `simulation.weather_source: nasa_power` and `exchange_price.source: iex` switch to real 2025 weather and prices (see the data card).
 
 ## Limitations
@@ -663,7 +670,8 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - In the fleet study, feeders respond to the city but the city does not respond to them: the fleet's reserve is not yet offered back into the market.
 - The frequency model is a two-area aggregate, not a full dynamic network model.
 - The forecasts have been backtested on real weather but not on real feeder load. Real weather is hourly, so it has no within-hour cloud variability, which flatters the solar forecast. A full month on real weather is not possible yet: the NASA file covers only the stress week and its training weeks.
-- The reserve's published confidence covers the feeder's own evening peak, not the DISCOM's relief call. In the simulation the DISCOM can call for more than the reserve offers (up to 4.3 times), and when the feeder is outside the rotation group an unmet call has no modelled consequence.
+- The DISCOM's calls are larger than the firm call capacity (median 1.58 times), so with calls as today the call confidence can rarely be tested; with calls bounded by the offer it holds. Whether a DISCOM would contract on the offer is a policy question, not a modelling one.
+- Lifeline needs the smart meter's load limit to be set remotely in real time. Indian prepaid specifications include a utility-set load limit with automatic disconnect and reconnect; remote real-time changes must be confirmed with the DISCOM or meter vendor. Rationing homes to a lifeline in a shortage would also need the state regulator's approval.
 - The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
 - With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.
 

@@ -175,7 +175,8 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             add(f"{tag}.call_confidence_stated_pct", cc["stated_mean_pct"], "%", f"{cc['stated_mean_pct']:.0f}%",
                 f"{sub}/calibration.json:call_confidence.within_offer.stated_mean_pct", check=False)
             add(f"{tag}.call_confidence_observed_pct", cc["observed_pct"], "%", f"{cc['observed_pct']:.1f}%",
-                f"{sub}/calibration.json:call_confidence.within_offer.observed_pct")
+                f"{sub}/calibration.json:call_confidence.within_offer.observed_pct",
+                check=tag == "bounded_calls")      # too few in-offer calls to quote in the unbounded case
             add(f"{tag}.call_confidence_n", cc["n_forecasts"], "count", f"{cc['n_forecasts']:,} forecasts",
                 f"{sub}/calibration.json:call_confidence.within_offer.n_forecasts", check=False)
 
