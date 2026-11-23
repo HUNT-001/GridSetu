@@ -1,0 +1,62 @@
+{
+  "_about": "Low-voltage network and transformer parameters for pilot feeder F07. Read by matlab/run_f07.m and by src/gridsetu/lvnetwork.py (the Python cross-check). Every value carries its source or derivation in the matching _src field. ASSUMPTION marks a value chosen by us, not taken from a datasheet.",
+
+  "base_kva": 315.0,
+  "_base_kva_src": "Transformer rating. 315 kVA is the nearest IS 1180 standard rating to the simulator's 300 kW limit (315 kVA x 0.95 pf = 299 kW).",
+  "v_nominal_ll_v": 415.0,
+  "_v_nominal_ll_v_src": "ASSUMPTION: 415 V line-to-line / 240 V phase, the nominal LT supply voltage used by Indian DISCOMs. Voltages are reported in per unit of this value.",
+  "v_limit_pu": [0.94, 1.06],
+  "_v_limit_pu_src": "ASSUMPTION pending confirmation of the Tamil Nadu supply-code clause: +/-6 % of nominal, the commonly quoted Indian LT limit (energypedia.info/wiki/Permissible_Voltage_Drop).",
+
+  "transformer": {
+    "rating_kva": 315.0,
+    "hv_kv": 11.0,
+    "lv_open_circuit_v": 433.0,
+    "impedance_pct": 4.5,
+    "load_loss_w": 2766.7,
+    "no_load_loss_w": 333.3,
+    "_src": "WBSEDCL technical specification, 3-star 315 kVA 11/0.433 kV distribution transformer to IS 1180 (Part 1):2014 Level 2: impedance 4.5 %; maximum total losses 1025 W at 50 % load and 3100 W at 100 % load. Solving NLL + 0.25 LL = 1025 and NLL + LL = 3100 gives LL = 2766.7 W, NLL = 333.3 W.",
+    "top_oil_rise_k": 35.0,
+    "winding_avg_rise_k": 40.0,
+    "_rise_src": "Same specification: temperature rise limits 35 C top oil (thermometer), 40 C winding (resistance method).",
+    "thermal": {
+      "x": 0.8, "y": 1.6, "k11": 1.0, "k21": 1.0, "k22": 2.0,
+      "tau_o_min": 180.0, "tau_w_min": 4.0, "hotspot_factor_H": 1.1,
+      "_src": "IEC 60076-7 recommended thermal characteristics for distribution transformers, ONAN (exponents, time constants, hot-spot factor). ASSUMPTION until checked against a copy of the standard: values as commonly cited for that column.",
+      "hotspot_gradient_k": 13.2,
+      "_hotspot_gradient_src": "ASSUMPTION/derived: H x g_r, with g_r = winding average rise 40 K - average oil rise (0.8 x 35 K = 28 K) = 12 K, H = 1.1.",
+      "ageing_reference_c": 98.0,
+      "ageing_doubling_k": 6.0,
+      "_ageing_src": "IEC 60076-7 relative ageing rate for non-thermally-upgraded paper: V = 2^((theta_h - 98)/6)."
+    }
+  },
+
+  "line": {
+    "conductor": "ACSR Rabbit 50 mm2",
+    "r_ohm_per_km_20c": 0.5426,
+    "_r_src": "Apar Industries ACSR datasheet, Rabbit: DC resistance 0.54260 ohm/km at 20 C.",
+    "operating_temp_c": 50.0,
+    "alpha_al": 0.00403,
+    "r_ohm_per_km": 0.6082,
+    "_r_op_src": "Derived: 0.5426 x (1 + 0.00403 x (50 - 20)). ASSUMPTION: 50 C average conductor temperature.",
+    "x_ohm_per_km": 0.2872,
+    "_x_src": "Derived: 2 pi 50 x 2e-7 x ln(GMD/GMR) per metre; GMR = 0.7788 x 5.025 mm; GMD = (0.3 x 0.3 x 0.6)^(1/3) m. ASSUMPTION: 0.3 m spacing on a horizontal LT cross-arm."
+  },
+
+  "topology": {
+    "circuits": 3, "buses_per_circuit": 7, "circuit_length_m": 600.0,
+    "_src": "ASSUMPTION: three radial circuits of about 600 m from the transformer, seven equal segments each. Same layout as outputs/matlab/f07_buses.csv."
+  },
+
+  "load_power_factor": 0.95,
+  "_load_power_factor_src": "ASSUMPTION: 0.95 lagging for household and enterprise load; battery and community PV at unity power factor.",
+
+  "scenarios": {
+    "baseline": {"variant": "baseline", "storage_buses": [0]},
+    "gridsetu": {"variant": "gridsetu", "storage_buses": [0]},
+    "gridsetu_distributed": {"variant": "gridsetu", "storage_buses": [4, 11, 18],
+      "_note": "Same total battery and community PV, split equally across the middle bus of each circuit instead of the transformer bus."}
+  },
+
+  "solver": {"tol_pu": 1e-9, "max_iter": 100, "thermal_substep_min": 1.0}
+}
