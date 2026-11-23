@@ -50,3 +50,19 @@ Where the two overlap (transformer loading) they must agree, and that agreement 
 **Q: Where do the bus loads come from?**
 From `python -m gridsetu export-matlab`. Each home, enterprise and critical load is placed on a
 named bus; a test proves the bus loads add up to the feeder import at every step.
+
+**Q: Does GridSetu reduce technical losses?**
+Only where the storage sits. With the battery at the transformer, line losses are unchanged
+(2,204 vs 2,215 kWh in the stress week, the extra being energy served instead of shed). Split
+across the three circuits, the same battery cuts technical losses about 7%, to 2,042 kWh. We
+now recommend the split layout.
+
+**Q: What does it do for the transformer?**
+Peak loading falls from 1.37 to 1.19 pu and the hot-spot peak by about 9 °C (IEC 60076-7 model).
+In this IS 1180 Level-2 unit ageing is already low in absolute terms, so the real benefit is
+fewer overload trips and headroom, not years of life.
+
+**Q: Where do your network parameters come from?**
+`matlab/f07_params.json`: transformer data from a DISCOM specification to IS 1180 Level 2,
+conductor resistance from a manufacturer's ACSR datasheet, and every assumption (lengths,
+spacing, power factor, voltage limit) marked as one.

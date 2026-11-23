@@ -29,6 +29,9 @@ def main(argv=None):
     mx.add_argument("--out", default="outputs/matlab")
     mx.add_argument("--config", default=None)
     mx.add_argument("--seed", type=int, default=42)
+    lv = sub.add_parser("lv-study", help="low-voltage network study (Python twin of matlab/run_f07.m) + charts")
+    lv.add_argument("--in", dest="in_dir", default="outputs/matlab")
+    lv.add_argument("--out", default="outputs/lv")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8000)
@@ -89,6 +92,16 @@ def main(argv=None):
     if args.cmd == "export-matlab":
         from .matlab_export import export
         print("wrote", export(args.out, args.config, args.seed))
+        return
+    if args.cmd == "lv-study":
+        from .lvfigures import make_figures
+        from .lvnetwork import run_study
+        for case, r in run_study(args.in_dir, args.out).items():
+            print(f"{case:34s} losses {r['technical_loss_kwh']:8.1f} kWh ({r['technical_loss_pct']:.2f} %)  "
+                  f"violations {r['voltage_violation_bus_hours']:6.1f} bus-h  peak loading "
+                  f"{r['peak_transformer_loading_pu']:.3f} pu")
+        for f in make_figures(f"{args.out}/charts"):
+            print("chart:", f)
         return
     if args.cmd == "numbers":
         from .numbers import build_numbers, check_files

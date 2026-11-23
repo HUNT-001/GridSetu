@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-23T04:35:48+00:00",
-    "git_commit": "f7aabec",
+    "generated_at": "2026-11-23T04:58:52+00:00",
+    "git_commit": "4577d85",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -314,6 +314,300 @@
       "display": "2.0 times",
       "source": "calibration.json:discom_request_evenings.request_over_reserve_median",
       "check": true
+    },
+    "lv.stress.baseline.technical_loss_kwh": {
+      "value": 2203.68,
+      "unit": "kWh/week",
+      "display": "2,204 kWh",
+      "source": "matlab/results/summary.json:stress_baseline.technical_loss_kwh",
+      "check": true
+    },
+    "lv.stress.baseline.technical_loss_pct": {
+      "value": 7.764,
+      "unit": "%",
+      "display": "7.8%",
+      "source": "matlab/results/summary.json:stress_baseline.technical_loss_pct",
+      "check": false
+    },
+    "lv.stress.baseline.voltage_violation_bus_hours": {
+      "value": 673,
+      "unit": "bus-hours/week",
+      "display": "673 bus-hours",
+      "source": "matlab/results/summary.json:stress_baseline.voltage_violation_bus_hours",
+      "check": true
+    },
+    "lv.stress.baseline.min_voltage_pu": {
+      "value": 0.7919,
+      "unit": "pu",
+      "display": "0.79 pu",
+      "source": "matlab/results/summary.json:stress_baseline.min_voltage_pu",
+      "check": false
+    },
+    "lv.stress.baseline.peak_transformer_loading_pu": {
+      "value": 1.3711,
+      "unit": "pu",
+      "display": "1.37 pu",
+      "source": "matlab/results/summary.json:stress_baseline.peak_transformer_loading_pu",
+      "check": true
+    },
+    "lv.stress.baseline.max_hotspot_c": {
+      "value": 82.81,
+      "unit": "deg C",
+      "display": "82.8 °C",
+      "source": "matlab/results/summary.json:stress_baseline.max_hotspot_c",
+      "check": true
+    },
+    "lv.stress.baseline.ageing_equivalent_hours": {
+      "value": 1.337,
+      "unit": "h/week",
+      "display": "1.34 h",
+      "source": "matlab/results/summary.json:stress_baseline.ageing_equivalent_hours",
+      "check": false
+    },
+    "lv.stress.gridsetu.technical_loss_kwh": {
+      "value": 2215.17,
+      "unit": "kWh/week",
+      "display": "2,215 kWh",
+      "source": "matlab/results/summary.json:stress_gridsetu.technical_loss_kwh",
+      "check": true
+    },
+    "lv.stress.gridsetu.technical_loss_pct": {
+      "value": 7.722,
+      "unit": "%",
+      "display": "7.7%",
+      "source": "matlab/results/summary.json:stress_gridsetu.technical_loss_pct",
+      "check": false
+    },
+    "lv.stress.gridsetu.voltage_violation_bus_hours": {
+      "value": 677.5,
+      "unit": "bus-hours/week",
+      "display": "678 bus-hours",
+      "source": "matlab/results/summary.json:stress_gridsetu.voltage_violation_bus_hours",
+      "check": true
+    },
+    "lv.stress.gridsetu.min_voltage_pu": {
+      "value": 0.796,
+      "unit": "pu",
+      "display": "0.80 pu",
+      "source": "matlab/results/summary.json:stress_gridsetu.min_voltage_pu",
+      "check": false
+    },
+    "lv.stress.gridsetu.peak_transformer_loading_pu": {
+      "value": 1.1891,
+      "unit": "pu",
+      "display": "1.19 pu",
+      "source": "matlab/results/summary.json:stress_gridsetu.peak_transformer_loading_pu",
+      "check": true
+    },
+    "lv.stress.gridsetu.max_hotspot_c": {
+      "value": 73.67,
+      "unit": "deg C",
+      "display": "73.7 °C",
+      "source": "matlab/results/summary.json:stress_gridsetu.max_hotspot_c",
+      "check": true
+    },
+    "lv.stress.gridsetu.ageing_equivalent_hours": {
+      "value": 1.011,
+      "unit": "h/week",
+      "display": "1.01 h",
+      "source": "matlab/results/summary.json:stress_gridsetu.ageing_equivalent_hours",
+      "check": false
+    },
+    "lv.stress.gridsetu_distributed.technical_loss_kwh": {
+      "value": 2041.58,
+      "unit": "kWh/week",
+      "display": "2,042 kWh",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.technical_loss_kwh",
+      "check": true
+    },
+    "lv.stress.gridsetu_distributed.technical_loss_pct": {
+      "value": 7.16,
+      "unit": "%",
+      "display": "7.2%",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.technical_loss_pct",
+      "check": false
+    },
+    "lv.stress.gridsetu_distributed.voltage_violation_bus_hours": {
+      "value": 645.75,
+      "unit": "bus-hours/week",
+      "display": "646 bus-hours",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.voltage_violation_bus_hours",
+      "check": true
+    },
+    "lv.stress.gridsetu_distributed.min_voltage_pu": {
+      "value": 0.8277,
+      "unit": "pu",
+      "display": "0.83 pu",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.min_voltage_pu",
+      "check": false
+    },
+    "lv.stress.gridsetu_distributed.peak_transformer_loading_pu": {
+      "value": 1.138,
+      "unit": "pu",
+      "display": "1.14 pu",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.peak_transformer_loading_pu",
+      "check": true
+    },
+    "lv.stress.gridsetu_distributed.max_hotspot_c": {
+      "value": 71.48,
+      "unit": "deg C",
+      "display": "71.5 °C",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.max_hotspot_c",
+      "check": true
+    },
+    "lv.stress.gridsetu_distributed.ageing_equivalent_hours": {
+      "value": 0.93,
+      "unit": "h/week",
+      "display": "0.93 h",
+      "source": "matlab/results/summary.json:stress_gridsetu_distributed.ageing_equivalent_hours",
+      "check": false
+    },
+    "lv.representative.baseline.technical_loss_kwh": {
+      "value": 2409.4,
+      "unit": "kWh/week",
+      "display": "2,409 kWh",
+      "source": "matlab/results/summary.json:representative_baseline.technical_loss_kwh",
+      "check": false
+    },
+    "lv.representative.baseline.technical_loss_pct": {
+      "value": 8.129,
+      "unit": "%",
+      "display": "8.1%",
+      "source": "matlab/results/summary.json:representative_baseline.technical_loss_pct",
+      "check": false
+    },
+    "lv.representative.baseline.voltage_violation_bus_hours": {
+      "value": 759.25,
+      "unit": "bus-hours/week",
+      "display": "759 bus-hours",
+      "source": "matlab/results/summary.json:representative_baseline.voltage_violation_bus_hours",
+      "check": false
+    },
+    "lv.representative.baseline.min_voltage_pu": {
+      "value": 0.8007,
+      "unit": "pu",
+      "display": "0.80 pu",
+      "source": "matlab/results/summary.json:representative_baseline.min_voltage_pu",
+      "check": false
+    },
+    "lv.representative.baseline.peak_transformer_loading_pu": {
+      "value": 1.3682,
+      "unit": "pu",
+      "display": "1.37 pu",
+      "source": "matlab/results/summary.json:representative_baseline.peak_transformer_loading_pu",
+      "check": false
+    },
+    "lv.representative.baseline.max_hotspot_c": {
+      "value": 82.1,
+      "unit": "deg C",
+      "display": "82.1 °C",
+      "source": "matlab/results/summary.json:representative_baseline.max_hotspot_c",
+      "check": false
+    },
+    "lv.representative.baseline.ageing_equivalent_hours": {
+      "value": 1.849,
+      "unit": "h/week",
+      "display": "1.85 h",
+      "source": "matlab/results/summary.json:representative_baseline.ageing_equivalent_hours",
+      "check": false
+    },
+    "lv.representative.gridsetu.technical_loss_kwh": {
+      "value": 2486.57,
+      "unit": "kWh/week",
+      "display": "2,487 kWh",
+      "source": "matlab/results/summary.json:representative_gridsetu.technical_loss_kwh",
+      "check": false
+    },
+    "lv.representative.gridsetu.technical_loss_pct": {
+      "value": 8.182,
+      "unit": "%",
+      "display": "8.2%",
+      "source": "matlab/results/summary.json:representative_gridsetu.technical_loss_pct",
+      "check": false
+    },
+    "lv.representative.gridsetu.voltage_violation_bus_hours": {
+      "value": 793.75,
+      "unit": "bus-hours/week",
+      "display": "794 bus-hours",
+      "source": "matlab/results/summary.json:representative_gridsetu.voltage_violation_bus_hours",
+      "check": false
+    },
+    "lv.representative.gridsetu.min_voltage_pu": {
+      "value": 0.8047,
+      "unit": "pu",
+      "display": "0.80 pu",
+      "source": "matlab/results/summary.json:representative_gridsetu.min_voltage_pu",
+      "check": false
+    },
+    "lv.representative.gridsetu.peak_transformer_loading_pu": {
+      "value": 1.1282,
+      "unit": "pu",
+      "display": "1.13 pu",
+      "source": "matlab/results/summary.json:representative_gridsetu.peak_transformer_loading_pu",
+      "check": false
+    },
+    "lv.representative.gridsetu.max_hotspot_c": {
+      "value": 73.3,
+      "unit": "deg C",
+      "display": "73.3 °C",
+      "source": "matlab/results/summary.json:representative_gridsetu.max_hotspot_c",
+      "check": false
+    },
+    "lv.representative.gridsetu.ageing_equivalent_hours": {
+      "value": 1.576,
+      "unit": "h/week",
+      "display": "1.58 h",
+      "source": "matlab/results/summary.json:representative_gridsetu.ageing_equivalent_hours",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.technical_loss_kwh": {
+      "value": 2238.21,
+      "unit": "kWh/week",
+      "display": "2,238 kWh",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.technical_loss_kwh",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.technical_loss_pct": {
+      "value": 7.426,
+      "unit": "%",
+      "display": "7.4%",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.technical_loss_pct",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.voltage_violation_bus_hours": {
+      "value": 748.25,
+      "unit": "bus-hours/week",
+      "display": "748 bus-hours",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.voltage_violation_bus_hours",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.min_voltage_pu": {
+      "value": 0.8484,
+      "unit": "pu",
+      "display": "0.85 pu",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.min_voltage_pu",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.peak_transformer_loading_pu": {
+      "value": 1.0637,
+      "unit": "pu",
+      "display": "1.06 pu",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.peak_transformer_loading_pu",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.max_hotspot_c": {
+      "value": 71.95,
+      "unit": "deg C",
+      "display": "72.0 °C",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.max_hotspot_c",
+      "check": false
+    },
+    "lv.representative.gridsetu_distributed.ageing_equivalent_hours": {
+      "value": 1.414,
+      "unit": "h/week",
+      "display": "1.41 h",
+      "source": "matlab/results/summary.json:representative_gridsetu_distributed.ageing_equivalent_hours",
+      "check": false
     }
   }
 }

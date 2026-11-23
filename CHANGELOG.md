@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased: MATLAB low-voltage model (November 2026)
+
+### Added
+- `matlab/`: low-voltage model of feeder F07 (`run_f07.m`, `bfs_loadflow.m`, `dt_thermal.m`, `make_figures.m`, `test_bfs.m`), with all parameters and their sources in `f07_params.json`. Results in `matlab/results/`.
+- `python -m gridsetu lv-study`: the Python twin (`lvnetwork.py`) and the six deck charts (`outputs/lv/charts/`).
+- Low-voltage figures in `numbers.json` and a README results section.
+- 5 tests: hand-calculated load flow, thermal steady state, energy balance, voltage profile, and step-by-step agreement with the MATLAB results (59 in total).
+
+### Found
+- A battery at the transformer bus cuts the transformer's peak loading (1.37 → 1.19 pu) but not line losses or voltage drop; splitting the storage across the circuits cuts technical losses about 7%. Voltage is outside ±6% on the assumed network in every case.
+
 ## Unreleased: trust, calibration and the MATLAB bridge (November 2026)
 
 ### Added

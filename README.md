@@ -11,7 +11,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![React](https://img.shields.io/badge/UI-React%2019-61DAFB)
-![Tests](https://img.shields.io/badge/tests-54%20passing-2DD4BF)
+![Tests](https://img.shields.io/badge/tests-59%20passing-2DD4BF)
 ![Data](https://img.shields.io/badge/data-synthetic%20simulation-F5A623)
 
 ![Power flowing through the simulated city from 13:00 to midnight on the stress day](docs/images/power-flow.gif)
@@ -481,6 +481,24 @@ Every evening GridSetu publishes a reserve with a confidence. We checked all 1,2
 - **What it does not cover, it does not warn about.** On 60 evenings (two per stress week, after the coal unit trips) the DISCOM asked this feeder for relief. Every request was 1.2 to 4.3 times the published reserve (median 2.0 times), GridSetu could not deliver 95% of it, and the feeder was rotated off like its neighbours, with the clinic, school and pump islanded on the battery. The confidence still read 100%, because it never looked at the DISCOM's call.
 - **What we are changing.** The reserve will carry a second confidence for meeting the expected DISCOM call, and a call into the reserve will be bounded by what was published. That is the point of publishing it.
 
+### Losses, voltage and transformer ageing (MATLAB low-voltage model)
+
+The simulator above treats the feeder as one point, so it cannot see losses or voltage along the wires. [`matlab/run_f07.m`](matlab/) places the same loads on a radial 415 V network (3 circuits × 7 buses, ACSR Rabbit, a 315 kVA IS 1180 Level-2 transformer; every parameter and its source in [`matlab/f07_params.json`](matlab/f07_params.json)). It solves a load flow for every 15-minute step and runs the IEC 60076-7 transformer thermal model. A Python twin (`python -m gridsetu lv-study`) gives the same answer at every step, to within 10⁻⁸.
+
+| Stress week | Baseline | GridSetu, battery at the transformer | GridSetu, storage split across the 3 circuits |
+|---|--:|--:|--:|
+| Technical losses (lines + transformer) | 2,204 kWh | 2,215 kWh | 2,042 kWh |
+| Voltage violations (±6 %) | 673 bus-hours | 678 bus-hours | 646 bus-hours |
+| Peak transformer loading | 1.37 pu | 1.19 pu | 1.14 pu |
+| Peak transformer hot-spot | 82.8 °C | 73.7 °C | 71.5 °C |
+
+<img src="outputs/lv/charts/lv_placement.png" alt="Losses, voltage violations and peak transformer loading for three storage placements" width="100%">
+
+- **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.19 pu and the hot-spot peak by about 9 °C.
+- **A battery at the transformer cannot cut line losses or voltage drop.** The current on the wires to the homes is the same either way, so technical losses barely move.
+- **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 7% and lifts the worst voltage from 0.79 to 0.83 pu. This is now the recommended layout.
+- **Voltage stays outside limits on the assumed network in every case.** Long, heavily loaded LT circuits are the cause; GridSetu's bus-level voltage map shows the DISCOM exactly where reconductoring would pay off.
+
 ---
 
 ## Run it locally
@@ -509,10 +527,12 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 54 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 59 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
 | `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
+| `python -m gridsetu lv-study` | Low-voltage network study (Python twin of the MATLAB model) and its charts, in `outputs/lv/` |
+| `matlab/run_f07.m`, `matlab/make_figures.m` | The MATLAB low-voltage model and its charts (MATLAB R2019b+ or GNU Octave 7+, no toolboxes) |
 | `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
 | `python -m gridsetu fetch-osm` | Download real OpenStreetMap streets for the city map (`--bbox south,west,north,east` to choose the area) |
 | `python -m gridsetu replay --broker host:1883` | Publish a run as live telemetry to MQTT |
@@ -610,6 +630,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - The frequency model is a two-area aggregate, not a full dynamic network model.
 - The forecasts have not been backtested on real feeder data.
 - The reserve's published confidence covers the feeder's own evening peak, not the DISCOM's relief call. In the simulation the DISCOM can call for more than the reserve offers (up to 4.3 times), and when the feeder is outside the rotation group an unmet call has no modelled consequence.
+- The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
 - With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.
 
 ## Roadmap
