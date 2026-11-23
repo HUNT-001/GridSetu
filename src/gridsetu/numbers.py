@@ -167,6 +167,32 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             add(f"lv.{week}.{scen}.ageing_equivalent_hours", r["ageing_equivalent_hours"], "h/week",
                 f"{r['ageing_equivalent_hours']:.2f} h", f"{src}.ageing_equivalent_hours", check=False)
 
+    # real-data validation (python -m gridsetu real-data)
+    rd_path = out / "real_data" / "real_data.json"
+    if rd_path.exists():
+        rd = json.loads(rd_path.read_text(encoding="utf-8"))
+        src = "real_data/real_data.json"
+        iex = rd["prices"]["iex_2025_09_14_20"]
+        add("real.iex.days_reaching_cap", iex["days_reaching_cap"], "days", f"{iex['days_reaching_cap']} of "
+            f"{iex['n_days']} days", f"{src}:prices.iex_2025_09_14_20.days_reaching_cap")
+        add("real.iex.peak_blocks_at_cap_pct", iex["peak_blocks_at_cap_pct"], "%",
+            f"{iex['peak_blocks_at_cap_pct']:.0f}%", f"{src}:prices.iex_2025_09_14_20.peak_blocks_at_cap_pct",
+            check=False)
+        add("real.iex.solar_hours_mean", iex["solar_10_16_mean_inr_kwh"], "INR/kWh",
+            f"₹{iex['solar_10_16_mean_inr_kwh']:.2f}/kWh", f"{src}:prices.iex_2025_09_14_20.solar_10_16_mean_inr_kwh")
+        for k in ("synthetic", "nasa_power"):
+            v = rd["weather"][k]["insolation_kwh_m2_day_mean"]
+            add(f"real.weather.{k}.insolation", v, "kWh/m2/day", f"{v:.2f} kWh/m²/day",
+                f"{src}:weather.{k}.insolation_kwh_m2_day_mean")
+            c = rd["forecast_backtest"]["mean"][k]["net_load"]["coverage_q10_q90_pct"]
+            add(f"real.backtest.{k}.net_load_coverage_pct", c, "%", f"{c:.1f}%",
+                f"{src}:forecast_backtest.mean.{k}.net_load.coverage_q10_q90_pct")
+        for case in ("synthetic", "real_weather", "real_weather_and_prices"):
+            for var in ("baseline", "gridsetu"):
+                v = rd["stress_week"][case]["feeders"][var]["evening_window_unserved_kwh"]
+                add(f"real.stress_week.{case}.{var}.evening_unserved_kwh", round(v), "kWh/week", f"{v:,.0f} kWh",
+                    f"{src}:stress_week.{case}.feeders.{var}.evening_window_unserved_kwh")
+
     versions = {}
     for lib in LIBS:
         try:

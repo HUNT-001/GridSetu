@@ -11,12 +11,10 @@ export PYTHONPATH=src
 OUT="$(mktemp -d)"
 echo "Running the 3-seed study into $OUT (about 1-2 minutes) ..."
 python -m gridsetu run --seeds 3 --out "$OUT" --quiet
+echo "Running the real-data validation (about 40 seconds) ..."
+python -m gridsetu real-data --out "$OUT/real_data" > /dev/null
 python - "$OUT" <<'EOF'
 import json, math, sys
-new = json.load(open(f"{sys.argv[1]}/results.json"))
-old = json.load(open("outputs/results.json"))
-for d in (new, old):
-    d["about"].pop("runtime_s", None)
 
 def diff(a, b, path=""):
     if isinstance(a, dict) and isinstance(b, dict):
@@ -31,12 +29,21 @@ def diff(a, b, path=""):
     elif a != b:
         yield path, a, b
 
-d = list(diff(old, new))
-if d:
-    print(f"NOT REPRODUCED: {len(d)} values differ. First 15:")
-    for p, a, b in d[:15]:
-        print(f"  {p}: committed={a!r} fresh={b!r}")
+failed = False
+for rel in ("results.json", "real_data/real_data.json"):
+    new = json.load(open(f"{sys.argv[1]}/{rel}"))
+    old = json.load(open(f"outputs/{rel}"))
+    for doc in (new, old):
+        doc.get("about", {}).pop("runtime_s", None)
+    d = list(diff(old, new))
+    if d:
+        failed = True
+        print(f"NOT REPRODUCED: outputs/{rel}: {len(d)} values differ. First 15:")
+        for p, a, b in d[:15]:
+            print(f"  {p}: committed={a!r} fresh={b!r}")
+    else:
+        print(f"REPRODUCED: outputs/{rel} (every value within 1 part in a billion).")
+if failed:
     print("Check that you installed requirements-lock.txt (exact versions).")
     sys.exit(1)
-print("REPRODUCED: fresh run matches outputs/results.json (every value within 1 part in a billion).")
 EOF
