@@ -161,6 +161,8 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     lifeline_rng = sc.rng(5150)
     lifeline_steps = 0
     call_rng = sc.rng(6060)
+    bounded_calls = bool(f.get("discom_calls_bounded_by_offer", False)) and gs
+    offer_today = None
     headroom_fc = _lifeline_headroom_forecast(fl, hist_last, spd, lifeline_min) if lifeline_on else None
 
     n_hh = fl.hh_load.shape[0]
@@ -192,6 +194,7 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
             reserves.append(_reserve_object("T-24h", sc, fl, fc, steps, window, p["soc"][ws_local],
                                             int(steps[window[steps]][0]) - spd, 0.0, 1.0, P, E, b_res, rng,
                                             headroom=headroom_fc, call_rng=call_rng))
+            offer_today = reserves[-1].get("call_capacity_kw")   # the day-ahead offer the DISCOM contracts
 
         for t in steps:
             hh3 = fl.hh_tier3[:, t]
@@ -214,6 +217,9 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
             elif sig.shed_frac_rt[t] > 1e-4:
                 base_imp = max(gross - roof - cpv, 0.0)
                 request = base_imp * sig.shed_frac_rt[t]
+                if bounded_calls and offer_today is not None:
+                    # ADMS/DERMS dispatches a flexible feeder up to its day-ahead offer, not beyond
+                    request = min(request, offer_today)
                 if gs and slices["control_2g4g"].send():
                     # can GridSetu deliver the requested relief? if not, the DISCOM
                     # treats the feeder like any other and applies the rotation trip
@@ -438,8 +444,10 @@ def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias,
     if headroom is not None:
         # DISCOM calls can last the whole evening (17:00-23:00), not just our 2-hour window, so a
         # firm offer spreads the battery's energy over 6 hours; load-side flexibility counts in full
+        # lifeline headroom (all load above the allowance) already contains the Tier-3 appliances,
+        # so Tier 3 is not added again
         bat_call_kw = min(P, e_bat / 6.0)
-        call_kw, call_conf = _call_capacity(sc, fc, wsteps, bat_call_kw + t3 + t2, headroom, scale,
+        call_kw, call_conf = _call_capacity(sc, fc, wsteps, bat_call_kw + t2, headroom, scale,
                                             call_rng if call_rng is not None else rng)
     return ReliabilityReserve(
         feeder_id=FEEDER_ID, stage=stage, issued_at=str(sc.index[max(issued_step, 0)]),

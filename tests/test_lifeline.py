@@ -48,7 +48,7 @@ def test_reserves_publish_call_capacity_and_confidence():
     rs = w.feeder["gridsetu"].reserves
     assert rs and all(r["call_capacity_kw"] is not None and r["call_capacity_kw"] > 0 for r in rs)
     assert all(0 <= r["call_confidence_pct"] <= 100 for r in rs)
-    assert all(r["call_capacity_kw"] >= r["tier3_kw"] for r in rs)  # lifeline adds to load flexibility
+    assert all(r["call_capacity_kw"] >= r["tier2_kw"] for r in rs)  # lifeline adds to load flexibility
     m = w.feeder["gridsetu"].metrics
     assert m["critical_outage_hours"] == 0.0
     assert m["dark_home_hours"] <= w.feeder["baseline"].metrics["dark_home_hours"]

@@ -58,6 +58,12 @@ def window_outcomes(feeder_result, week: str, seed: int) -> list[dict]:
         own_peak_held = bool(own_resid.max() <= TOL_KW and not st.str.startswith("overload_event").any())
         max_req = float(req.max()) if len(req) else 0.0
         cc = r.get("call_capacity_kw")
+        # what the call confidence promises: every DISCOM request step met (protection-scheme
+        # emergency steps are a separate path and are scored by end_to_end, not here)
+        call_steps = req > 1e-6
+        call_resid = (ts["import"][m] - lim).where(call_steps & energized, 0.0).fillna(0.0)
+        call_met = bool(call_steps.any() and call_resid.max() <= TOL_KW
+                        and not st[call_steps].str.startswith("cap_shortfall_trip").any())
         rows.append({"seed": seed, "week": week, "stage": r["stage"], "window_start": str(ws),
                      "confidence_pct": float(r["confidence_pct"]), "reserve_kw": float(r["reserve_kw"]),
                      "held": held, "end_to_end": e2e, "own_peak_held": own_peak_held,
@@ -66,12 +72,13 @@ def window_outcomes(feeder_result, week: str, seed: int) -> list[dict]:
                      "max_residual_kw": round(float(residual.max()), 2),
                      "call_capacity_kw": cc, "call_confidence_pct": r.get("call_confidence_pct"),
                      # the controller must deliver 95% of a request; inside the offer means it said it could
+                     "call_met": call_met,
                      "within_offer": bool(max_req > 1e-6 and cc is not None and 0.95 * max_req <= cc)})
     return rows
 
 
 def _one_seed(args) -> list[dict]:
-    i, config_path = args
+    i, config_path, extra = args
     import logging
     import warnings
     warnings.filterwarnings("ignore")
@@ -79,7 +86,7 @@ def _one_seed(args) -> list[dict]:
     logging.getLogger("pyomo").setLevel(logging.ERROR)
     from .simulate import stress_and_representative
     seed = 42 + 100 * i            # same seed schedule as `gridsetu run`
-    res = stress_and_representative(config_path, {"simulation": {"seed": seed}}, verbose=False)
+    res = stress_and_representative(config_path, {**(extra or {}), "simulation": {"seed": seed}}, verbose=False)
     rows = []
     for week in ("stress", "representative"):
         rows += window_outcomes(res[week].feeder["gridsetu"], week, seed)
@@ -107,9 +114,10 @@ def _offer_stats(d: pd.DataFrame) -> dict:
         return {}
     w, a = d[d.within_offer], d[~d.within_offer]
     return {"within_offer_n": int(len(w)),
-            "within_offer_met_pct": round(100 * float(w.held.mean()), 1) if len(w) else None,
+            "within_offer_met_pct": round(100 * float(w.call_met.mean()), 1) if len(w) else None,
             "above_offer_n": int(len(a)),
-            "above_offer_met_pct": round(100 * float(a.held.mean()), 1) if len(a) else None,
+            "above_offer_met_pct": round(100 * float(a.call_met.mean()), 1) if len(a) else None,
+            "all_calls_met_pct": round(100 * float(d.call_met.mean()), 1),
             "call_confidence_mean_pct": round(float(d.call_confidence_pct.mean()), 1),
             "request_over_call_capacity_median": round(float((d.max_request_kw / d.call_capacity_kw).median()), 2),
             "request_over_call_capacity_max": round(float((d.max_request_kw / d.call_capacity_kw).max()), 2)}
@@ -138,10 +146,11 @@ def score(df: pd.DataFrame, outcome: str = "held", conf: str = "confidence_pct")
 
 
 def run_calibration(seeds: int = 30, out_dir: str | Path = "outputs", config_path=None,
-                    workers: int = 2, verbose: bool = True) -> dict:
-    out = Path(out_dir) / "calibration"
+                    workers: int = 2, verbose: bool = True, overrides: dict | None = None,
+                    sub: str = "calibration") -> dict:
+    out = Path(out_dir) / sub
     out.mkdir(parents=True, exist_ok=True)
-    jobs = [(i, config_path) for i in range(seeds)]
+    jobs = [(i, config_path, overrides) for i in range(seeds)]
     rows: list[dict] = []
     with ProcessPoolExecutor(max_workers=max(1, workers)) as ex:
         for k, r in enumerate(ex.map(_one_seed, jobs), 1):
@@ -165,11 +174,13 @@ def run_calibration(seeds: int = 30, out_dir: str | Path = "outputs", config_pat
     }
     calls = df[df.discom_request & df.call_confidence_pct.notna()] if "call_confidence_pct" in df else df.iloc[:0]
     if len(calls):
-        result["about"]["outcome_call_met"] = ("second confidence: on evenings with a DISCOM call, the call was "
-                                               "met (no shortfall trip); scored on calls inside the published "
-                                               "call capacity, which is what the confidence promises")
-        result["call_confidence"] = {"within_offer": score(calls[calls.within_offer], "held", "call_confidence_pct"),
-                                     "all_calls": score(calls, "held", "call_confidence_pct")}
+        result["about"]["outcome_call_met"] = ("second confidence: every DISCOM request step in the evening "
+                                               "window was met (import at or under the requested cap, no "
+                                               "shortfall trip); protection-scheme emergency steps excluded. "
+                                               "Scored on calls inside the published call capacity, which is "
+                                               "what the confidence promises")
+        result["call_confidence"] = {"within_offer": score(calls[calls.within_offer], "call_met", "call_confidence_pct"),
+                                     "all_calls": score(calls, "call_met", "call_confidence_pct")}
     (out / "calibration.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
     plot_reliability(df, out / "reserve_calibration.png", seeds)
     return result

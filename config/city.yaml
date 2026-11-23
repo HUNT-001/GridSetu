@@ -116,6 +116,9 @@ pilot_feeder:
     enabled: true                # home at a small allowance instead of the feeder being switched off.
     min_kw_per_home: 0.2         # ASSUMPTION: 200 W = lights, a fan, phone charging (sensitivity in README)
     meter_trip_prob: 0.05        # ASSUMPTION: 5% of limited homes exceed the cap and their meter disconnects them
+  discom_calls_bounded_by_offer: false   # true = ADMS/DERMS dispatches the feeder only up to its day-ahead call
+                                         # capacity (scenario, `calibrate --bounded-calls`); false = the DISCOM
+                                         # asks for the feeder's full share of the shortage (headline, stricter)
   overload_trip:                 # protection model shared by both scenarios
     full_prob_at_overload: 0.10  # trip probability ramps to its max at 10 % overload
     max_prob_per_step: 0.25
