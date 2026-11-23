@@ -69,3 +69,28 @@ homes the fairness ledger paused that step.
 **Stated assumptions.** Bus positions, circuit length, the clinic on bus 4, the school on bus
 11, the water pump at the tail of circuit C (bus 21), street lighting and rooftop PV spread
 evenly. These go on the MATLAB slide as assumptions.
+
+## The low-voltage model: `matlab/run_f07.m` and its Python twin `lvnetwork.py`
+
+**What it does.** Places the exported bus loads on a radial 415 V network (3 circuits × 7
+buses, 600 m of ACSR Rabbit each, a 315 kVA IS 1180 Level-2 transformer) and, for every
+15-minute step, solves a backward/forward-sweep load flow: start every voltage at the source
+value, compute each bus's current from its load, add the currents up the tree (backward), then
+subtract each branch's voltage drop down the tree (forward), and repeat until nothing changes.
+Then the IEC 60076-7 thermal model turns transformer loading into top-oil and hot-spot
+temperature and an ageing rate V = 2^((θh − 98)/6).
+
+**Why you can trust it.** The solver matches a hand-calculated case to 1e-9; the bus loads add
+up to the Python simulator's import at every step; MATLAB and the independent Python twin agree
+to 1e-8 at every step of every case.
+
+**What it found.** GridSetu cuts the transformer's peak loading from 1.37 to 1.19 pu and its
+hot-spot peak by about 9 °C. A battery at the transformer cannot reduce line losses or voltage
+drop; splitting the same storage across the circuits cuts losses about 7% and lifts the worst
+voltage from 0.79 to 0.83 pu. Voltage is outside ±6% on the assumed network in every case.
+
+**Likely question.** *Your voltages look terrible. Is the model wrong?* Three 600 m circuits
+each carry about 113 kW at the evening peak: roughly 166 A per phase, above Rabbit's 156 A
+rating. Hand estimate of the drop: 166 A × 0.67 Ω/km × 0.3 km ≈ 33 V of 240 V, about 14%, plus
+the transformer drop, minus the 433 V tap boost. The model agrees. The answer is the network,
+and GridSetu's per-bus map shows where.
