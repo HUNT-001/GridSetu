@@ -17,6 +17,18 @@ def main(argv=None):
     r.add_argument("--config", default=None, help="scenario YAML (default config/city.yaml)")
     r.add_argument("--pf-every", type=int, default=2, help="run AC power flow every N steps")
     r.add_argument("--quiet", action="store_true")
+    ca = sub.add_parser("calibrate", help="check the Reliability Reserve's stated confidence against outcomes")
+    ca.add_argument("--seeds", type=int, default=30)
+    ca.add_argument("--out", default="outputs")
+    ca.add_argument("--config", default=None)
+    ca.add_argument("--workers", type=int, default=2)
+    nu = sub.add_parser("numbers", help="rebuild outputs/numbers.json and check documents against it")
+    nu.add_argument("--out", default="outputs")
+    nu.add_argument("--check", nargs="*", default=["README.md"], help="files whose figures must match")
+    mx = sub.add_parser("export-matlab", help="write per-bus load profiles of feeder F07 for the MATLAB model")
+    mx.add_argument("--out", default="outputs/matlab")
+    mx.add_argument("--config", default=None)
+    mx.add_argument("--seed", type=int, default=42)
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8000)
@@ -63,6 +75,28 @@ def main(argv=None):
         from .copilot.replay_cli import replay
         replay(args.broker, args.run, args.week, args.speed, args.start, args.steps)
         return
+    if args.cmd == "calibrate":
+        from pathlib import Path
+        from .calibration import run_calibration
+        from .numbers import build_numbers
+        r = run_calibration(args.seeds, args.out, args.config, args.workers)
+        a = r["all_stages"]["held"]
+        print(f"{a['n_forecasts']} forecasts: stated {a['stated_mean_pct']}%, call met {a['observed_pct']}%, "
+              f"own peak held {r['all_stages']['own_peak_held']['observed_pct']}%")
+        if (Path(args.out) / "results.json").exists():
+            build_numbers(args.out)      # fold the calibration figures into numbers.json
+        return
+    if args.cmd == "export-matlab":
+        from .matlab_export import export
+        print("wrote", export(args.out, args.config, args.seed))
+        return
+    if args.cmd == "numbers":
+        from .numbers import build_numbers, check_files
+        build_numbers(args.out)
+        problems = check_files(args.out, args.check)
+        for p in problems:
+            print("MISMATCH:", p)
+        raise SystemExit(1 if problems else 0)
     if args.cmd == "run":
         from .runner import run_all
         run_all(args.out, seeds=args.seeds, config_path=args.config, pf_every=args.pf_every,

@@ -11,7 +11,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![React](https://img.shields.io/badge/UI-React%2019-61DAFB)
-![Tests](https://img.shields.io/badge/tests-45%20passing-2DD4BF)
+![Tests](https://img.shields.io/badge/tests-54%20passing-2DD4BF)
 ![Data](https://img.shields.io/badge/data-synthetic%20simulation-F5A623)
 
 ![Power flowing through the simulated city from 13:00 to midnight on the stress day](docs/images/power-flow.gif)
@@ -54,7 +54,7 @@ Schneider's EcoStruxure ADMS/DERMS already dispatches DERs it has a metered, con
 | Evening peak | Transformer overloads and trips | Battery shaves the peak under the rating |
 | DISCOM asks for relief | Whole feeder tripped in rotation | Relief delivered from battery, then Tier-3, then consented Tier-2 loads |
 | Relief not possible | Feeder dark | Feeder tripped, **critical loads islanded on the battery** |
-| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row |
+| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row unless relief would otherwise fall short (4 logged intervals in the stress week) |
 | What the control room sees | Nothing until it fails | A reserve with kW, duration, confidence and cost, updated at T−24h, T−1h, T−15min, real time and post-event |
 
 **Load tiers on the pilot feeder**
@@ -422,15 +422,15 @@ Monthly composite of three normal weeks and one stress week (a forced 125 MW coa
 
 | Metric, per month | Baseline | GridSetu | Change | + city DR |
 |---|--:|--:|--:|--:|
-| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 546 kWh | −80% | 403 kWh |
-| Unserved energy, all hours (net of rebound) | 3,825 kWh | 811 kWh | −79% | 572 kWh |
-| Critical-load outage | 13.6 h | 0.0 h | −100% | 0.0 h |
-| Whole-feeder outage | 13.6 h | 2.9 h | −79% | 2.0 h |
+| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 529 kWh | −80% | 386 kWh |
+| Unserved energy, all hours (net of rebound) | 3,846 kWh | 792 kWh | −79% | 569 kWh |
+| Critical-load outage | 13.7 h | 0.0 h | −100% | 0.0 h |
+| Whole-feeder outage | 13.7 h | 2.8 h | −79% | 2.0 h |
 | Transformer overload trips | 10 | 0 | −100% | 0 |
 | Peak drawn from the grid | 340 kW | 291 kW | −14% | 291 kW |
 | Battery cycles | – | 17.6 | | 17.6 |
 
-*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,315 to 3,389 kWh; GridSetu 452 to 617 kWh.
+*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,314 to 3,388 kWh; GridSetu 400 to 617 kWh.
 
 **Other studies (stress week)**
 - **Fairness:** all 420 homes shared Tier-3 curtailment, at most 4.0 hours each. Gini of paused hours 0.04, with 654 user overrides honoured.
@@ -471,17 +471,27 @@ Feeder results use the linear market so they stay comparable with Phase 1.
 - **Stress events:** during a 30-hour, 125 MW shortfall a 200 kWh battery cannot supply all the relief requested. The feeder is still tripped for part of the event, but its critical loads stay on.
 - **Frequency support:** about 6 MW of fast response from a quarter of the peri-urban feeders is real but small at city scale. Fairness and critical-load protection are the stronger results.
 
+### Does the Reliability Reserve keep its word?
+
+Every evening GridSetu publishes a reserve with a confidence. We checked all 1,260 published forecasts (30 seeds × 2 weeks × T−24h, T−1h and T−15min) against what actually happened. Run it with `python -m gridsetu calibrate --seeds 30`.
+
+<img src="outputs/calibration/reserve_calibration.png" alt="Stated vs observed reserve outcomes, and DISCOM requests vs published reserve" width="100%">
+
+- **What the confidence covers, it delivers.** The published confidence is the chance of holding the feeder's own evening peak under the transformer limit. It said 100% every time, and the peak was held on every evening in both normal and stress weeks.
+- **What it does not cover, it does not warn about.** On 60 evenings (two per stress week, after the coal unit trips) the DISCOM asked this feeder for relief. Every request was 1.2 to 4.3 times the published reserve (median 2.0 times), GridSetu could not deliver 95% of it, and the feeder was rotated off like its neighbours, with the clinic, school and pump islanded on the battery. The confidence still read 100%, because it never looked at the DISCOM's call.
+- **What we are changing.** The reserve will carry a second confidence for meeting the expected DISCOM call, and a call into the reserve will be bounded by what was published. That is the point of publishing it.
+
 ---
 
 ## Run it locally
 
-**Requirements:** Python 3.11, Node 20 or newer. About 2 GB of RAM; no GPU needed.
+**Requirements:** Python 3.11 or newer (`requirements-lock.txt` is verified on Python 3.13), Node 20 or newer. About 2 GB of RAM; no GPU needed.
 
 ```bash
 git clone https://github.com/HUNT-001/gridsetu.git
 cd gridsetu
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements-lock.txt     # exact versions; requirements.txt has ranges
 
 # build the dashboard once
 cd web && npm install && npm run build && cd ..
@@ -499,7 +509,11 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 45 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 54 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
+| `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
+| `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
+| `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
 | `python -m gridsetu fetch-osm` | Download real OpenStreetMap streets for the city map (`--bbox south,west,north,east` to choose the area) |
 | `python -m gridsetu replay --broker host:1883` | Publish a run as live telemetry to MQTT |
 | `cd web && npm run dev` | Dashboard with hot reload on port 5173, with the API proxied |
@@ -595,6 +609,8 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - In the fleet study, feeders respond to the city but the city does not respond to them: the fleet's reserve is not yet offered back into the market.
 - The frequency model is a two-area aggregate, not a full dynamic network model.
 - The forecasts have not been backtested on real feeder data.
+- The reserve's published confidence covers the feeder's own evening peak, not the DISCOM's relief call. In the simulation the DISCOM can call for more than the reserve offers (up to 4.3 times), and when the feeder is outside the rotation group an unmet call has no modelled consequence.
+- With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.
 
 ## Roadmap
 
@@ -602,6 +618,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - [x] **Phase 2:** city-wide GridSetu fleet, PyPSA unit commitment, city map with OpenStreetMap streets
 - [x] **Phase 3:** control-room dashboard, API, mock ADMS ingest, scenario lab
 - [x] **Phase 4:** operator copilot (Claude, Ollama or offline) with tool calls into the simulator; live telemetry replay with an MQTT bridge
+- [ ] Next: a second reserve confidence for the expected DISCOM call, and calls bounded by the published reserve
 - [ ] Next: offer the fleet's aggregated Reliability Reserve into the market, so the city schedules around it
 - [ ] Later: TimescaleDB history for the replay stream
 
