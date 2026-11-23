@@ -25,6 +25,10 @@ def main(argv=None):
     nu = sub.add_parser("numbers", help="rebuild outputs/numbers.json and check documents against it")
     nu.add_argument("--out", default="outputs")
     nu.add_argument("--check", nargs="*", default=["README.md"], help="files whose figures must match")
+    mx = sub.add_parser("export-matlab", help="write per-bus load profiles of feeder F07 for the MATLAB model")
+    mx.add_argument("--out", default="outputs/matlab")
+    mx.add_argument("--config", default=None)
+    mx.add_argument("--seed", type=int, default=42)
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
     sv.add_argument("--host", default="127.0.0.1")
     sv.add_argument("--port", type=int, default=8000)
@@ -81,6 +85,10 @@ def main(argv=None):
               f"own peak held {r['all_stages']['own_peak_held']['observed_pct']}%")
         if (Path(args.out) / "results.json").exists():
             build_numbers(args.out)      # fold the calibration figures into numbers.json
+        return
+    if args.cmd == "export-matlab":
+        from .matlab_export import export
+        print("wrote", export(args.out, args.config, args.seed))
         return
     if args.cmd == "numbers":
         from .numbers import build_numbers, check_files

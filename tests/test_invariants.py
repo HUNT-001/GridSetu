@@ -147,3 +147,19 @@ def test_island_microgrid_balance(week):
         served = ts["load_kw"] - ts["unserved_kw"]
         assert (supplied - served >= -1e-6).all()   # never serves more than it supplies
         assert m["unserved_kwh"] >= 0
+
+
+def test_matlab_export_balances_feeder_import(week):
+    """Per-bus loads, minus community PV and the battery at the transformer bus, add up to the
+    feeder import Python reports at every energized step; Tier 1 stays on its named buses."""
+    from gridsetu.matlab_export import CRITICAL_BUS, bus_loads, bus_map
+    fl = week.feeder_loads
+    bm = bus_map(fl.hh_load.shape[0], fl.ent_load.shape[0])
+    assert bm.n_homes.sum() == fl.hh_load.shape[0] and bm.n_enterprises.sum() == fl.ent_load.shape[0]
+    for variant in ("baseline", "gridsetu"):
+        loads, feeder = bus_loads(fl, week.feeder[variant])
+        on = feeder.energized == 1
+        head = loads.sum(axis=1) - feeder.community_pv_kw - feeder.battery_kw
+        assert np.allclose(head[on], feeder.import_kw[on], atol=1e-2), variant
+        assert (loads[~on] == 0).all().all(), variant
+    assert set(CRITICAL_BUS.values()) <= set(bm.bus_id)
