@@ -154,12 +154,17 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     b_res = dict(b, soc_min=floor_kwh / E)   # what planning and published reserves may use
     t2_all = (fl.ent_tier2 * fl.ent_optin[:, None])
     sizing_log, reserves = [], []
+    lf = f.get("lifeline", {}) if gs else {}
+    lifeline_on = bool(lf.get("enabled", False))
+    lifeline_min = float(lf.get("min_kw_per_home", 0.3))
+    lifeline_rng = sc.rng(5150)
+    lifeline_steps = 0
 
     n_hh = fl.hh_load.shape[0]
     hh_status = np.zeros((n, n_hh), np.uint8)   # 0 supplied, 1 Tier-3 curtailed, 2 dark
     rec = {k: np.zeros(n) for k in (
         "gross", "net", "import", "battery_kw", "soc", "unserved", "curtail_t3", "curtail_t2",
-        "tier1_unserved", "solar_avail", "solar_used", "spill", "limit", "cap_request",
+        "tier1_unserved", "solar_avail", "solar_used", "spill", "limit", "cap_request", "lifeline_kw",
         "rebound", "t3_avail")}
     state = np.empty(n, dtype=object)
     relief_req = np.zeros(n)   # kW of relief the DISCOM asked of this feeder
@@ -210,8 +215,15 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
                     # treats the feeder like any other and applies the rotation trip
                     p_dis = min(P, max(soc - floor_kwh, 0) * b["eta_discharge"] / dt)
                     flex = p_dis + hh3.sum() * (1 - f["refusal_prob_tier3"]) + t2_all[:, t].sum()
+                    # lifeline: smart meters cap every home at a small allowance (lights, fans,
+                    # phones), so the request can be met without switching the feeder off
+                    lifeline_flex = flex + float(np.maximum(fl.hh_load[:, t] - lifeline_min, 0).sum()) \
+                        - hh3.sum() * (1 - f["refusal_prob_tier3"]) if lifeline_on else flex
                     if flex >= 0.95 * request or not sig.rotation_trip[t]:
                         cap_req, st = base_imp - request, "cap"
+                        relief_req[t] = request
+                    elif lifeline_on and lifeline_flex >= 0.95 * request:
+                        cap_req, st = base_imp - request, "cap+lifeline"
                         relief_req[t] = request
                     else:
                         upstream_trip, st = True, "cap_shortfall_trip"
@@ -251,6 +263,17 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
                         c2 = min(excess, t2_all[:, t].sum())
                         excess -= c2
                     imp -= c3 + c2
+                    if excess > 1e-6 and st == "cap+lifeline":
+                        c_life, dark = _lifeline(fl.hh_load[:, t] - np.where(cmask, hh3, 0.0), excess,
+                                                 lifeline_min, float(lf.get("meter_trip_prob", 0.05)),
+                                                 lifeline_rng)
+                        lim = (fl.hh_load[:, t] - np.where(cmask, hh3, 0.0)) > lifeline_min + 1e-9
+                        hh_status[t, lim] = 3
+                        hh_status[t, dark] = 2
+                        lifeline_steps += 1
+                        imp -= c_life
+                        c2 += c_life          # reported with Tier-2 curtailment as unserved energy
+                        rec["lifeline_kw"][t] = c_life
                 else:
                     ledger.step(0.0, hh3, dt)
                 # serve the rebound queue only with headroom and no active request
@@ -321,10 +344,35 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     ts["relief_requested"] = relief_req
     ts["tier1"] = t1_all
     metrics = feeder_metrics(sc, fl, ts, window, E, b, queue)
+    metrics["dark_home_hours"] = float((hh_status == 2).sum() * dt)              # home fully without supply
+    metrics["dark_home_hours_evening"] = float((hh_status[window] == 2).sum() * dt)
+    metrics["lifeline_home_hours"] = float((hh_status == 3).sum() * dt)          # home limited to the lifeline
+    metrics["lifeline_steps"] = int(lifeline_steps) if gs else 0
     return FeederResult(mode, ts, metrics, ledger.summary() if gs else {}, reserves,
                         [s.stats() for s in slices.values()] if gs else [], sizing_log,
                         {"household_hours": ledger.hours.copy(), "hh_status": hh_status,
                          "household_events": ledger.events.copy()})
+
+
+def _lifeline(load: np.ndarray, need_kw: float, floor_kw: float, trip_prob: float,
+              rng: np.random.Generator) -> tuple[float, np.ndarray]:
+    """Lowest common per-home limit L >= floor_kw that removes need_kw. Homes above L are cut
+    back to L; a share of them exceed it anyway and their meter relay disconnects them.
+    Returns (kW removed, mask of disconnected homes)."""
+    def cut(L):
+        return float(np.maximum(load - L, 0).sum())
+    lo, hi = floor_kw, float(load.max()) if load.size else floor_kw
+    if cut(lo) <= need_kw:                    # even the floor is not enough: everyone at floor
+        L = lo
+    else:
+        for _ in range(40):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if cut(mid) >= need_kw else (lo, mid)
+        L = lo
+    over = load > L + 1e-9
+    dark = over & (rng.random(load.size) < trip_prob)
+    removed = float(np.maximum(load - L, 0)[over & ~dark].sum() + load[dark].sum())
+    return removed, dark
 
 
 def _deliverability(sc, fc, wsteps, soc_now, flex_kwh, bias, scale, b, E, rng, n=800):
