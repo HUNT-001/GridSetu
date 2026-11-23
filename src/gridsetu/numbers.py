@@ -143,6 +143,30 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
                 f"{rq['request_over_reserve_median']:.1f} times",
                 "calibration.json:discom_request_evenings.request_over_reserve_median")
 
+    # low-voltage network study (MATLAB reference results, matlab/run_f07.m)
+    lv_path = out.resolve().parent / "matlab" / "results" / "summary.json"
+    if lv_path.exists():
+        lv = json.loads(lv_path.read_text(encoding="utf-8"))
+        for case, r in lv.items():
+            week, scen = case.split("_", 1)
+            src = f"matlab/results/summary.json:{case}"
+            add(f"lv.{week}.{scen}.technical_loss_kwh", r["technical_loss_kwh"], "kWh/week",
+                f"{r['technical_loss_kwh']:,.0f} kWh", f"{src}.technical_loss_kwh", check=week == "stress")
+            add(f"lv.{week}.{scen}.technical_loss_pct", r["technical_loss_pct"], "%",
+                f"{r['technical_loss_pct']:.1f}%", f"{src}.technical_loss_pct", check=False)
+            add(f"lv.{week}.{scen}.voltage_violation_bus_hours", r["voltage_violation_bus_hours"], "bus-hours/week",
+                f"{r['voltage_violation_bus_hours']:,.0f} bus-hours", f"{src}.voltage_violation_bus_hours",
+                check=week == "stress")
+            add(f"lv.{week}.{scen}.min_voltage_pu", r["min_voltage_pu"], "pu",
+                f"{r['min_voltage_pu']:.2f} pu", f"{src}.min_voltage_pu", check=False)
+            add(f"lv.{week}.{scen}.peak_transformer_loading_pu", r["peak_transformer_loading_pu"], "pu",
+                f"{r['peak_transformer_loading_pu']:.2f} pu", f"{src}.peak_transformer_loading_pu",
+                check=week == "stress")
+            add(f"lv.{week}.{scen}.max_hotspot_c", r["max_hotspot_c"], "deg C",
+                f"{r['max_hotspot_c']:.1f} °C", f"{src}.max_hotspot_c", check=week == "stress")
+            add(f"lv.{week}.{scen}.ageing_equivalent_hours", r["ageing_equivalent_hours"], "h/week",
+                f"{r['ageing_equivalent_hours']:.2f} h", f"{src}.ageing_equivalent_hours", check=False)
+
     versions = {}
     for lib in LIBS:
         try:
