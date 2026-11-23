@@ -54,7 +54,7 @@ Schneider's EcoStruxure ADMS/DERMS already dispatches DERs it has a metered, con
 | Evening peak | Transformer overloads and trips | Battery shaves the peak under the rating |
 | DISCOM asks for relief | Whole feeder tripped in rotation | Relief delivered from battery, then Tier-3, then consented Tier-2 loads |
 | Relief not possible | Feeder dark | Feeder tripped, **critical loads islanded on the battery** |
-| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row |
+| Who carries curtailment | Everyone, all at once | Rotated by a fairness ledger; no home twice in a row unless relief would otherwise fall short (4 logged intervals in the stress week) |
 | What the control room sees | Nothing until it fails | A reserve with kW, duration, confidence and cost, updated at T−24h, T−1h, T−15min, real time and post-event |
 
 **Load tiers on the pilot feeder**
@@ -422,15 +422,15 @@ Monthly composite of three normal weeks and one stress week (a forced 125 MW coa
 
 | Metric, per month | Baseline | GridSetu | Change | + city DR |
 |---|--:|--:|--:|--:|
-| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 546 kWh | −80% | 403 kWh |
-| Unserved energy, all hours (net of rebound) | 3,825 kWh | 811 kWh | −79% | 572 kWh |
-| Critical-load outage | 13.6 h | 0.0 h | −100% | 0.0 h |
-| Whole-feeder outage | 13.6 h | 2.9 h | −79% | 2.0 h |
+| Unserved energy, 17:30 to 19:30 | 2,713 kWh | 529 kWh | −80% | 386 kWh |
+| Unserved energy, all hours (net of rebound) | 3,846 kWh | 792 kWh | −79% | 569 kWh |
+| Critical-load outage | 13.7 h | 0.0 h | −100% | 0.0 h |
+| Whole-feeder outage | 13.7 h | 2.8 h | −79% | 2.0 h |
 | Transformer overload trips | 10 | 0 | −100% | 0 |
 | Peak drawn from the grid | 340 kW | 291 kW | −14% | 291 kW |
 | Battery cycles | – | 17.6 | | 17.6 |
 
-*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,315 to 3,389 kWh; GridSetu 452 to 617 kWh.
+*+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 2,314 to 3,388 kWh; GridSetu 400 to 617 kWh.
 
 **Other studies (stress week)**
 - **Fairness:** all 420 homes shared Tier-3 curtailment, at most 4.0 hours each. Gini of paused hours 0.04, with 654 user overrides honoured.
