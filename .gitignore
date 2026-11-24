@@ -7,3 +7,9 @@ web/dist-demo/
 web/src/snapshot.gen.json
 *.egg-info/
 .env
+
+# Simulink build products
+slprj/
+*.slxc
+matlab/islanding/gridsetu_islanding.slx
+matlab/islanding/results/

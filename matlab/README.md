@@ -30,7 +30,7 @@ That number should be around 1e-8 or smaller. If the Python twin's results are m
 
 ## The model
 
-- **Network:** the 315 kVA transformer (IS 1180 Level 2: 4.5 % impedance; losses 1,025 W at half load, 3,100 W at full load) feeds three radial circuits of 600 m, ACSR Rabbit, seven buses each, 20 homes per bus. The clinic is on bus 4, the school on bus 11, the water pump at the far end of circuit C.
+- **Network:** the 315 kVA transformer (IS 1180 Level 2: 4.5 % impedance; losses 1,025 W at half load, 3,100 W at full load) feeds three radial circuits of 600 m, ACSR Rabbit, seven buses each, with the 1,090 homes spread evenly (about 52 per bus). The clinic is on bus 4, the school on bus 11, the water pump at the far end of circuit C.
 - **Load flow:** `bfs_loadflow.m`, a backward/forward sweep, balanced, per unit on 315 kVA / 415 V. One solve per 15-minute step.
 - **Transformer thermal model:** `dt_thermal.m`, the IEC 60076-7 difference equations with 1-minute sub-steps; relative ageing V = 2^((θh − 98)/6).
 - **Scenarios** (`f07_params.json`): baseline; GridSetu with the battery and community PV at the transformer; GridSetu with the same storage split across the middle bus of each circuit.
@@ -42,3 +42,48 @@ That number should be around 1e-8 or smaller. If the Python twin's results are m
 3. `run_f07.m` compares every step with the Python twin (`src/gridsetu/lvnetwork.py`); `tests/test_lvnetwork.py` does the same from Python.
 
 The committed `results/` were produced by `run_f07.m` and checked against the Python twin.
+
+## Simulink: the critical bus islanding (milliseconds to seconds)
+
+The load-flow model above works in 15-minute steps. `islanding/` shows the moment that matters
+most at a resolution of 0.1 ms: the feeder trips at 18:45, and the battery inverter must keep the
+clinic, school, water pump and street lights alive.
+
+```matlab
+cd matlab/islanding
+run_islanding        % builds gridsetu_islanding.slx, runs GridSetu and the baseline in Simulink
+```
+
+Needs Simulink (R2020b or newer); without Simulink, or in Octave, `run_islanding(false)` runs
+the same model as a plain loop. It prints the key numbers and writes
+`results/islanding_summary.json` and `results/islanding_waveforms.png`.
+
+**The sequence (compressed outage, 9 s):**
+
+| Time | Event | GridSetu | Baseline |
+|---|---|---|---|
+| 1.00 s | Feeder breaker opens | Inverter cannot hold the whole feeder: voltage collapses to 0.55 pu | Critical bus dark |
+| +40 ms | Undervoltage confirmed (2 cycles) | Static switch told to open the tie | |
+| +100 ms | Tie open | Inverter becomes grid-forming; 0.99 pu within 50 ms | |
+| 2.5 s | Water pump starts (direct-on-line, 5× current) | Voltage dips to 0.965 pu, frequency to 49.84 Hz, secondary control restores 50 Hz | |
+| 5.0 s | Grid returns, 115° out of phase | Island speeds up 0.3 Hz to catch the grid's phase | Critical bus back on |
+| 6.94 s | Within 10° and 0.1 Hz for 0.2 s | Tie closes in phase; battery ramps back to its 90 kW dispatch | |
+
+Critical loads see under 0.9 pu for 115 ms, then stay on: in the baseline they are dark for the
+whole outage. The 100 ms at 0.55 pu is a flicker that lights, fans and the pump ride through, but
+it is outside the ITIC/CBEMA curve for sensitive electronics (below 70 % for more than 20 ms), so
+the clinic's equipment needs a small UPS or a faster transfer. An inverter that stays
+grid-forming while connected would remove the dip; that is the next variant to model.
+
+**How it is built.** `build_islanding_model.m` generates the Simulink model as code: a Digital
+Clock, a MATLAB Function block (`GridSetu critical bus`) that calls `islanding_step.m`, a Unit
+Delay holding the 16 states, a To Workspace block and four scopes (frequency, voltage, inverter
+power, battery current). `islanding_reference.m` runs the same step function as a plain loop;
+`run_islanding` checks that Simulink reproduces it and prints the largest difference (0 in MATLAB R2025a). Open the diagram with `open_system('gridsetu_islanding')`.
+
+**What it is, and is not.** An average-value (RMS) model: the inverter is a controlled voltage
+source behind its control loops (1 % frequency droop, 5 % voltage droop, secondary frequency
+restoration, 1.1× current limit), loads are constant impedance, and the pump start is a decaying
+inrush current. It does not model switching ripple or individual phases. Detection, switch and
+control settings are assumptions in `islanding_params.m`, each marked, to be confirmed with an
+inverter vendor and against the DISCOM's protection settings.
