@@ -50,7 +50,7 @@ def test_explain_price_at_the_outage_mentions_scarcity(ctx):
 
 
 def test_tools_return_errors_not_exceptions(ctx):
-    assert "error" in call_tool(ctx, "get_household", {"household_id": "HH-999"})
+    assert "error" in call_tool(ctx, "get_household", {"household_id": "HH-9999"})
     assert "error" in call_tool(ctx, "get_moment", {"time": "banana"})
     assert "error" in call_tool(ctx, "no_such_tool", {})
     ctx.submit_run = lambda *a: pytest.fail("must not submit")

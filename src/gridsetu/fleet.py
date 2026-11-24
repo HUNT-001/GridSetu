@@ -56,7 +56,9 @@ def define_fleet(sc) -> list[FleetFeeder]:
                              dict(f["critical_loads_kw"]), True, float(f["battery"]["power_kw"]),
                              float(f["battery"]["energy_kwh"]), True)
         else:
-            hh = int(rng.integers(260, 600))
+            # the fleet was designed around a 420-home pilot; scale counts with the pilot so each
+            # feeder's demand is unchanged when homes are made lighter
+            hh = int(int(rng.integers(260, 600)) * f["households"] / 420)
             peak = round(hh * f["target_peak_kw"] / f["households"] * rng.uniform(0.9, 1.1), 1)
             rating = float(max(100, 25 * round(peak * rng.uniform(0.84, 1.05) / 25)))
             scale = hh / f["households"]

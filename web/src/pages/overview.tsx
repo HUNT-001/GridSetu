@@ -31,7 +31,7 @@ export default function Overview() {
         <Card>
           <CardHeader>
             <div>
-              <CardTitle>Pilot feeder F07, 420 homes</CardTitle>
+              <CardTitle>Pilot feeder F07, 1,090 homes</CardTitle>
               <CardDescription>Amber homes are fully supplied, teal outlines are Tier-3 appliances paused by the fairness ledger, dark homes have no supply.</CardDescription>
             </div>
             <Segmented<Variant> label="GridSetu variant" size="sm" value={variant === "baseline" ? "gridsetu" : variant}

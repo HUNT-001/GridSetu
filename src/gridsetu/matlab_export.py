@@ -12,7 +12,7 @@ variant (baseline, gridsetu):
 
 Allocation is exact: at every energized step the bus loads, minus community PV and the
 battery at the transformer bus, add up to the feeder import Python reports (tested).
-Assumptions (stated, not measured): homes ``i`` go to bus ``i // 20 + 1``; enterprises
+Assumptions (stated, not measured): homes are spread evenly over the 21 buses (home ``i`` to bus ``i * 21 // n + 1``); enterprises
 round-robin across buses; the health sub-centre, school and water pump sit on named buses;
 street lighting and rooftop PV are spread evenly over the 21 buses.
 
@@ -37,7 +37,7 @@ def bus_map(n_hh: int, n_ent: int) -> pd.DataFrame:
         crit = [name for name, bus in CRITICAL_BUS.items() if bus == b]
         rows.append({"bus_id": b, "circuit": "ABC"[c], "index_on_circuit": k + 1,
                      "position_m": round((k + 1) * CIRCUIT_LENGTH_M / BUSES_PER_CIRCUIT, 1),
-                     "n_homes": int(sum(1 for i in range(n_hh) if i // 20 + 1 == b)),
+                     "n_homes": int(sum(1 for i in range(n_hh) if i * n_bus // n_hh + 1 == b)),
                      "n_enterprises": int(sum(1 for j in range(n_ent) if j % n_bus + 1 == b)),
                      "critical": ";".join(crit)})
     return pd.DataFrame(rows)
@@ -49,7 +49,7 @@ def bus_loads(fl, fr) -> tuple[pd.DataFrame, pd.DataFrame]:
     n_hh, n_ent = fl.hh_load.shape[0], fl.ent_load.shape[0]
     n_bus = N_CIRCUITS * BUSES_PER_CIRCUIT
     T = len(ts)
-    hh_bus = np.arange(n_hh) // 20
+    hh_bus = np.arange(n_hh) * (N_CIRCUITS * BUSES_PER_CIRCUIT) // n_hh
     ent_bus = np.arange(n_ent) % n_bus
     status = fr.extra.get("hh_status", np.zeros((T, n_hh), np.uint8))
     state = ts["state"].astype(str).to_numpy()

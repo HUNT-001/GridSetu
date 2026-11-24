@@ -43,7 +43,9 @@ ASSUMPTIONS = {
     "bess_lowest_2025_inr_per_mw_month": 1.48e5,  # lowest 2025 discovered tariff, same source
     "community_scale_premium": 2.0,               # ASSUMPTION: small unit vs utility tender
     "smart_plug_inr_per_home": 1500.0,            # ASSUMPTION: Wi-Fi/4G relay plug, installed
+    "homes_with_tier3_share": 0.41,               # eMARC: 89 of 216 deployments in homes with AC or water heaters
     "smart_plug_life_years": 5.0,                 # ASSUMPTION
+    "homes": 1090,                                # replaced by the scenario's home count in run_study
     "controller_comms_inr_per_year": 25000.0,     # ASSUMPTION: edge controller (5-yr life) + 4G + platform
     "stress_weeks_per_year": 13,                  # matches the headline month (3 normal + 1 stress)
     "diesel_inr_per_litre": 99.55,                # Chennai, 17 Nov 2026 (DT Next)
@@ -96,7 +98,7 @@ def annual(weekly: dict, a: dict) -> dict:
     avg_price = {v: yr(v, "energy_cost_inr") / yr(v, "import_kwh") for v in ("baseline", "gridsetu")}
     cost = {
         "battery": a["bess_benchmark_inr_per_mw_month"] * 0.1 * 12 * a["community_scale_premium"],
-        "smart_plugs": 420 * a["smart_plug_inr_per_home"] / a["smart_plug_life_years"],
+        "smart_plugs": a["homes"] * a["homes_with_tier3_share"] * a["smart_plug_inr_per_home"] / a["smart_plug_life_years"],
         "controller_comms": a["controller_comms_inr_per_year"],
     }
     total_cost = sum(cost.values())
@@ -115,7 +117,7 @@ def annual(weekly: dict, a: dict) -> dict:
         "avg_purchase_price_inr_per_kwh": {k: round(v, 2) for k, v in avg_price.items()},
         "costs_inr_per_year": {k: round(v) for k, v in cost.items()},
         "total_cost_inr_per_year": round(total_cost),
-        "cost_per_home_per_month_inr": round(total_cost / 420 / 12, 1),
+        "cost_per_home_per_month_inr": round(total_cost / a["homes"] / 12, 1),
         "breakeven_value_inr_per_kwh": round(breakeven, 2),
         "at_reference_values": ref,
     }
@@ -160,7 +162,7 @@ def _charts(out: Path, res: dict) -> None:
     ax.barh(0, ref["diesel_backup"]["reliability_value_inr"] / LAKH, color=TEAL, height=0.55)
     ax.set_yticks([2, 1, 0], ["What it costs", f"Outages avoided\nat ₹{ref['iex_ceiling']['value_inr_per_kwh']:.0f}/kWh (IEX ceiling)",
                               f"Outages avoided\nat ₹{ref['diesel_backup']['value_inr_per_kwh']:.0f}/kWh (diesel backup)"])
-    ax.set_xlabel("₹ lakh per year, one feeder (420 homes)")
+    ax.set_xlabel(f"₹ lakh per year, one feeder ({res['about']['assumptions']['homes']:,} homes)")
     ax.set_title(f"GridSetu pays for itself if an avoided outage is worth more than "
                  f"₹{yr['breakeven_value_inr_per_kwh']:.1f} per kWh", loc="left")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=4, frameon=False, fontsize=9)
@@ -195,11 +197,12 @@ def run_study(out_dir: str | Path = "outputs/economics", config_path=None, seeds
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     sim = simulate(seeds, config_path)
+    a = {**ASSUMPTIONS, "homes": int(load_scenario(config_path).feeder["households"])}
     res = {"about": {"label": "SIMULATION priced with real IEX prices; costs from the 2025 Indian BESS benchmark",
-                     "seeds": seeds, "assumptions": ASSUMPTIONS, "sources": SOURCES},
+                     "seeds": seeds, "assumptions": a, "sources": SOURCES},
            "weekly_mean": sim["mean"],
-           "annual": annual(sim["mean"], ASSUMPTIONS),
-           "sensitivity": sensitivity(sim["mean"], ASSUMPTIONS)}
+           "annual": annual(sim["mean"], a),
+           "sensitivity": sensitivity(sim["mean"], a)}
     (out / "economics.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
     _charts(out, res)
     return res

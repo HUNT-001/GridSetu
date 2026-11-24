@@ -176,16 +176,20 @@ def feeder_loads(sc: Scenario, weather: pd.DataFrame, seed: int, hh_scale: float
     hours = idx.hour.values + idx.minute.values / 60
     temp = weather["temp_c"].values
 
-    # households: shared shape, individual time shift, size and noise
-    base = np.array(HOURLY_SHAPES["domestic"])
-    size = rng.lognormal(0, 0.35, n_hh)
-    shift_h = rng.normal(0, 0.5, n_hh)
-    hh = np.empty((n_hh, n))
-    for i in range(n_hh):
-        hh[i] = np.interp((hours - shift_h[i]) % 24, np.arange(25), list(base) + [base[0]])
-    hh *= size[:, None]
+    hm = f.get("household_model", {"source": "legacy"})
+    if hm.get("source", "legacy") == "emarc":
+        hh = _emarc_households(n_hh, hours, rng, hm)
+    else:
+        # legacy: shared shape, individual time shift, size and noise (too coincident; see README)
+        base = np.array(HOURLY_SHAPES["domestic"])
+        size = rng.lognormal(0, 0.35, n_hh)
+        shift_h = rng.normal(0, 0.5, n_hh)
+        hh = np.empty((n_hh, n))
+        for i in range(n_hh):
+            hh[i] = np.interp((hours - shift_h[i]) % 24, np.arange(25), list(base) + [base[0]])
+        hh *= size[:, None]
+        hh *= np.clip(1 + rng.normal(0, 0.12, (n_hh, n)), 0.3, None)
     hh *= 1 + 0.02 * (temp[None, :] - 27)
-    hh *= np.clip(1 + rng.normal(0, 0.12, (n_hh, n)), 0.3, None)
     evening = (hours >= 17) & (hours < 23)
     t3_frac = f["tier3_share_of_household"] * np.where(evening, 1.4, 0.8)
 
@@ -204,10 +208,13 @@ def feeder_loads(sc: Scenario, weather: pd.DataFrame, seed: int, hh_scale: float
         # calibrate household scale so the coincident gross peak hits the target
         other = ent.sum(axis=0) + tier1
         hh_sum = hh.sum(axis=0)
+        # the scenario is defined by its evening peak (an overloaded DT in the evening ramp);
+        # "evening" anchors the target there, "any" at whatever hour demand peaks
+        win = (hours >= 17) & (hours < 23) if f.get("target_peak_window", "any") == "evening" else np.ones(n, bool)
         lo, hi = 0.01, 5.0
         for _ in range(60):
             mid = (lo + hi) / 2
-            if (mid * hh_sum + other).max() > f["target_peak_kw"]:
+            if (mid * hh_sum + other)[win].max() > f["target_peak_kw"]:
                 hi = mid
             else:
                 lo = mid
@@ -219,6 +226,50 @@ def feeder_loads(sc: Scenario, weather: pd.DataFrame, seed: int, hh_scale: float
     community = pv_power(weather["ghi"].values, temp, f["community_solar_kwp"])
     return FeederLoads(idx, hh, hh_t3, ent, ent * 0.5, ent_optin, critical,
                        rooftop, community, weather), hh_scale
+
+
+_EMARC_PROFILE = None
+
+
+def _emarc_profile() -> np.ndarray:
+    """Mean load per home (kW, 96 blocks), measured Indian homes Aug-Oct (Prayas eMARC, CC0)."""
+    global _EMARC_PROFILE
+    if _EMARC_PROFILE is None:
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[2] / "data" / "real" / "emarc_mainline_summary.json"
+        _EMARC_PROFILE = np.array(json.loads(p.read_text(encoding="utf-8"))["groups"]["all|aug_oct"]["profile"])
+    return _EMARC_PROFILE
+
+
+def _emarc_households(n_hh: int, hours: np.ndarray, rng: np.random.Generator, hm: dict) -> np.ndarray:
+    """Homes fitted to measured Indian smart-meter data: a steady base following the measured
+    average day (shifted per home) plus random appliance events (lognormal power, geometric
+    duration) whose timing follows the same average day. Parameters fitted to eMARC Aug-Oct:
+    daily energy spread, daily peaks, evening load above 200 W and coincidence."""
+    m = _emarc_profile()
+    beta, pm, dbar = float(hm["event_share"]), float(hm["event_kw"]), float(hm["event_steps"])
+    n = len(hours)
+    size = rng.lognormal(0, float(hm["size_sigma"]), n_hh)
+    size /= size.mean()
+    grid = np.arange(97) / 4
+    mm = np.r_[m, m[0]]
+    shift = rng.normal(0, float(hm["shift_h"]), n_hh)
+    base = np.array([np.interp((hours - sh) % 24, grid, mm) for sh in shift]) * (1 - beta) * size[:, None]
+    mt = np.interp(hours % 24, grid, mm)
+    p = beta * mt[None, :] * size[:, None] / (pm * dbar)
+    starts = rng.random((n_hh, n)) < p
+    power = rng.lognormal(np.log(pm) - 0.18, 0.6, (n_hh, n))
+    dur = rng.geometric(1 / dbar, (n_hh, n))
+    ev = np.zeros((n_hh, n))
+    for k in range(int(4 * dbar) + 1):
+        add = np.where(starts & (dur > k), power, 0.0)
+        if k:
+            ev[:, k:] += add[:, :n - k]
+        else:
+            ev += add
+    hh = base + ev
+    return hh * np.clip(1 + rng.normal(0, 0.1, (n_hh, n)), 0.3, None)
 
 
 def history_weeks(sc: Scenario, hh_scale: float, n_weeks: int):

@@ -214,11 +214,14 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
                 f"{100 * node['evening_above_200w_share']:.0f}%", f"{src}:{side}.evening_above_200w_share", check=False)
             add(f"households.{side}_coincidence", node["coincidence"], "", f"{node['coincidence']:.2f}",
                 f"{src}:{side}.coincidence", check=False)
-        for n, r in h.get("same_feeder_demand_more_homes", {}).items():
+        if "legacy_synthetic" in h:
+            add("households.legacy_daily_kwh", h["legacy_synthetic"]["daily_kwh_mean"], "kWh/day",
+                f"{h['legacy_synthetic']['daily_kwh_mean']:.1f} kWh a day", f"{src}:legacy_synthetic.daily_kwh_mean")
+        for case, r in h.get("fitted_vs_legacy", {}).items():
             for v in ("baseline", "gridsetu"):
-                for k in ("evening_window_unserved_kwh", "dark_home_hours"):
-                    add(f"households.homes_{n}.{v}.{k}", r[v][k], "per month", f"{r[v][k]:,.0f}",
-                        f"{src}:same_feeder_demand_more_homes.{n}.{v}.{k}", check=False)
+                for k in ("evening_window_unserved_kwh", "dark_home_hours", "feeder_outage_hours"):
+                    add(f"households.{case}.{v}.{k}", r[v][k], "per month", f"{r[v][k]:,.1f}" if "hours" in k and "home" not in k
+                        else f"{r[v][k]:,.0f}", f"{src}:fitted_vs_legacy.{case}.{v}.{k}", check=False)
 
     # low-voltage network study (MATLAB reference results, matlab/run_f07.m)
     lv_path = out.resolve().parent / "matlab" / "results" / "summary.json"
