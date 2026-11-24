@@ -142,7 +142,7 @@ title('Zoom: detect (40 ms), open the tie (60 ms), form the island');
 subplot(3, 2, 3);
 plot(t, G(:, 2), 'Color', navy, 'LineWidth', 1.6); hold on;
 mark(ev, evl, [49.6 50.4]); ylim([49.6 50.4]); xlim([0 p.t_end]); grid on;
-text(p.t_return + 0.1, 50.36, 'deliberate +0.3 Hz to catch the grid''s phase', 'FontSize', 8, 'Color', [0.3 0.3 0.3]);
+text(p.t_return + 0.1, 50.33, 'deliberate +0.3 Hz to catch the grid''s phase', 'FontSize', 8, 'Color', [0.3 0.3 0.3]);
 ylabel('Frequency (Hz)'); title('Frequency set by the battery inverter in the island');
 
 subplot(3, 2, 4);
