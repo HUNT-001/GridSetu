@@ -118,3 +118,27 @@ would set it. We show the sensitivity.
 **Q: What happens to a home that uses more than 200 W?**
 Its meter disconnects it, as prepaid meters already do when a load limit is exceeded. We assume
 5% of limited homes do that, and count them as dark.
+
+## Money
+
+**Q: What does it cost, and who pays?**
+About ₹7.0 lakh a year for one 420-home feeder, or ₹140 per home per month. Most of it is the
+battery, priced from the 2025 Indian benchmark for 2-hour storage and doubled for small scale.
+It pays for itself if an avoided outage is worth more than ₹21.8 per kWh. Diesel backup costs
+about ₹33/kWh, so for anyone who would otherwise run a generator, it pays.
+
+**Q: At ₹10/kWh it doesn't pay. Isn't that a problem?**
+On energy value alone, no, it doesn't: benefit ÷ cost is 0.46 at the IEX ceiling. We say so.
+The case rests on reliability: the clinic, school and pump never go dark, homes keep a lifeline
+instead of a blackout, and the transformer stops tripping. Those are worth more than the
+exchange price, which is why people buy diesel generators.
+
+**Q: Doesn't the battery make money by buying cheap and selling dear?**
+Not on this feeder. GridSetu serves more energy in the expensive evening than a feeder that is
+switched off, so the average price paid per kWh stays the same (₹4.36 vs ₹4.35). We don't claim
+arbitrage income.
+
+**Q: What would make it cheaper?**
+Battery price is the biggest lever: at utility-scale cost the break-even falls to about
+₹15/kWh. Viability gap funding, pooling several feeders' batteries in one tender, or RDSS
+funding for the smart plugs would all help.

@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-23T17:00:31+00:00",
-    "git_commit": "b35b7a7",
+    "generated_at": "2026-11-24T06:40:35+00:00",
+    "git_commit": "cb93629",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -439,6 +439,48 @@
       "unit": "count",
       "display": "170 forecasts",
       "source": "calibration_bounded/calibration.json:call_confidence.within_offer.n_forecasts",
+      "check": false
+    },
+    "economics.breakeven_inr_per_kwh": {
+      "value": 21.77,
+      "unit": "INR/kWh",
+      "display": "₹21.8 per kWh",
+      "source": "economics/economics.json:annual.breakeven_value_inr_per_kwh",
+      "check": true
+    },
+    "economics.total_cost_lakh": {
+      "value": 7.0,
+      "unit": "INR lakh/year",
+      "display": "₹7.0 lakh a year",
+      "source": "economics/economics.json:annual.total_cost_inr_per_year",
+      "check": true
+    },
+    "economics.cost_per_home_month": {
+      "value": 140,
+      "unit": "INR/home/month",
+      "display": "₹140 per home per month",
+      "source": "economics/economics.json:annual.cost_per_home_per_month_inr",
+      "check": true
+    },
+    "economics.unserved_avoided_kwh": {
+      "value": 41929,
+      "unit": "kWh/year",
+      "display": "41,929 kWh",
+      "source": "economics/economics.json:annual.unserved_avoided_kwh_per_year",
+      "check": true
+    },
+    "economics.bcr_iex_ceiling": {
+      "value": 0.46,
+      "unit": "ratio",
+      "display": "0.46",
+      "source": "economics/economics.json:annual.at_reference_values.iex_ceiling.benefit_cost_ratio",
+      "check": false
+    },
+    "economics.bcr_diesel_backup": {
+      "value": 1.52,
+      "unit": "ratio",
+      "display": "1.52",
+      "source": "economics/economics.json:annual.at_reference_values.diesel_backup.benefit_cost_ratio",
       "check": false
     },
     "lv.stress.baseline.technical_loss_kwh": {

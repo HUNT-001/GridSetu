@@ -155,3 +155,23 @@ The calibration scores it on calls inside the offer.
 **Likely question.** *Why not always use lifeline instead of the battery?* Lifeline limits
 every home; the battery limits nobody. So the battery goes first, then Tier 3 and Tier 2, and
 lifeline only when those run out.
+
+## Business case: `economics.py`
+
+**What it does.** Runs the stress and normal weeks for 3 seeds and prices every 15 minutes with
+the real IEX prices. It annualises (13 stress + 39 normal weeks), adds up the costs, and reports
+the **break-even value**: what an avoided kWh of outage must be worth for the costs to be
+covered.
+
+**Costs:**
+- **Battery:** the 2025 Indian benchmark tariff for 2-hour storage (₹2.3 lakh/MW/month), which already includes capital, maintenance and return, × 2 for small scale.
+- **Smart plugs:** ₹1,500 per home over 5 years.
+- **Controller and comms:** ₹25,000 a year.
+
+**Result.** ₹7.0 lakh a year; break-even ₹21.8 per kWh; benefit ÷ cost 0.46 at the IEX
+ceiling and 1.52 at diesel-backup cost. The sensitivity chart shows the battery price matters
+most.
+
+**Likely question.** *Why not just assume a value of lost load?* There's no solid Indian
+figure for this kind of community. A break-even lets the DISCOM or a funder put in their own
+number and see the answer at once.

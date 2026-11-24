@@ -1,6 +1,8 @@
 """Command line: python -m gridsetu run [--seeds 3] [--out outputs] [--config config/city.yaml]"""
 from __future__ import annotations
 
+import json
+
 import argparse
 import logging
 import warnings
@@ -35,6 +37,8 @@ def main(argv=None):
     lv = sub.add_parser("lv-study", help="low-voltage network study (Python twin of matlab/run_f07.m) + charts")
     lv.add_argument("--in", dest="in_dir", default="outputs/matlab")
     lv.add_argument("--out", default="outputs/lv")
+    ec = sub.add_parser("economics", help="rupee business case priced with real IEX prices")
+    ec.add_argument("--out", default="outputs/economics")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
     rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
@@ -102,6 +106,13 @@ def main(argv=None):
     if args.cmd == "export-matlab":
         from .matlab_export import export
         print("wrote", export(args.out, args.config, args.seed))
+        return
+    if args.cmd == "economics":
+        from .economics import run_study as run_econ
+        r = run_econ(args.out)
+        print(json.dumps(r["annual"], indent=2))
+        for srow in r["sensitivity"]:
+            print(f"  {srow['assumption']}: break-even {srow['breakeven_low']} .. {srow['breakeven_high']} INR/kWh")
         return
     if args.cmd == "real-data":
         from .realstudy import run_study
