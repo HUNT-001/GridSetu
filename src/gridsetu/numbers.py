@@ -180,6 +180,24 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             add(f"{tag}.call_confidence_n", cc["n_forecasts"], "count", f"{cc['n_forecasts']:,} forecasts",
                 f"{sub}/calibration.json:call_confidence.within_offer.n_forecasts", check=False)
 
+    # business case (python -m gridsetu economics)
+    ec_path = out / "economics" / "economics.json"
+    if ec_path.exists():
+        e = json.loads(ec_path.read_text(encoding="utf-8"))["annual"]
+        src = "economics/economics.json:annual"
+        add("economics.breakeven_inr_per_kwh", e["breakeven_value_inr_per_kwh"], "INR/kWh",
+            f"₹{e['breakeven_value_inr_per_kwh']:.1f} per kWh", f"{src}.breakeven_value_inr_per_kwh")
+        add("economics.total_cost_lakh", round(e["total_cost_inr_per_year"] / 1e5, 1), "INR lakh/year",
+            f"₹{e['total_cost_inr_per_year'] / 1e5:.1f} lakh a year", f"{src}.total_cost_inr_per_year")
+        add("economics.cost_per_home_month", round(e["cost_per_home_per_month_inr"]), "INR/home/month",
+            f"₹{e['cost_per_home_per_month_inr']:.0f} per home per month", f"{src}.cost_per_home_per_month_inr")
+        add("economics.unserved_avoided_kwh", e["unserved_avoided_kwh_per_year"], "kWh/year",
+            f"{e['unserved_avoided_kwh_per_year']:,} kWh", f"{src}.unserved_avoided_kwh_per_year")
+        for k in ("iex_ceiling", "diesel_backup"):
+            r = e["at_reference_values"][k]
+            add(f"economics.bcr_{k}", r["benefit_cost_ratio"], "ratio", f"{r['benefit_cost_ratio']:.2f}",
+                f"{src}.at_reference_values.{k}.benefit_cost_ratio", check=False)
+
     # low-voltage network study (MATLAB reference results, matlab/run_f07.m)
     lv_path = out.resolve().parent / "matlab" / "results" / "summary.json"
     if lv_path.exists():

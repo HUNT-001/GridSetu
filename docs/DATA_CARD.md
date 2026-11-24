@@ -80,6 +80,18 @@ These come from documents, not from our feeder. Details and links are in
 | ₹10/kWh exchange price ceiling | IEX day-ahead market rules (confirmed in the IEX data above) |
 | Smart meters with a utility-set load limit, automatic disconnect and reconnect, and remote connect/disconnect (used by lifeline mode) | MSEDCL smart prepaid meter specification, which follows IS 16444 (clauses 6.34, 6.35, 13.01, 13.02, 6.41.01). Remote real-time changes to the limit are not stated explicitly and must be confirmed. |
 
+### Business-case inputs (SOURCED / ASSUMED)
+
+| Input | Value | Source or status |
+|---|---|---|
+| Battery cost | ₹2.3 lakh per MW per month (2-hour storage, covers capital, O&M and return) | SOURCED: 2025 Indian indicative benchmark tariff, IEEFA–JMK report via ESS News, May 2026. Lowest 2025 bid ₹1.48 lakh |
+| Community-scale premium | 2× the benchmark | ASSUMED; sensitivity 1×–3× |
+| Smart plug per home | ₹1,500 installed, 5-year life | ASSUMED; sensitivity ₹750–₹3,000 |
+| Edge controller, comms, platform | ₹25,000 a year | ASSUMED |
+| Diesel | ₹99.55 a litre, Chennai, 17 Nov 2026 | SOURCED: DT Next |
+| Small generator output | 3 kWh per litre | ASSUMED |
+| Exchange prices for the year | the one real IEX week (14–20 Sep 2025), repeated | REAL data, but a simplification: other seasons differ |
+
 ## Synthetic
 
 | Input | Where | Tested against real data? |

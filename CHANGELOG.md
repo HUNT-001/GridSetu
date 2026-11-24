@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased: business case (November 2026)
+
+### Added
+- `python -m gridsetu economics`: a year of the pilot feeder priced with real IEX prices. Costs come from the 2025 Indian battery benchmark tariff (×2 for small scale), smart plugs, and controller and comms. It reports the break-even value of an avoided kWh of outage (₹21.8) and a sensitivity on four assumptions. Results and 2 charts in `outputs/economics/`; README section "What it costs, and when it pays"; figures in `numbers.json`; checked by `reproduce.sh`.
+- Data card: business-case inputs with sources. Q&A: money questions.
+- 2 tests (69 in total).
+
+### Fixed
+- README test counts (badge said 59, table 63).
+
 ## Unreleased: lifeline mode and the second confidence (November 2026)
 
 ### Added

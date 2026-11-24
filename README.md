@@ -11,7 +11,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![React](https://img.shields.io/badge/UI-React%2019-61DAFB)
-![Tests](https://img.shields.io/badge/tests-59%20passing-2DD4BF)
+![Tests](https://img.shields.io/badge/tests-69%20passing-2DD4BF)
 ![Data](https://img.shields.io/badge/data-synthetic%20simulation-F5A623)
 
 ![Power flowing through the simulated city from 13:00 to midnight on the stress day](docs/images/power-flow.gif)
@@ -536,6 +536,30 @@ Household load stays synthetic in every case.
 
 Our synthetic stress week forces two deeply overcast days; the real week of 14–20 September 2025 had none, so GridSetu does better on it. The critical loads stay powered in all three cases. We keep the harsher synthetic week for the headline figures.
 
+### What it costs, and when it pays
+
+`python -m gridsetu economics` prices the pilot feeder for a year (13 stress weeks and 39 normal weeks, matching the headline month), with the real IEX prices and a battery cost from the market: the 2025 Indian benchmark tariff for 2-hour storage, ₹2.3 lakh per MW per month ([IEEFA–JMK, 2026](https://www.ess-news.com/2026/05/19/india-awards-10-4-gw-of-standalone-bess-capacity-in-2025-but-tariff-viability-remains-a-concern/)). That tariff already covers capital, maintenance and return; we double it because a 100 kW unit costs more per MW than a 250 MW tender.
+
+| Per year, one feeder | ₹ |
+|---|--:|
+| Battery (benchmark tariff × 2) | 5.52 lakh |
+| Smart plugs for Tier 3 (₹1,500 a home, 5-year life) | 1.26 lakh |
+| Edge controller and comms | 0.25 lakh |
+| **Total** | **₹7.0 lakh a year**, or ₹140 per home per month |
+| Extra energy bought for the outages avoided (at IEX prices) | 2.10 lakh |
+
+GridSetu avoids 41,929 kWh of outage a year. So it pays for itself if an avoided outage is worth more than **₹21.8 per kWh** to the community:
+
+- Valued at the IEX price ceiling (₹10/kWh), it does not: benefit ÷ cost is 0.46.
+- Valued at what diesel backup costs (₹99.55 a litre in Chennai, about ₹33/kWh), it does: benefit ÷ cost is 1.52.
+- The battery's price matters most: at utility-scale cost the break-even falls to about ₹15/kWh, at three times it rises to about ₹28/kWh.
+
+GridSetu does not lower the average price paid for each kWh (₹4.36 against ₹4.35), because it serves more energy in the expensive evening. Its value is reliability, not arbitrage.
+
+<img src="outputs/economics/charts/business_case.png" alt="Annual cost of GridSetu against the value of outages avoided" width="100%">
+
+<img src="outputs/economics/charts/business_case_sensitivity.png" alt="Break-even value of avoided outage under different assumptions" width="100%">
+
 ---
 
 ## Run it locally
@@ -564,12 +588,13 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 63 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 69 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
 | `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
 | `python -m gridsetu lv-study` | Low-voltage network study (Python twin of the MATLAB model) and its charts, in `outputs/lv/` |
 | `matlab/run_f07.m`, `matlab/make_figures.m` | The MATLAB low-voltage model and its charts (MATLAB R2019b+ or GNU Octave 7+, no toolboxes) |
+| `python -m gridsetu economics` | Rupee business case at real IEX prices, in `outputs/economics/` (about a minute) |
 | `python -m gridsetu real-data` | Checks the scenario against real weather (NASA POWER) and real prices (IEX), in `outputs/real_data/` (about 40 seconds) |
 | `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
 | `python -m gridsetu fetch-osm` | Download real OpenStreetMap streets for the city map (`--bbox south,west,north,east` to choose the area) |
@@ -671,6 +696,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - The frequency model is a two-area aggregate, not a full dynamic network model.
 - The forecasts have been backtested on real weather but not on real feeder load. Real weather is hourly, so it has no within-hour cloud variability, which flatters the solar forecast. A full month on real weather is not possible yet: the NASA file covers only the stress week and its training weeks.
 - The DISCOM's calls are larger than the firm call capacity (median 1.58 times), so with calls as today the call confidence can rarely be tested; with calls bounded by the offer it holds. Whether a DISCOM would contract on the offer is a policy question, not a modelling one.
+- The business case uses one real IEX week (September 2025) for all 52 weeks, a 2x premium for community-scale storage and assumed smart-plug and controller costs. It does not count avoided transformer failures, diesel saved at the clinic, or the DISCOM's revenue on the extra energy sold.
 - Lifeline needs the smart meter's load limit to be set remotely in real time. Indian prepaid specifications include a utility-set load limit with automatic disconnect and reconnect; remote real-time changes must be confirmed with the DISCOM or meter vendor. Rationing homes to a lifeline in a shortage would also need the state regulator's approval.
 - The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
 - With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.
