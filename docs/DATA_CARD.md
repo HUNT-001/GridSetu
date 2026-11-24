@@ -100,7 +100,7 @@ These come from documents, not from our feeder. Details and links are in
 |---|---|---|
 | Battery cost | ₹2.3 lakh per MW per month (2-hour storage, covers capital, O&M and return) | SOURCED: 2025 Indian indicative benchmark tariff, IEEFA–JMK report via ESS News, May 2026. Lowest 2025 bid ₹1.48 lakh |
 | Community-scale premium | 2× the benchmark | ASSUMED; sensitivity 1×–3× |
-| Smart plug per home | ₹1,500 installed, 5-year life | ASSUMED; sensitivity ₹750–₹3,000 |
+| Smart plug per home | ₹1,500 installed, 5-year life, one in every home (the model gives every home some Tier-3 load; eMARC suggests 41% own an AC or water heater) | ASSUMED; sensitivity ₹750–₹3,000 |
 | Edge controller, comms, platform | ₹25,000 a year | ASSUMED |
 | Diesel | ₹99.55 a litre, Chennai, 17 Nov 2026 | SOURCED: DT Next |
 | Small generator output | 3 kWh per litre | ASSUMED |
@@ -112,7 +112,8 @@ These come from documents, not from our feeder. Details and links are in
 |---|---|---|
 | Weather for the headline results | `src/gridsetu/weather.py` | Yes. Real sunshine was lower (4.1 vs 5.2 kWh/m²/day over the same 63 days) and steadier. |
 | Exchange price curve for the headline results | `exchange_price` in `config/city.yaml` | Yes. The real evening reached the ₹10 ceiling on 6 of 7 days; ours stops at ₹9.8. Real midday prices were far lower. |
-| Household, enterprise and critical loads; Tier 1/2/3 split; temperature sensitivity | `config/city.yaml`, `src/gridsetu/profiles.py` | Partly. Against measured Indian homes, ours use about 1.9× the energy and peak together far more (coincidence 0.85 vs 0.35). Feeder-level results hold with the same demand over more homes; see README |
+| Household load | `household_model` in `config/city.yaml`, `_emarc_households` in `src/gridsetu/profiles.py` | Yes. Fitted to Prayas eMARC (Aug–Oct): 4.9 vs 4.6 kWh a day, evening 0.22 vs 0.21 kW, coincidence 0.30 vs 0.35. Median home lighter than measured (3.2 vs 4.1 kWh). Not Tamil Nadu homes. The first model (420 homes, 8.6 kWh a day) is kept as `source: legacy` |
+| Enterprise and critical loads; Tier 1/2/3 split; temperature sensitivity | `config/city.yaml`, `src/gridsetu/profiles.py` | No. Every home has a Tier-3 share (14% of its load); in eMARC only about 41% of homes own an AC or water heater |
 | Wind generation | `src/gridsetu/weather.py` (also used in real-weather runs) | No |
 | City generation fleet, network, forced outage | `config/city.yaml` | No |
 | DISCOM relief requests and rotation | `config/city.yaml`, `src/gridsetu/market.py` | No |

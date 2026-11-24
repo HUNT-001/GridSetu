@@ -34,8 +34,8 @@ rebuilds it, so a hand edit is overwritten and the check fails.
 what it covers. In the first version, on all 60 evenings with a DISCOM call the request was
 far above the published reserve and the call was not met. That led to lifeline mode and the
 second (call) confidence, scored by `call_met`: see "Lifeline mode and the second confidence"
-below. Now 20 of 60 calls are met as the DISCOM calls today, and 58 of 60 when calls are
-bounded by our offer.
+below. With the fitted homes, 0 of 60 calls are met in full as the DISCOM calls today, and
+52 of 60 when calls are bounded by our offer.
 
 **Scores.** Brier score = mean of (stated probability − outcome)², 0 is perfect. With every
 forecast at 100%, a reliability diagram collapses to one point, so the chart shows stated vs
@@ -57,8 +57,8 @@ noise between processors). CI runs it on every pull request.
 ## `matlab_export.py`: feeder F07 for the MATLAB model
 
 **What it does.** The Python simulator treats the feeder as one point. The MATLAB model needs
-the loads on a radial low-voltage network. `python -m gridsetu export-matlab` places the 420
-homes (20 per bus), 35 micro-enterprises and the critical loads on 21 buses (3 circuits × 7
+the loads on a radial low-voltage network. `python -m gridsetu export-matlab` places the 1,090
+homes (spread evenly, about 52 per bus), 35 micro-enterprises and the critical loads on 21 buses (3 circuits × 7
 buses, 600 m each) and writes per-bus net load for every 15-minute step, plus the feeder-head
 import, battery, community PV, energized state and ambient temperature.
 
@@ -142,10 +142,10 @@ enough, the feeder is switched off as before, with the critical loads islanded o
 The calibration scores it on calls inside the offer.
 
 **What it found.**
-- Monthly home-hours without supply fall from 5,740 to 291, and whole-feeder outage from 13.7 h to 0.5 h.
-- With calls bounded by the day-ahead offer, 58 of 60 call evenings are met, and the 90% call confidence held 97.6% of the time.
-- With calls as the DISCOM makes them today (median 1.58 times our offer), 20 of 60 are met.
-- Across 20 feeders, home-hours without supply in the stress week fall 75% at full adoption (26% before lifeline).
+- Monthly home-hours without supply fall from 18,167 to 2,484, and whole-feeder outage from 16.7 h to 2.2 h (fitted homes).
+- With calls bounded by the day-ahead offer, 52 of 60 call evenings are met, and the 90% call confidence held 89.7% of the time: well calibrated.
+- With calls as the DISCOM makes them today (median 2.15 times our offer), 0 of 60 are met in full.
+- Across 20 feeders, home-hours without supply in the stress week fall 44% at full adoption (75% with the first, heavier homes; 26% before lifeline).
 
 **Bugs it exposed and fixed.**
 - An accepted DISCOM cap outside the rotation group could be missed with no consequence.
@@ -165,11 +165,11 @@ covered.
 
 **Costs:**
 - **Battery:** the 2025 Indian benchmark tariff for 2-hour storage (₹2.3 lakh/MW/month), which already includes capital, maintenance and return, × 2 for small scale.
-- **Smart plugs:** ₹1,500 per home over 5 years.
+- **Smart plugs:** ₹1,500 per home over 5 years. Every home in the model has some Tier-3 load, so every home is costed one; eMARC suggests only 41% own an AC or water heater.
 - **Controller and comms:** ₹25,000 a year.
 
-**Result.** ₹7.0 lakh a year; break-even ₹21.8 per kWh; benefit ÷ cost 0.46 at the IEX
-ceiling and 1.52 at diesel-backup cost. The sensitivity chart shows the battery price matters
+**Result.** ₹9.0 lakh a year (₹69 per home per month); break-even ₹21.8 per kWh; benefit ÷ cost
+0.46 at the IEX ceiling and 1.52 at diesel-backup cost. The sensitivity chart shows the battery price matters
 most.
 
 **Likely question.** *Why not just assume a value of lost load?* There's no solid Indian
@@ -178,16 +178,23 @@ number and see the answer at once.
 
 ## Household check: `householdcheck.py`
 
-**What it does.** Compares our 420 synthetic homes with 116 measured Indian homes (Prayas eMARC,
+**What it does.** Compares our synthetic homes with 116 measured Indian homes (Prayas eMARC,
 CC0). The 368 MB file was processed in the browser and only a summary was kept
-(`data/real/emarc_mainline_summary.json`). With `--sensitivity`, it re-runs the month with the same
-feeder demand over 720 and 1,030 homes.
+(`data/real/emarc_mainline_summary.json`). It checks both the fitted model (now used) and the
+first model; with `--sensitivity` it re-runs the month under both.
+
+**The fitted model** (`household_model` in `config/city.yaml`, `_emarc_households` in
+`profiles.py`): each home = the measured average day, shifted in time by a random amount
+(standard deviation 45 minutes), × a lognormal size (σ 0.85), with a quarter of its energy moved into random appliance bursts (about 0.8 kW for
+about 5 steps). The feeder's 340 kW is anchored at the evening peak (`target_peak_window:
+evening`), which needs 1,090 homes.
 
 **What it found.**
-- Our homes use 8.6 kWh a day, against 4.6 measured and 3.5 for the TN average.
-- Our coincidence is 0.85, against 0.35 for real homes.
-- 64% of our evening load is above 200 W, against 37% for real homes.
-- Feeder results hold (about −80% evening unserved energy, 0 h critical outage). Lifeline's benefit shrinks.
+- First model: 8.6 kWh a day, coincidence 0.85, 64% of evening load above 200 W.
+- Fitted model: 4.9 kWh a day, coincidence 0.30, 44% above 200 W.
+- Measured: 4.6 kWh a day (TN average 3.5), coincidence 0.35, 37% above 200 W.
+- Results on fitted homes: −74% evening unserved energy (−82% before), critical loads always on, no overload trips. Lifeline frees less power, so home-hours dark fall 86% instead of 95%.
 
-**Likely question.** *So your homes are wrong?* Per home, yes, and we found it ourselves. The
-feeder total is what the transformer sees, and that's what our headline results depend on.
+**Likely question.** *Did you tune the model to make GridSetu look good?* No: the parameters
+were fitted only to the measured per-home statistics, and the results got less flattering. We
+publish both.

@@ -43,7 +43,10 @@ ASSUMPTIONS = {
     "bess_lowest_2025_inr_per_mw_month": 1.48e5,  # lowest 2025 discovered tariff, same source
     "community_scale_premium": 2.0,               # ASSUMPTION: small unit vs utility tender
     "smart_plug_inr_per_home": 1500.0,            # ASSUMPTION: Wi-Fi/4G relay plug, installed
-    "homes_with_tier3_share": 0.41,               # eMARC: 89 of 216 deployments in homes with AC or water heaters
+    # The simulator gives every home a Tier-3 share (tier3_share_of_household), so every home is
+    # costed a plug. eMARC suggests only ~41% of homes own an AC or water heater (89 of 216
+    # deployments); concentrating Tier 3 in those homes would cut this cost and is future work.
+    "homes_with_tier3_share": 1.0,
     "smart_plug_life_years": 5.0,                 # ASSUMPTION
     "homes": 1090,                                # replaced by the scenario's home count in run_study
     "controller_comms_inr_per_year": 25000.0,     # ASSUMPTION: edge controller (5-yr life) + 4G + platform

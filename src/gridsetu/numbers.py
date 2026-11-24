@@ -99,6 +99,9 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
         "results.json:fairness_stress_week.refusals")
     add("fairness.homes_sharing", fair["households_ever_curtailed"], "count", f"{fair['households_ever_curtailed']}",
         "results.json:fairness_stress_week.households_ever_curtailed")
+    if "households_with_shiftable_load" in fair:
+        add("fairness.homes_with_shiftable_load", fair["households_with_shiftable_load"], "count",
+            f"{fair['households_with_shiftable_load']}", "results.json:fairness_stress_week.households_with_shiftable_load")
     add("fairness.back_to_back_relaxations", fair["consecutive_interval_violations"], "intervals/stress week",
         f"{fair['consecutive_interval_violations']}", "results.json:fairness_stress_week.consecutive_interval_violations",
         check=False)
