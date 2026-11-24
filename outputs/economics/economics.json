@@ -7,7 +7,9 @@
       "bess_lowest_2025_inr_per_mw_month": 148000.0,
       "community_scale_premium": 2.0,
       "smart_plug_inr_per_home": 1500.0,
+      "homes_with_tier3_share": 1.0,
       "smart_plug_life_years": 5.0,
+      "homes": 1090,
       "controller_comms_inr_per_year": 25000.0,
       "stress_weeks_per_year": 13,
       "diesel_inr_per_litre": 99.55,
@@ -23,59 +25,59 @@
   "weekly_mean": {
     "stress": {
       "baseline": {
-        "unserved_kwh": 1864.4747214113042,
-        "import_kwh": 26000.961284858902,
-        "energy_cost_inr": 108631.76844768267,
+        "unserved_kwh": 2248.5701007284024,
+        "import_kwh": 37513.48035925083,
+        "energy_cost_inr": 145805.09759635033,
         "battery_discharge_kwh": 0.0
       },
       "gridsetu": {
-        "unserved_kwh": 620.467866770157,
-        "import_kwh": 27313.203178122738,
-        "energy_cost_inr": 116132.10211779982,
-        "battery_discharge_kwh": 748.9685966581045
+        "unserved_kwh": 903.1917135727923,
+        "import_kwh": 38923.62244666991,
+        "energy_cost_inr": 151560.5138087135,
+        "battery_discharge_kwh": 1019.7430276117462
       }
     },
     "representative": {
       "baseline": {
-        "unserved_kwh": 660.4460211269612,
-        "import_kwh": 27386.190500038967,
-        "energy_cost_inr": 120696.97414126068,
+        "unserved_kwh": 888.1079760395036,
+        "import_kwh": 38345.91985379678,
+        "energy_cost_inr": 154875.94297893354,
         "battery_discharge_kwh": 0.0
       },
       "gridsetu": {
-        "unserved_kwh": 0.0,
-        "import_kwh": 28126.52494221856,
-        "energy_cost_inr": 123580.03054116857,
-        "battery_discharge_kwh": 739.4799999999996
+        "unserved_kwh": 3.551292652368345,
+        "import_kwh": 39310.102974348345,
+        "energy_cost_inr": 158836.5531487964,
+        "battery_discharge_kwh": 955.5531123879
       }
     }
   },
   "annual": {
-    "unserved_avoided_kwh_per_year": 41929,
-    "extra_energy_cost_inr_per_year": 209944,
+    "unserved_avoided_kwh_per_year": 51988,
+    "extra_energy_cost_inr_per_year": 229284,
     "avg_purchase_price_inr_per_kwh": {
-      "baseline": 4.35,
-      "gridsetu": 4.36
+      "baseline": 4.0,
+      "gridsetu": 4.0
     },
     "costs_inr_per_year": {
       "battery": 552000,
-      "smart_plugs": 126000,
+      "smart_plugs": 327000,
       "controller_comms": 25000
     },
-    "total_cost_inr_per_year": 703000,
-    "cost_per_home_per_month_inr": 139.5,
-    "breakeven_value_inr_per_kwh": 21.77,
+    "total_cost_inr_per_year": 904000,
+    "cost_per_home_per_month_inr": 69.1,
+    "breakeven_value_inr_per_kwh": 21.8,
     "at_reference_values": {
       "iex_ceiling": {
         "value_inr_per_kwh": 10.0,
-        "reliability_value_inr": 419295,
-        "net_inr_per_year": -493649,
+        "reliability_value_inr": 519876,
+        "net_inr_per_year": -613408,
         "benefit_cost_ratio": 0.46
       },
       "diesel_backup": {
         "value_inr_per_kwh": 33.18,
-        "reliability_value_inr": 1391360,
-        "net_inr_per_year": 478417,
+        "reliability_value_inr": 1725123,
+        "net_inr_per_year": 591839,
         "benefit_cost_ratio": 1.52
       }
     }
@@ -85,33 +87,33 @@
       "assumption": "Community-scale battery premium",
       "low_setting": "1x (utility price)",
       "high_setting": "3x",
-      "breakeven_low": 15.19,
-      "breakeven_high": 28.36,
-      "base": 21.77
+      "breakeven_low": 16.49,
+      "breakeven_high": 27.11,
+      "base": 21.8
     },
     {
       "assumption": "Battery tariff",
       "low_setting": "\u20b91.48 lakh (lowest 2025 bid)",
       "high_setting": "\u20b93.0 lakh",
-      "breakeven_low": 17.08,
-      "breakeven_high": 25.78,
-      "base": 21.77
+      "breakeven_low": 18.01,
+      "breakeven_high": 25.03,
+      "base": 21.8
     },
     {
       "assumption": "Stress weeks per year",
       "low_setting": "26",
       "high_setting": "4",
-      "breakeven_low": 19.65,
-      "breakeven_high": 23.76,
-      "base": 21.77
+      "breakeven_low": 19.95,
+      "breakeven_high": 23.35,
+      "base": 21.8
     },
     {
       "assumption": "Smart plug cost per home",
       "low_setting": "\u20b9750",
       "high_setting": "\u20b93,000",
-      "breakeven_low": 20.27,
-      "breakeven_high": 24.78,
-      "base": 21.77
+      "breakeven_low": 18.65,
+      "breakeven_high": 28.09,
+      "base": 21.8
     }
   ]
 }

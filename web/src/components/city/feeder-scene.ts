@@ -1,4 +1,4 @@
-/* Pilot feeder F07 inset: the same 420 households under the baseline and under GridSetu,
+/* Pilot feeder F07 inset: the same households under the baseline and under GridSetu,
  * side by side. Each house eases towards its state (supplied, Tier-3 curtailed, lifeline, dark) in
  * ~120 ms, so step changes read as a continuous dimming instead of a flicker. */
 import type { FeederPayload, Variant } from "@/lib/types";
@@ -7,8 +7,8 @@ import { readPalette, type Palette } from "./scene";
 
 export const FW = 660;
 export const FH = 372;
-const COLS = 21;
-const CELL = 12;
+const GRID_W = 252;   // house grid area per panel (px)
+const GRID_H = 240;
 
 const rgba = (hex: string, a: number) => {
   const h = hex.replace("#", "");
@@ -23,6 +23,8 @@ export class FeederScene {
   private panels: Panel[] = [];
   private data: FeederPayload | null = null;
   private nHh = 420;
+  private cols = 21;
+  private cell = 12;
   intro = 1;
   pal: Palette;
 
@@ -35,6 +37,11 @@ export class FeederScene {
     this.data = d;
     if (!d) return;
     this.nHh = d.n_households;
+    // fit every home into the same grid area, whatever the count
+    let cell = Math.sqrt((GRID_W * GRID_H) / this.nHh);
+    let cols = Math.max(1, Math.floor(GRID_W / cell));
+    while (Math.ceil(this.nHh / cols) * (GRID_W / cols) > GRID_H) cols += 1;
+    this.cols = cols; this.cell = GRID_W / cols;
     const mk = (variant: Variant, x: number): Panel => ({
       variant, x, status: d.variants[variant] ? decodeB64(d.variants[variant].hh_status_b64) : null,
       cur: new Float32Array(this.nHh).fill(1), cur3: new Float32Array(this.nHh),
@@ -83,22 +90,23 @@ export class FeederScene {
         const target = !introOn ? 0 : s === 0 ? 1 : s === 1 ? 0.55 : s === 3 ? 0.3 : 0;   // 3 = lifeline (lights and fans only)
         pn.cur[h] += (target - pn.cur[h]) * k;
         pn.cur3[h] += ((s === 1 ? 1 : 0) - pn.cur3[h]) * k;
-        const col = h % COLS, row = Math.floor(h / COLS);
-        const x = pn.x + col * CELL, y = 54 + row * CELL;
+        const C = this.cell, sz = C * 0.75;
+        const col = h % this.cols, row = Math.floor(h / this.cols);
+        const x = pn.x + col * C, y = 54 + row * C;
         ctx.fillStyle = p.dark ? "#0a1a31" : "#d5dde8";
-        ctx.fillRect(x, y, CELL - 3, CELL - 3);
+        ctx.fillRect(x, y, sz, sz);
         const b = pn.cur[h];
-        if (b > 0.02) { ctx.fillStyle = rgba(litCol, b); ctx.fillRect(x, y, CELL - 3, CELL - 3); }
+        if (b > 0.02) { ctx.fillStyle = rgba(litCol, b); ctx.fillRect(x, y, sz, sz); }
         if (pn.cur3[h] > 0.05) {
-          ctx.strokeStyle = rgba(p.teal, pn.cur3[h]); ctx.lineWidth = 1.2;
-          ctx.strokeRect(x + 0.6, y + 0.6, CELL - 4.2, CELL - 4.2);
+          ctx.strokeStyle = rgba(p.teal, pn.cur3[h]); ctx.lineWidth = C > 9 ? 1.2 : 0.8;
+          ctx.strokeRect(x + 0.4, y + 0.4, sz - 0.8, sz - 0.8);
         }
       }
 
       // critical loads (Tier 1)
       const t1u = at(v.series.tier1_unserved, step);
       const t1on = t1u < 0.01;
-      const y0 = 54 + Math.ceil(this.nHh / COLS) * CELL + 12;
+      const y0 = 54 + GRID_H + 12;
       const items: [string, string][] = [["Clinic", "+"], ["School", "S"], ["Pump", "P"], ["Lights", "L"]];
       items.forEach(([label, glyph], j) => {
         const x = pn.x + j * 64;
@@ -125,7 +133,7 @@ export class FeederScene {
       }
       ctx.fillStyle = tripped ? p.faint : p.fg; ctx.font = `500 12px "Source Code Pro Variable", monospace`;
       ctx.textAlign = "right";
-      ctx.fillText(`${imp.toFixed(0)} kW from grid`, pn.x + COLS * CELL - 3, 22);
+      ctx.fillText(`${imp.toFixed(0)} kW from grid`, pn.x + GRID_W - 3, 22);
       ctx.textAlign = "left";
     }
     // divider

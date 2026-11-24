@@ -27,6 +27,7 @@ class FairnessLedger:
         self.refusals = 0
         self.requests = 0
         self.violations = 0
+        self.ever_eligible = np.zeros(n_households, bool)   # had shiftable Tier-3 load during an event
 
     def step(self, needed_kw: float, tier3_kw: np.ndarray, dt_h: float) -> tuple[float, np.ndarray]:
         """Curtail at least needed_kw of Tier-3 load if possible. Returns (kw curtailed, mask)."""
@@ -38,6 +39,7 @@ class FairnessLedger:
         if not self.in_event:
             self.event_id += 1
             self.in_event = True
+        self.ever_eligible |= tier3_kw > 0.02
         rested = self.last_step < self.step_id - 1
         eligible = (tier3_kw > 0.02) & rested
         got = self._fill(needed_kw, tier3_kw, eligible, mask)
@@ -73,20 +75,27 @@ class FairnessLedger:
             got += tier3[i]
         return got
 
+    @staticmethod
+    def _gini(h: np.ndarray) -> float:
+        if h.size == 0 or h.sum() <= 0:
+            return 0.0
+        s = np.sort(h)
+        n = len(s)
+        return float((2 * np.arange(1, n + 1) - n - 1) @ s / (n * s.sum()))
+
     def summary(self) -> dict:
         h = self.hours
         curtailed = h[h > 0]
-        gini = 0.0
-        if h.sum() > 0:
-            s = np.sort(h)
-            n = len(s)
-            gini = float((2 * np.arange(1, n + 1) - n - 1) @ s / (n * s.sum()))
+        # Homes with no shiftable load while curtailment was needed cannot be asked; including them
+        # would count "had nothing to shift" as unfairness. Both figures are reported.
         return {
             "events": int(self.event_id + 1),
             "households_ever_curtailed": int((h > 0).sum()),
             "max_household_hours": float(h.max()) if h.size else 0.0,
             "mean_hours_if_curtailed": float(curtailed.mean()) if curtailed.size else 0.0,
-            "gini_curtailment_hours": gini,
+            "gini_curtailment_hours": self._gini(h[self.ever_eligible]),
+            "gini_all_homes": self._gini(h),
+            "households_with_shiftable_load": int(self.ever_eligible.sum()),
             "consecutive_interval_violations": int(self.violations),
             "requests": int(self.requests),
             "refusals": int(self.refusals),

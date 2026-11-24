@@ -94,13 +94,21 @@ coordination:
 
 # ---------------------------------------------------------------- pilot feeder (GridSetu)
 pilot_feeder:
-  households: 420
+  households: 1090               # sized so homes use the measured 4.6 kWh/day at the evening peak demand
+  household_model:               # emarc = fitted to measured Indian homes (Prayas eMARC, Aug-Oct); legacy = old shape
+    source: emarc
+    event_share: 0.25            # share of energy in appliance events (fitted)
+    event_kw: 0.8                # mean event power (fitted)
+    event_steps: 5               # mean event length in 15-min steps (fitted)
+    size_sigma: 0.85             # spread of home sizes, lognormal (fitted)
+    shift_h: 0.75                # spread of each home's daily timing (fitted)
   micro_enterprises: 35
   opt_in_share_tier2: 0.6        # micro-enterprises with prior opt-in for Tier-2 shifting
   refusal_prob_tier3: 0.10       # household overrides a Tier-3 request
   shiftable_share_tier3: 0.6     # share of curtailed Tier-3 energy that comes back later
   tier3_share_of_household: 0.14 # AC boost, water heating, 2W/EV charging
   target_peak_kw: 340
+  target_peak_window: evening    # the scenario: an overloaded DT in the evening ramp (17:00-23:00)
   critical_loads_kw:            # Tier 1
     health_subcentre: 12
     school: 8

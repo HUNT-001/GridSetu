@@ -43,7 +43,7 @@ export default function ArchitecturePage() {
   const layers: Layer[] = [
     { id: "slice", name: "Slice layer", icon: "signal", code: "comms.py",
       what: "Separate communication slices so protection traffic is never queued behind meter reads.",
-      parts: ["URLLC for protection and PMUs", "mMTC for 420 smart meters", "2G/4G control with retries", "eMBB for dashboards", "Edge fail-safe on message loss"],
+      parts: ["URLLC for protection and PMUs", "mMTC for 1,090 smart meters", "2G/4G control with retries", "eMBB for dashboards", "Edge fail-safe on message loss"],
       standards: ["IEC 62351-3 transport security", "IEC 62351-8 role-based access"],
       live: gs.comms.map((x) => [SLICE_NAMES[x.slice] ?? x.slice, `${f1(x.delivered_pct)}% delivered`]) },
     { id: "control", name: "Control layer", icon: "sliders-horizontal", code: "market.py, feeder.py, wams.py",
@@ -61,7 +61,7 @@ export default function ArchitecturePage() {
         ["Homes fully supplied", `${f0(gs.hh_lit_pct[step])}%`]] },
     { id: "infrastructure", name: "Infrastructure layer", icon: "cpu", code: "profiles.py, feeder.py",
       what: "The metered, measured and controllable assets on the ground.",
-      parts: ["420 AMI meters at 15-minute resolution", "200 kWh / 100 kW LFP battery", "90 kWp rooftop and 60 kWp community PV", "PMUs at 50 frames/s", "Feeder edge controller"],
+      parts: ["1,090 AMI meters at 15-minute resolution", "200 kWh / 100 kW LFP battery", "90 kWp rooftop and 60 kWp community PV", "PMUs at 50 frames/s", "Feeder edge controller"],
       standards: ["IEEE C37.118 synchrophasors", "IEC 61850 substation data"],
       live: [["Battery", `${f0(gs.series.soc_pct[step])}% charged`], ["Meter reads delivered", ami ? `${f1(ami.delivered_pct)}%` : "–"],
         ["Feeder solar now", `${f0(gs.series.solar_avail[step])} kW`]] },

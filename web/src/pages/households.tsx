@@ -64,7 +64,7 @@ export default function HouseholdsPage() {
         <CardContent className="grid grid-cols-2 gap-5 pt-4 @[31rem]:grid-cols-4">
           <Kpi label="Homes that shared curtailment" format={f0} value={fs.households_ever_curtailed ?? 0} unit={`of ${rows.length}`} />
           <Kpi label="Most hours paused, any home" unit="h" format={f2} value={fs.max_household_hours ?? 0} />
-          <Kpi label="Gini of paused hours" format={f2} value={fs.gini_curtailment_hours ?? 0} hint="0 means perfectly even" />
+          <Kpi label="Gini of paused hours" format={f2} value={fs.gini_curtailment_hours ?? 0} hint="among homes with load to shift; 0 means perfectly even" />
           <Kpi label="Overrides honoured" format={f0} value={fs.refusals ?? 0} hint="Households that said no to a request" />
         </CardContent>
       </Card>

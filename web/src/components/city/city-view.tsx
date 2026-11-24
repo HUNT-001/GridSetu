@@ -134,7 +134,7 @@ export function FeederInset() {
   return (
     <div className="relative overflow-hidden rounded-lg border bg-panel">
       <canvas ref={canvas} className="block w-full" role="img"
-        aria-label="Pilot feeder: 420 households under the baseline and under GridSetu" />
+        aria-label="Pilot feeder: 1,090 households under the baseline and under GridSetu" />
       {!feeder && <Skeleton className="absolute inset-0 rounded-none" />}
     </div>
   );

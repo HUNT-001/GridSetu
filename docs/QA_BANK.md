@@ -28,13 +28,14 @@ We report the count rather than claim "never".
 On what it measures, no: across 1,260 published forecasts the feeder held its own evening peak
 every time. The DISCOM's call is a separate promise, so it now has its own number: a firm call
 capacity with a 90% confidence. When calls are bounded by our day-ahead offer, as in an ADMS
-dispatch contract, the call was met on 58 of 60 evenings and the 90% held 97.6% of the time.
+dispatch contract, the call was met on 52 of 60 evenings and the 90% held 89.7% of the time.
 
 **Q: And if the DISCOM asks for more than you offered?**
 That is how our model's DISCOM behaves today: it asks for the feeder's full share of the
-shortage, a median 1.58 times our call capacity. Lifeline still met the call on 20 of 60
-evenings; on the rest the feeder was switched off for part of the evening, with the clinic,
-school and pump on the battery. We report both cases.
+shortage, a median 2.15 times our call capacity. Then the feeder met 0 of 60 calls in full and
+was switched off for part of those evenings, with the clinic, school and pump on the battery.
+A shared battery cannot carry a city-wide generation shortfall; it can keep the promise it
+publishes. We report both cases.
 
 **Q: Then what's the value on the worst nights?**
 Critical loads never go dark, and GridSetu is honest about what it can't do, so the operator can
@@ -102,7 +103,7 @@ to IEX's published daily figure, and a test checks it.
 When the DISCOM needs more relief than the battery and flexible loads can give, a normal feeder
 is switched off. GridSetu instead sets a load limit on every home's smart meter, as low as
 200 W: lights, a fan, phone charging. The DISCOM gets its relief and the homes are not dark.
-Over a month, home-hours without supply fall from 5,740 to 291.
+Over a month, home-hours without supply fall from 18,167 to 2,484.
 
 **Q: Can smart meters really do that?**
 Indian prepaid smart-meter specifications (for example MSEDCL's, which follows IS 16444)
@@ -122,7 +123,7 @@ Its meter disconnects it, as prepaid meters already do when a load limit is exce
 ## Money
 
 **Q: What does it cost, and who pays?**
-About ₹7.0 lakh a year for one 420-home feeder, or ₹140 per home per month. Most of it is the
+About ₹9.0 lakh a year for one 1,090-home feeder, or ₹69 per home per month. Most of it is the
 battery, priced from the 2025 Indian benchmark for 2-hour storage and doubled for small scale.
 It pays for itself if an avoided outage is worth more than ₹21.8 per kWh. Diesel backup costs
 about ₹33/kWh, so for anyone who would otherwise run a generator, it pays.
@@ -135,24 +136,30 @@ exchange price, which is why people buy diesel generators.
 
 **Q: Doesn't the battery make money by buying cheap and selling dear?**
 Not on this feeder. GridSetu serves more energy in the expensive evening than a feeder that is
-switched off, so the average price paid per kWh stays the same (₹4.36 vs ₹4.35). We don't claim
+switched off, so the average price paid per kWh stays the same (₹4.00 in both cases). We don't claim
 arbitrage income.
 
 **Q: What would make it cheaper?**
 Battery price is the biggest lever: at utility-scale cost the break-even falls to about
-₹15/kWh. Viability gap funding, pooling several feeders' batteries in one tender, or RDSS
+₹16/kWh. Viability gap funding, pooling several feeders' batteries in one tender, or RDSS
 funding for the smart plugs would all help.
 
 ## Household data
 
 **Q: Is your household load realistic?**
-Not per home, and we checked. Against 116 measured Indian homes (Prayas eMARC, public domain),
-ours use 8.6 kWh a day against 4.6, and peak together far more. The Tamil Nadu
-average is 3.5 kWh a day. What drives the results is the feeder's total demand, which is set
-by its transformer. Spread the same demand over 720 or 1,030 lighter homes and GridSetu still cuts
-evening unserved energy by about 80%, with the critical loads always on. Lifeline helps less,
-and we show that.
+It is fitted to real homes. Our first model was not: against 116 measured Indian homes (Prayas
+eMARC, public domain) its homes used 8.6 kWh a day against 4.6, and all peaked together. We
+refitted it: each home now follows the measured daily shape with random appliance bursts on top.
+It matches measured daily energy (4.9 vs 4.6 kWh), evening load (0.22 vs 0.21 kW) and diversity
+(coincidence 0.30 vs 0.35). The Tamil Nadu average is lower, 3.5 kWh a day.
 
-**Q: Why not fix it?**
-We're fitting the household model to the measured data next: real homes are spiky individually,
-rarely peak together and have a morning peak. Until then we report both.
+**Q: Did the refit change your results?**
+Yes, and we show both. The same transformer now serves 1,090 lighter homes instead of 420 heavy
+ones. Critical loads still never go dark and overload trips still disappear; evening unserved
+energy falls 74% instead of 82%. Lifeline helps less, because real homes already draw little in
+the evening, so capping them at 200 W frees less power.
+
+**Q: Why is the data from Maharashtra and Uttar Pradesh, not Tamil Nadu?**
+It's the largest public 15-minute smart-meter dataset of Indian homes we found. We use the
+Tamil Nadu state average as a cross-check, and a DISCOM's smart-meter data would replace it in
+a pilot.

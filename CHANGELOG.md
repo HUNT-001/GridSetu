@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased: household model fitted to measured Indian homes (November 2026)
+
+### Changed
+- Households now follow Prayas eMARC (`household_model.source: emarc`): the measured average day, a per-home time shift and lognormal size, and random appliance bursts. Fitted to Aug–Oct: 4.9 kWh a day (measured 4.6), evening 0.22 kW (0.21), coincidence 0.30 (0.35).
+- The 340 kW target is anchored at the evening peak (`target_peak_window: evening`), so feeder F07 now has 1,090 homes. The first model stays available as `source: legacy` (420 homes).
+- Other feeders, the MATLAB export (homes spread over the 21 buses), the business case and the dashboard's house grid follow the home count.
+- Fairness Gini is computed over homes that had Tier-3 load to pause (841 of 1,090); the all-homes figure is also reported. 1 test (72).
+- Business case costs a smart plug for every home, because every home in the model has some Tier-3 load.
+
+### Results on the fitted homes (all regenerated)
+- Monthly evening unserved energy 2,223 → 577 kWh (−74%; was −82%); critical-load outage 0 h; overload trips 13 → 0; home-hours dark 18,167 → 2,484.
+- DISCOM calls bounded by the offer: 52 of 60 met, call confidence 90% stated, 89.7% observed. Calls as today: 0 of 60 met in full.
+- Fleet, stress week, full adoption: home-hours dark −44% (was −75%). Lifeline frees less power from real homes.
+- Business case: ₹9.0 lakh a year (₹69 per home per month); break-even ₹21.8 per kWh.
+- Forecast q10–q90 coverage fell to 72% (nominal 80%) on the spikier homes.
+
 ## Unreleased: households against real Indian data (November 2026)
 
 ### Added

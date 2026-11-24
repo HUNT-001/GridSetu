@@ -2,12 +2,13 @@
 
     python -m gridsetu household-check [--sensitivity]     # writes outputs/households/
 
-Compares the simulator's 420 homes (representative September week, seed 42) with 116 measured
+Compares the simulator's homes (representative September week, seed 42) with 116 measured
 main-line meters (data/real/emarc_mainline_summary.json, Aug-Oct and all year): daily energy,
 evening load, how much evening load lies above the 200 W lifeline floor, the daily shape and how
-coincident homes are. With --sensitivity it also re-runs the monthly study with the same feeder
-demand spread over 720 and 1,030 homes (the simulator scales each home so the feeder peak is
-unchanged), i.e. homes at the Prayas and Tamil Nadu average consumption.
+coincident homes are, for both household models:
+  fitted  (headline) 1,090 homes fitted to eMARC, feeder demand anchored at the evening peak
+  legacy             the first model: 420 heavy, highly coincident homes
+With --sensitivity it re-runs the monthly study under both models.
 """
 from __future__ import annotations
 
@@ -49,13 +50,16 @@ def synthetic_stats(hh: np.ndarray) -> dict:
             "profile": [round(float(x), 4) for x in prof]}
 
 
-def sensitivity(homes=(420, 720, 1030), seeds=(42, 142, 242)) -> dict:
+LEGACY = {"pilot_feeder": {"households": 420, "household_model": {"source": "legacy"}, "target_peak_window": "any"}}
+CASES = {"fitted_1090": {}, "legacy_420": LEGACY}
+
+
+def sensitivity(seeds=(42, 142, 242)) -> dict:
     out = {}
-    for n in homes:
+    for name, over in CASES.items():
         acc, kwh = {}, None
         for seed in seeds:
-            r = stress_and_representative(None, {"simulation": {"seed": seed}, "pilot_feeder": {"households": n}},
-                                          verbose=False)
+            r = stress_and_representative(None, {**over, "simulation": {"seed": seed}}, verbose=False)
             for wk, w in (("stress", 1), ("representative", 3)):
                 for v in ("baseline", "gridsetu"):
                     m = r[wk].feeder[v].metrics
@@ -67,15 +71,16 @@ def sensitivity(homes=(420, 720, 1030), seeds=(42, 142, 242)) -> dict:
         res = {v: {k: round(float(np.reshape(acc[(v, k)], (len(seeds), 2)).sum(1).mean()), 1) for k in KEYS}
                for v in ("baseline", "gridsetu")}
         res["home_kwh_per_day"] = round(kwh, 2)
-        out[str(n)] = res
+        out[name] = res
     return out
 
 
-def _chart(out: Path, syn: dict, real: dict, real_all: dict) -> None:
+def _chart(out: Path, syn: dict, real: dict, leg: dict) -> None:
     _style()
     x = np.arange(96) / 4
     fig, (ax, ax2) = plt.subplots(1, 2, figsize=(13, 5), gridspec_kw={"width_ratios": [1.6, 1]})
-    ax.plot(x, syn["profile"], color=GREY, lw=2, label="GridSetu synthetic home (September)")
+    ax.plot(x, leg["profile"], color=GREY, lw=1.8, ls="--", label="First model: 420 heavy homes (replaced)")
+    ax.plot(x, syn["profile"], color=NAVY, lw=2, label="Fitted model: 1,090 homes (now used)")
     ax.plot(x, real["profile"], color=TEAL, lw=2.2, label="Measured Indian home, Aug–Oct (Prayas eMARC, 116 meters)")
     ax.axhline(0.2, color=AMBER, ls="--", lw=1.2)
     ax.text(0.3, 0.215, "200 W lifeline floor", color=AMBER, fontsize=9)
@@ -84,23 +89,24 @@ def _chart(out: Path, syn: dict, real: dict, real_all: dict) -> None:
     ax.set_xticks(range(0, 25, 3))
     ax.set_xlabel("Hour of day")
     ax.set_ylabel("Average load per home (kW)")
-    ax.set_title("Average day per home: ours are heavier and peak together", loc="left")
+    ax.set_title("Average day per home: fitted model against measured homes", loc="left")
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.14), ncol=1, frameon=False, fontsize=9)
 
     rows = [("Daily energy (kWh)", "daily_kwh_mean"), ("Evening load (kW)", "evening_mean_kw"),
             ("Evening load above 200 W", "evening_above_200w_share"), ("Coincidence", "coincidence")]
     y = np.arange(len(rows))
-    ratio_s = [1.0] * len(rows)
-    ratio_r = [real[k] / syn[k] for _, k in rows]
-    ax2.barh(y + 0.18, ratio_s, height=0.34, color=GREY, label="synthetic = 1")
-    ax2.barh(y - 0.18, ratio_r, height=0.34, color=TEAL, label="measured, as a share of synthetic")
-    for i, (_, k) in enumerate(rows):
-        ax2.text(1.02, i + 0.18, f"{syn[k]:.2f}", va="center", fontsize=8, color=MUTED)
-        ax2.text(ratio_r[i] + 0.02, i - 0.18, f"{real[k]:.2f}", va="center", fontsize=8, color=INK)
+    h = 0.26
+    for j, (src, col, lab) in enumerate(((leg, GREY, "first model"), (syn, NAVY, "fitted model"), (real, TEAL, "measured"))):
+        vals = [src[k] for _, k in rows]
+        rel = [v / real[k] for v, (_, k) in zip(vals, rows)]
+        ax2.barh(y + (j - 1) * h, rel, height=h, color=col, label=lab)
+        for i, v in enumerate(vals):
+            ax2.text(rel[i] + 0.03, i + (j - 1) * h, f"{v:.2f}", va="center", fontsize=7.5, color=INK)
     ax2.set_yticks(y, [r for r, _ in rows])
     ax2.invert_yaxis()
-    ax2.set_xlim(0, 1.3)
-    ax2.set_title("Measured ÷ synthetic", loc="left")
+    ax2.set_xlim(0, 3.2)
+    ax2.axvline(1, color=TEAL, lw=1, ls=":")
+    ax2.set_title("Each model ÷ measured (1 = matches)", loc="left")
     ax2.legend(loc="upper center", bbox_to_anchor=(0.5, -0.14), ncol=1, frameon=False, fontsize=9)
     fig.subplots_adjust(bottom=0.27, wspace=0.45)
     _sim_tag(fig, f"Real data: Prayas eMARC (Maharashtra, Uttar Pradesh), CC0 · Tamil Nadu average: "
@@ -114,23 +120,26 @@ def run_study(out_dir: str | Path = "outputs/households", with_sensitivity: bool
     emarc = json.loads(EMARC.read_text(encoding="utf-8"))
     r = stress_and_representative(None, {"simulation": {"seed": 42}}, verbose=False)
     syn = synthetic_stats(r["representative"].feeder_loads.hh_load)
+    rl = stress_and_representative(None, {**LEGACY, "simulation": {"seed": 42}}, verbose=False)
+    leg = synthetic_stats(rl["representative"].feeder_loads.hh_load)
     real, real_all = emarc["groups"]["all|aug_oct"], emarc["groups"]["all|all_year"]
     res = {"about": {"label": "Synthetic homes (simulation) against measured Indian homes (REAL, Prayas eMARC)",
                      "emarc_source": emarc["source"], "tn_domestic_kwh_per_day": round(TN_DOMESTIC_KWH_PER_DAY, 2),
                      "tn_source": "https://des.tn.gov.in/sites/default/files/2025-07/10.%20ELECTRICITY.pdf"},
            "synthetic": {k: v for k, v in syn.items() if k != "profile"},
+           "legacy_synthetic": {k: v for k, v in leg.items() if k != "profile"},
            "measured_aug_oct": {k: v for k, v in real.items() if k != "profile"},
            "measured_all_year": {k: v for k, v in real_all.items() if k != "profile"},
            "synthetic_over_measured_daily_kwh": round(syn["daily_kwh_mean"] / real["daily_kwh_mean"], 2),
            "synthetic_over_tn_average_daily_kwh": round(syn["daily_kwh_mean"] / TN_DOMESTIC_KWH_PER_DAY, 2)}
     if with_sensitivity:
-        res["same_feeder_demand_more_homes"] = sensitivity()
+        res["fitted_vs_legacy"] = sensitivity()
     else:
         prev = out / "households.json"
         if prev.exists():
             old = json.loads(prev.read_text(encoding="utf-8"))
-            if "same_feeder_demand_more_homes" in old:
-                res["same_feeder_demand_more_homes"] = old["same_feeder_demand_more_homes"]
+            if "fitted_vs_legacy" in old:
+                res["fitted_vs_legacy"] = old["fitted_vs_legacy"]
     (out / "households.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
-    _chart(out, syn, real, real_all)
+    _chart(out, syn, real, leg)
     return res

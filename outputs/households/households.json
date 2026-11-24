@@ -22,6 +22,20 @@
     "tn_source": "https://des.tn.gov.in/sites/default/files/2025-07/10.%20ELECTRICITY.pdf"
   },
   "synthetic": {
+    "home_days": 7630,
+    "daily_kwh_mean": 4.894,
+    "daily_kwh_p10": 0.895,
+    "daily_kwh_p50": 3.221,
+    "daily_kwh_p90": 10.489,
+    "peak_kw_p50": 0.623,
+    "peak_kw_p90": 2.122,
+    "evening_mean_kw": 0.2223,
+    "evening_above_200w_share": 0.445,
+    "profile_peak_block": 30,
+    "profile_peak_over_mean": 1.274,
+    "coincidence": 0.3
+  },
+  "legacy_synthetic": {
     "home_days": 2940,
     "daily_kwh_mean": 8.638,
     "daily_kwh_p10": 5.176,
@@ -67,10 +81,31 @@
     "coincidence": 0.363,
     "coincidence_dates": 886
   },
-  "synthetic_over_measured_daily_kwh": 1.86,
-  "synthetic_over_tn_average_daily_kwh": 2.46,
-  "same_feeder_demand_more_homes": {
-    "420": {
+  "synthetic_over_measured_daily_kwh": 1.06,
+  "synthetic_over_tn_average_daily_kwh": 1.39,
+  "fitted_vs_legacy": {
+    "fitted_1090": {
+      "baseline": {
+        "evening_window_unserved_kwh": 2223.1,
+        "total_unserved_kwh": 4912.9,
+        "critical_outage_hours": 16.7,
+        "feeder_outage_hours": 16.7,
+        "dark_home_hours": 18166.7,
+        "lifeline_home_hours": 0.0,
+        "overload_trips": 13.0
+      },
+      "gridsetu": {
+        "evening_window_unserved_kwh": 576.5,
+        "total_unserved_kwh": 913.8,
+        "critical_outage_hours": 0.0,
+        "feeder_outage_hours": 2.2,
+        "dark_home_hours": 2483.9,
+        "lifeline_home_hours": 1017.4,
+        "overload_trips": 0.0
+      },
+      "home_kwh_per_day": 4.89
+    },
+    "legacy_420": {
       "baseline": {
         "evening_window_unserved_kwh": 2713.1,
         "total_unserved_kwh": 3845.8,
@@ -90,48 +125,6 @@
         "overload_trips": 0.0
       },
       "home_kwh_per_day": 8.64
-    },
-    "720": {
-      "baseline": {
-        "evening_window_unserved_kwh": 2428.1,
-        "total_unserved_kwh": 3570.5,
-        "critical_outage_hours": 12.7,
-        "feeder_outage_hours": 12.7,
-        "dark_home_hours": 9120.0,
-        "lifeline_home_hours": 0.0,
-        "overload_trips": 9.0
-      },
-      "gridsetu": {
-        "evening_window_unserved_kwh": 555.4,
-        "total_unserved_kwh": 823.4,
-        "critical_outage_hours": 0.0,
-        "feeder_outage_hours": 2.2,
-        "dark_home_hours": 1692.3,
-        "lifeline_home_hours": 1793.1,
-        "overload_trips": 0.0
-      },
-      "home_kwh_per_day": 5.04
-    },
-    "1030": {
-      "baseline": {
-        "evening_window_unserved_kwh": 2715.2,
-        "total_unserved_kwh": 3856.0,
-        "critical_outage_hours": 13.7,
-        "feeder_outage_hours": 13.7,
-        "dark_home_hours": 14076.7,
-        "lifeline_home_hours": 0.0,
-        "overload_trips": 10.0
-      },
-      "gridsetu": {
-        "evening_window_unserved_kwh": 554.7,
-        "total_unserved_kwh": 880.2,
-        "critical_outage_hours": 0.0,
-        "feeder_outage_hours": 2.8,
-        "dark_home_hours": 2969.6,
-        "lifeline_home_hours": 1085.0,
-        "overload_trips": 0.0
-      },
-      "home_kwh_per_day": 3.44
     }
   }
 }
