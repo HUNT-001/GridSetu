@@ -1,0 +1,137 @@
+{
+  "about": {
+    "label": "Synthetic homes (simulation) against measured Indian homes (REAL, Prayas eMARC)",
+    "emarc_source": {
+      "dataset": "Prayas (Energy Group), Monitoring and Analysis of Residential Electricity Consumption (eMARC): Processed data",
+      "doi": "10.7910/DVN/YJ5SP1",
+      "url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/YJ5SP1",
+      "files": {
+        "eMARC load blocks.csv": {
+          "id": 4877314,
+          "bytes": 368001967
+        },
+        "eMARC daily consumption.tab": {
+          "id": 4877312,
+          "bytes": 8583260
+        }
+      },
+      "licence": "CC0 1.0",
+      "retrieved": "2026-11-24"
+    },
+    "tn_domestic_kwh_per_day": 3.51,
+    "tn_source": "https://des.tn.gov.in/sites/default/files/2025-07/10.%20ELECTRICITY.pdf"
+  },
+  "synthetic": {
+    "home_days": 2940,
+    "daily_kwh_mean": 8.638,
+    "daily_kwh_p10": 5.176,
+    "daily_kwh_p50": 8.291,
+    "daily_kwh_p90": 12.732,
+    "peak_kw_p50": 0.678,
+    "peak_kw_p90": 1.054,
+    "evening_mean_kw": 0.5604,
+    "evening_above_200w_share": 0.6433,
+    "profile_peak_block": 77,
+    "profile_peak_over_mean": 1.677,
+    "coincidence": 0.854
+  },
+  "measured_aug_oct": {
+    "home_days": 14022,
+    "daily_kwh_mean": 4.637,
+    "daily_kwh_p10": 1.015,
+    "daily_kwh_p50": 4.08,
+    "daily_kwh_p90": 8.677,
+    "peak_kw_p50": 0.617,
+    "peak_kw_p90": 2.376,
+    "evening_mean_kw": 0.2097,
+    "evening_above_200w_share": 0.3696,
+    "evening_above_300w_share": 0.2421,
+    "profile_peak_block": 27,
+    "profile_peak_over_mean": 1.379,
+    "coincidence": 0.354,
+    "coincidence_dates": 184
+  },
+  "measured_all_year": {
+    "home_days": 61918,
+    "daily_kwh_mean": 4.804,
+    "daily_kwh_p10": 1.017,
+    "daily_kwh_p50": 4.056,
+    "daily_kwh_p90": 9.149,
+    "peak_kw_p50": 0.612,
+    "peak_kw_p90": 2.382,
+    "evening_mean_kw": 0.2103,
+    "evening_above_200w_share": 0.374,
+    "evening_above_300w_share": 0.2497,
+    "profile_peak_block": 32,
+    "profile_peak_over_mean": 1.302,
+    "coincidence": 0.363,
+    "coincidence_dates": 886
+  },
+  "synthetic_over_measured_daily_kwh": 1.86,
+  "synthetic_over_tn_average_daily_kwh": 2.46,
+  "same_feeder_demand_more_homes": {
+    "420": {
+      "baseline": {
+        "evening_window_unserved_kwh": 2713.1,
+        "total_unserved_kwh": 3845.8,
+        "critical_outage_hours": 13.7,
+        "feeder_outage_hours": 13.7,
+        "dark_home_hours": 5740.0,
+        "lifeline_home_hours": 0.0,
+        "overload_trips": 10.0
+      },
+      "gridsetu": {
+        "evening_window_unserved_kwh": 483.5,
+        "total_unserved_kwh": 620.5,
+        "critical_outage_hours": 0.0,
+        "feeder_outage_hours": 0.5,
+        "dark_home_hours": 291.2,
+        "lifeline_home_hours": 2137.6,
+        "overload_trips": 0.0
+      },
+      "home_kwh_per_day": 8.64
+    },
+    "720": {
+      "baseline": {
+        "evening_window_unserved_kwh": 2428.1,
+        "total_unserved_kwh": 3570.5,
+        "critical_outage_hours": 12.7,
+        "feeder_outage_hours": 12.7,
+        "dark_home_hours": 9120.0,
+        "lifeline_home_hours": 0.0,
+        "overload_trips": 9.0
+      },
+      "gridsetu": {
+        "evening_window_unserved_kwh": 555.4,
+        "total_unserved_kwh": 823.4,
+        "critical_outage_hours": 0.0,
+        "feeder_outage_hours": 2.2,
+        "dark_home_hours": 1692.3,
+        "lifeline_home_hours": 1793.1,
+        "overload_trips": 0.0
+      },
+      "home_kwh_per_day": 5.04
+    },
+    "1030": {
+      "baseline": {
+        "evening_window_unserved_kwh": 2715.2,
+        "total_unserved_kwh": 3856.0,
+        "critical_outage_hours": 13.7,
+        "feeder_outage_hours": 13.7,
+        "dark_home_hours": 14076.7,
+        "lifeline_home_hours": 0.0,
+        "overload_trips": 10.0
+      },
+      "gridsetu": {
+        "evening_window_unserved_kwh": 554.7,
+        "total_unserved_kwh": 880.2,
+        "critical_outage_hours": 0.0,
+        "feeder_outage_hours": 2.8,
+        "dark_home_hours": 2969.6,
+        "lifeline_home_hours": 1085.0,
+        "overload_trips": 0.0
+      },
+      "home_kwh_per_day": 3.44
+    }
+  }
+}

@@ -37,6 +37,9 @@ def main(argv=None):
     lv = sub.add_parser("lv-study", help="low-voltage network study (Python twin of matlab/run_f07.m) + charts")
     lv.add_argument("--in", dest="in_dir", default="outputs/matlab")
     lv.add_argument("--out", default="outputs/lv")
+    hc = sub.add_parser("household-check", help="synthetic homes against real Indian smart-meter data")
+    hc.add_argument("--out", default="outputs/households")
+    hc.add_argument("--sensitivity", action="store_true", help="also re-run with 720 and 1,030 homes (~10 min)")
     ec = sub.add_parser("economics", help="rupee business case priced with real IEX prices")
     ec.add_argument("--out", default="outputs/economics")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
@@ -106,6 +109,11 @@ def main(argv=None):
     if args.cmd == "export-matlab":
         from .matlab_export import export
         print("wrote", export(args.out, args.config, args.seed))
+        return
+    if args.cmd == "household-check":
+        from .householdcheck import run_study as run_hh
+        r = run_hh(args.out, args.sensitivity)
+        print(json.dumps({k: v for k, v in r.items() if k != "about"}, indent=1))
         return
     if args.cmd == "economics":
         from .economics import run_study as run_econ

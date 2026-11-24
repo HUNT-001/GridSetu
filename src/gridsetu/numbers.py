@@ -198,6 +198,28 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             add(f"economics.bcr_{k}", r["benefit_cost_ratio"], "ratio", f"{r['benefit_cost_ratio']:.2f}",
                 f"{src}.at_reference_values.{k}.benefit_cost_ratio", check=False)
 
+    # households against real Indian smart-meter data (python -m gridsetu household-check)
+    hh_path = out / "households" / "households.json"
+    if hh_path.exists():
+        h = json.loads(hh_path.read_text(encoding="utf-8"))
+        src = "households/households.json"
+        add("households.synthetic_daily_kwh", h["synthetic"]["daily_kwh_mean"], "kWh/day",
+            f"{h['synthetic']['daily_kwh_mean']:.1f} kWh a day", f"{src}:synthetic.daily_kwh_mean")
+        add("households.measured_daily_kwh", h["measured_aug_oct"]["daily_kwh_mean"], "kWh/day",
+            f"{h['measured_aug_oct']['daily_kwh_mean']:.1f} kWh a day", f"{src}:measured_aug_oct.daily_kwh_mean")
+        add("households.tn_daily_kwh", h["about"]["tn_domestic_kwh_per_day"], "kWh/day",
+            f"{h['about']['tn_domestic_kwh_per_day']:.1f} kWh a day", f"{src}:about.tn_domestic_kwh_per_day")
+        for side, node in (("synthetic", h["synthetic"]), ("measured", h["measured_aug_oct"])):
+            add(f"households.{side}_evening_above_200w_pct", round(100 * node["evening_above_200w_share"]), "%",
+                f"{100 * node['evening_above_200w_share']:.0f}%", f"{src}:{side}.evening_above_200w_share", check=False)
+            add(f"households.{side}_coincidence", node["coincidence"], "", f"{node['coincidence']:.2f}",
+                f"{src}:{side}.coincidence", check=False)
+        for n, r in h.get("same_feeder_demand_more_homes", {}).items():
+            for v in ("baseline", "gridsetu"):
+                for k in ("evening_window_unserved_kwh", "dark_home_hours"):
+                    add(f"households.homes_{n}.{v}.{k}", r[v][k], "per month", f"{r[v][k]:,.0f}",
+                        f"{src}:same_feeder_demand_more_homes.{n}.{v}.{k}", check=False)
+
     # low-voltage network study (MATLAB reference results, matlab/run_f07.m)
     lv_path = out.resolve().parent / "matlab" / "results" / "summary.json"
     if lv_path.exists():

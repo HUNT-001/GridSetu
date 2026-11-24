@@ -11,7 +11,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![React](https://img.shields.io/badge/UI-React%2019-61DAFB)
-![Tests](https://img.shields.io/badge/tests-69%20passing-2DD4BF)
+![Tests](https://img.shields.io/badge/tests-71%20passing-2DD4BF)
 ![Data](https://img.shields.io/badge/data-synthetic%20simulation-F5A623)
 
 ![Power flowing through the simulated city from 13:00 to midnight on the stress day](docs/images/power-flow.gif)
@@ -536,6 +536,37 @@ Household load stays synthetic in every case.
 
 Our synthetic stress week forces two deeply overcast days; the real week of 14–20 September 2025 had none, so GridSetu does better on it. The critical loads stay powered in all three cases. We keep the harsher synthetic week for the headline figures.
 
+### Our homes against real Indian homes
+
+Household load is the biggest synthetic input, so we compared it with measured data (`python -m gridsetu household-check --sensitivity`). Two sources:
+
+- Prayas Energy Group's eMARC smart-meter data: 116 homes in Maharashtra and Uttar Pradesh, 2018–2020, 15-minute load, public domain ([Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/YJ5SP1)). We processed all 6.1 million main-line readings.
+- Tamil Nadu's domestic average: 30,602 million units over 23.9 million connections in 2022-23 ([TN DES](https://des.tn.gov.in/sites/default/files/2025-07/10.%20ELECTRICITY.pdf)).
+
+**Our synthetic homes are too heavy and too synchronised:**
+
+| Per home | Our synthetic home (Sep) | Measured Indian home (Aug–Oct) |
+|---|--:|--:|
+| Daily energy | 8.6 kWh a day | 4.6 kWh a day (Tamil Nadu average 3.5 kWh a day) |
+| Evening load, 17:30–19:30 | 0.56 kW | 0.21 kW |
+| Evening load above the 200 W lifeline floor | 64% | 37% |
+| Coincidence (peak of the average ÷ average of each home's peak) | 0.85 | 0.35 |
+
+Real homes are spiky one at a time but rarely peak together, and the morning matters as much as the evening.
+
+<img src="outputs/households/charts/households_real_vs_synthetic.png" alt="Average daily load per home, synthetic against measured Indian homes" width="100%">
+
+**Does GridSetu still work?** The simulator sizes each home so the feeder's total demand is right, so the same feeder can be modelled as more, lighter homes. Monthly results:
+
+| Same feeder demand spread over | 420 homes (8.6 kWh a day) | 720 homes (5.0, Prayas level) | 1,030 homes (3.4, TN average) |
+|---|--:|--:|--:|
+| Evening unserved energy, baseline → GridSetu | 2,713 → 484 kWh | 2,428 → 555 kWh | 2,715 → 555 kWh |
+| Home-hours fully dark, baseline → GridSetu | 5,740 → 291 | 9,120 → 1,692 | 14,077 → 2,970 |
+| Whole-feeder outage with GridSetu | 0.5 h | 2.2 h | 2.8 h |
+| Critical-load outage with GridSetu | 0 h | 0 h | 0 h |
+
+The feeder-level results hold: evening unserved energy falls by about 80% and the critical loads never go dark. Lifeline helps less with lighter homes, because more of each home's evening load sits under the 200 W floor, so the feeder is switched off more often. A household model fitted to the measured data (diversity, morning peak) is next.
+
 ### What it costs, and when it pays
 
 `python -m gridsetu economics` prices the pilot feeder for a year (13 stress weeks and 39 normal weeks, matching the headline month), with the real IEX prices and a battery cost from the market: the 2025 Indian benchmark tariff for 2-hour storage, ₹2.3 lakh per MW per month ([IEEFA–JMK, 2026](https://www.ess-news.com/2026/05/19/india-awards-10-4-gw-of-standalone-bess-capacity-in-2025-but-tariff-viability-remains-a-concern/)). That tariff already covers capital, maintenance and return; we double it because a 100 kW unit costs more per MW than a 250 MW tender.
@@ -588,12 +619,13 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 69 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 71 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
 | `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |
 | `python -m gridsetu lv-study` | Low-voltage network study (Python twin of the MATLAB model) and its charts, in `outputs/lv/` |
 | `matlab/run_f07.m`, `matlab/make_figures.m` | The MATLAB low-voltage model and its charts (MATLAB R2019b+ or GNU Octave 7+, no toolboxes) |
+| `python -m gridsetu household-check` | Our synthetic homes against measured Indian homes; `--sensitivity` re-runs with 720 and 1,030 homes (about 10 minutes) |
 | `python -m gridsetu economics` | Rupee business case at real IEX prices, in `outputs/economics/` (about a minute) |
 | `python -m gridsetu real-data` | Checks the scenario against real weather (NASA POWER) and real prices (IEX), in `outputs/real_data/` (about 40 seconds) |
 | `python -m gridsetu export-matlab` | Writes per-bus load profiles of feeder F07 for the MATLAB low-voltage model (`outputs/matlab/`) |
@@ -696,6 +728,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - The frequency model is a two-area aggregate, not a full dynamic network model.
 - The forecasts have been backtested on real weather but not on real feeder load. Real weather is hourly, so it has no within-hour cloud variability, which flatters the solar forecast. A full month on real weather is not possible yet: the NASA file covers only the stress week and its training weeks.
 - The DISCOM's calls are larger than the firm call capacity (median 1.58 times), so with calls as today the call confidence can rarely be tested; with calls bounded by the offer it holds. Whether a DISCOM would contract on the offer is a policy question, not a modelling one.
+- Our synthetic homes use 8.6 kWh a day, about 1.9 times measured Indian homes and 2.5 times the Tamil Nadu average, and peak together far more than real homes. Feeder-level results hold when the same demand is spread over more, lighter homes; lifeline's benefit shrinks (see "Our homes against real Indian homes").
 - The business case uses one real IEX week (September 2025) for all 52 weeks, a 2x premium for community-scale storage and assumed smart-plug and controller costs. It does not count avoided transformer failures, diesel saved at the clinic, or the DISCOM's revenue on the extra energy sold.
 - Lifeline needs the smart meter's load limit to be set remotely in real time. Indian prepaid specifications include a utility-set load limit with automatic disconnect and reconnect; remote real-time changes must be confirmed with the DISCOM or meter vendor. Rationing homes to a lifeline in a shortage would also need the state regulator's approval.
 - The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
