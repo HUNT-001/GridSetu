@@ -79,7 +79,7 @@ grid-forming while connected would remove the dip; that is the next variant to m
 Clock, a MATLAB Function block (`GridSetu critical bus`) that calls `islanding_step.m`, a Unit
 Delay holding the 16 states, a To Workspace block and four scopes (frequency, voltage, inverter
 power, battery current). `islanding_reference.m` runs the same step function as a plain loop;
-`run_islanding` checks that Simulink reproduces it and prints the largest difference.
+`run_islanding` checks that Simulink reproduces it and prints the largest difference (0 in MATLAB R2025a). Open the diagram with `open_system('gridsetu_islanding')`.
 
 **What it is, and is not.** An average-value (RMS) model: the inverter is a controlled voltage
 source behind its control loops (1 % frequency droop, 5 % voltage droop, secondary frequency

@@ -39,6 +39,10 @@ if use_simulink
         fprintf('done (%d samples)\n', size(Ys{k}, 1));
     end
     set_param(blk, 'Value', '1');
+    try
+        open_system(mdl);   % show the diagram (skipped quietly when there is no editor)
+    catch
+    end
     d = max(max_diff(Ys{1}, G), max_diff(Ys{2}, Bl));
     fprintf('Simulink vs reference loop: largest difference %.2e\n', d);
     S.engine = 'Simulink';
