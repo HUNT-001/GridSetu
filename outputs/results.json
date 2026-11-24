@@ -4,7 +4,7 @@
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
     "headline_attribution": "baseline and gridsetu run on the same city signals; gridsetu_coordinated adds city-level solar-hour irrigation and industrial DR",
-    "runtime_s": 66.9
+    "runtime_s": 89.8
   },
   "pilot_feeder_monthly": {
     "baseline": {
@@ -63,6 +63,21 @@
         "min": 6.0,
         "max": 17.0
       },
+      "dark_home_hours": {
+        "mean": 5740.0,
+        "min": 4410.0,
+        "max": 8400.0
+      },
+      "dark_home_hours_evening": {
+        "mean": 3920.0,
+        "min": 3255.0,
+        "max": 5040.0
+      },
+      "lifeline_home_hours": {
+        "mean": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
       "feeder_peak_import_kw": {
         "mean": 340.00000000000006,
         "min": 340.0,
@@ -76,19 +91,19 @@
     },
     "gridsetu": {
       "evening_window_unserved_kwh": {
-        "mean": 529.119435418106,
-        "min": 400.114711015827,
-        "max": 617.4167213541655
+        "mean": 483.54085740056377,
+        "min": 398.49388247216694,
+        "max": 602.3241244813933
       },
       "total_unserved_kwh": {
-        "mean": 792.4000042961587,
-        "min": 649.2879284050204,
-        "max": 1000.6382814710313
+        "mean": 620.467866770157,
+        "min": 511.4451013354112,
+        "max": 803.7482167729784
       },
       "gross_unserved_kwh": {
-        "mean": 920.6076408192597,
-        "min": 793.6272870520668,
-        "max": 1116.0232950648024
+        "mean": 823.4828848418559,
+        "min": 724.2761959814632,
+        "max": 991.4077946304848
       },
       "critical_outage_hours": {
         "mean": 0.0,
@@ -101,34 +116,49 @@
         "max": 0.0
       },
       "feeder_outage_hours": {
-        "mean": 2.8333333333333335,
-        "min": 2.25,
-        "max": 3.75
+        "mean": 0.5,
+        "min": 0.0,
+        "max": 1.25
       },
       "battery_cycles": {
-        "mean": 17.620033044122472,
-        "min": 17.569823529411757,
-        "max": 17.698393250014497
+        "mean": 17.455344686224134,
+        "min": 17.399529411764696,
+        "max": 17.545798764554775
       },
       "battery_discharge_kwh": {
-        "mean": 2995.405617500821,
-        "min": 2986.8699999999994,
-        "max": 3008.7268525024647
+        "mean": 2967.408596658103,
+        "min": 2957.9199999999983,
+        "max": 2982.785789974312
       },
       "tier3_curtailed_kwh": {
-        "mean": 166.47025660430043,
-        "min": 153.04869199284235,
-        "max": 178.363416728111
+        "mean": 261.57855856049883,
+        "min": 251.57619625868637,
+        "max": 270.0615064477162
       },
       "tier2_curtailed_kwh": {
-        "mean": 28.325482560520722,
-        "min": 23.55579839806567,
-        "max": 37.32130861017981
+        "mean": 46.06788293539961,
+        "min": 36.713860102294525,
+        "max": 50.79419077742227
       },
       "overload_trips": {
         "mean": 0.0,
         "min": 0.0,
         "max": 0.0
+      },
+      "dark_home_hours": {
+        "mean": 291.25,
+        "min": 85.5,
+        "max": 603.0
+      },
+      "dark_home_hours_evening": {
+        "mean": 250.91666666666666,
+        "min": 56.0,
+        "max": 555.5
+      },
+      "lifeline_home_hours": {
+        "mean": 2137.5833333333335,
+        "min": 1981.5,
+        "max": 2262.75
       },
       "feeder_peak_import_kw": {
         "mean": 291.0,
@@ -136,26 +166,26 @@
         "max": 291.0
       },
       "solar_utilisation_pct": {
-        "mean": 99.99517780660504,
-        "min": 99.99066651497759,
+        "mean": 99.99983945699627,
+        "min": 99.99951837098881,
         "max": 100.0
       }
     },
     "gridsetu_coordinated": {
       "evening_window_unserved_kwh": {
-        "mean": 386.2233939315406,
-        "min": 334.02084224406053,
-        "max": 445.4024564717646
+        "mean": 368.92739232147255,
+        "min": 318.8927567363476,
+        "max": 448.23226479275854
       },
       "total_unserved_kwh": {
-        "mean": 569.0054699499409,
-        "min": 504.1652207979673,
-        "max": 691.6611212053876
+        "mean": 413.53151192427987,
+        "min": 339.362124213203,
+        "max": 545.425873583442
       },
       "gross_unserved_kwh": {
-        "mean": 705.8034128637714,
-        "min": 624.8621947322893,
-        "max": 830.9273160967562
+        "mean": 608.6237455469212,
+        "min": 514.9060557177118,
+        "max": 752.2643593296324
       },
       "critical_outage_hours": {
         "mean": 0.0,
@@ -168,34 +198,49 @@
         "max": 0.0
       },
       "feeder_outage_hours": {
-        "mean": 2.0,
-        "min": 1.75,
-        "max": 2.5
+        "mean": 0.08333333333333333,
+        "min": 0.0,
+        "max": 0.25
       },
       "battery_cycles": {
-        "mean": 17.645472243220212,
-        "min": 17.620316165181237,
-        "max": 17.688922661779202
+        "mean": 17.540274987174566,
+        "min": 17.517999999999986,
+        "max": 17.58482496152373
       },
       "battery_discharge_kwh": {
-        "mean": 2999.7302813474366,
-        "min": 2995.45374808081,
-        "max": 3007.1168525024646
+        "mean": 2981.8467478196762,
+        "min": 2978.0599999999977,
+        "max": 2989.4202434590343
       },
       "tier3_curtailed_kwh": {
-        "mean": 170.47098258747778,
-        "min": 149.5590902655538,
-        "max": 185.28142327877714
+        "mean": 249.79361600947286,
+        "min": 221.60950970477776,
+        "max": 268.56451725533384
       },
       "tier2_curtailed_kwh": {
-        "mean": 34.51535336134391,
-        "min": 30.9615197749897,
-        "max": 39.26180594853503
+        "mean": 45.21606401695747,
+        "min": 42.57822568164208,
+        "max": 47.370190976240266
       },
       "overload_trips": {
         "mean": 0.0,
         "min": 0.0,
         "max": 0.0
+      },
+      "dark_home_hours": {
+        "mean": 101.0,
+        "min": 59.25,
+        "max": 184.5
+      },
+      "dark_home_hours_evening": {
+        "mean": 73.66666666666667,
+        "min": 34.75,
+        "max": 146.5
+      },
+      "lifeline_home_hours": {
+        "mean": 1985.5833333333333,
+        "min": 1784.25,
+        "max": 2274.75
       },
       "feeder_peak_import_kw": {
         "mean": 291.0,
@@ -203,8 +248,8 @@
         "max": 291.0
       },
       "solar_utilisation_pct": {
-        "mean": 99.99958450095441,
-        "min": 99.99923513187443,
+        "mean": 100.0,
+        "min": 100.0,
         "max": 100.0
       }
     }
@@ -225,39 +270,51 @@
         "tier3_curtailed_kwh": 0.0,
         "tier2_curtailed_kwh": 0.0,
         "overload_trips": 0,
-        "days": 7
+        "days": 7,
+        "dark_home_hours": 1890.0,
+        "dark_home_hours_evening": 1050.0,
+        "lifeline_home_hours": 0.0,
+        "lifeline_steps": 0
       },
       "gridsetu": {
-        "evening_window_unserved_kwh": 617.4167213541655,
-        "total_unserved_kwh": 1000.6382814710313,
-        "gross_unserved_kwh": 1116.0232950648024,
+        "evening_window_unserved_kwh": 602.3241244813933,
+        "total_unserved_kwh": 803.7482167729784,
+        "gross_unserved_kwh": 991.4077946304848,
         "critical_outage_hours": 0.0,
         "critical_unserved_kwh": 0.0,
-        "feeder_outage_hours": 3.75,
-        "solar_utilisation_pct": 99.96266605991039,
-        "feeder_peak_import_kw": 291.0,
-        "battery_cycles": 4.64874619119098,
-        "battery_discharge_kwh": 790.2868525024667,
-        "tier3_curtailed_kwh": 153.04869199284235,
-        "tier2_curtailed_kwh": 23.55579839806567,
-        "overload_trips": 0,
-        "days": 7
-      },
-      "gridsetu_coordinated": {
-        "evening_window_unserved_kwh": 445.4024564717646,
-        "total_unserved_kwh": 691.6611212053876,
-        "gross_unserved_kwh": 830.9273160967562,
-        "critical_outage_hours": 0.0,
-        "critical_unserved_kwh": 0.0,
-        "feeder_outage_hours": 2.5,
+        "feeder_outage_hours": 1.25,
         "solar_utilisation_pct": 99.99807348395522,
         "feeder_peak_import_kw": 291.0,
-        "battery_cycles": 4.639275602955687,
-        "battery_discharge_kwh": 788.6768525024668,
-        "tier3_curtailed_kwh": 176.5724342181024,
-        "tier2_curtailed_kwh": 33.322734360507006,
+        "battery_cycles": 4.496151705731259,
+        "battery_discharge_kwh": 764.3457899743141,
+        "tier3_curtailed_kwh": 251.57619625868637,
+        "tier2_curtailed_kwh": 36.713860102294525,
         "overload_trips": 0,
-        "days": 7
+        "days": 7,
+        "dark_home_hours": 603.0,
+        "dark_home_hours_evening": 555.5,
+        "lifeline_home_hours": 2168.5,
+        "lifeline_steps": 22
+      },
+      "gridsetu_coordinated": {
+        "evening_window_unserved_kwh": 448.23226479275854,
+        "total_unserved_kwh": 545.425873583442,
+        "gross_unserved_kwh": 752.2643593296324,
+        "critical_outage_hours": 0.0,
+        "critical_unserved_kwh": 0.0,
+        "feeder_outage_hours": 0.25,
+        "solar_utilisation_pct": 100.0,
+        "feeder_peak_import_kw": 291.0,
+        "battery_cycles": 4.468352941176469,
+        "battery_discharge_kwh": 759.6199999999997,
+        "tier3_curtailed_kwh": 268.56451725533384,
+        "tier2_curtailed_kwh": 45.699775392990084,
+        "overload_trips": 0,
+        "days": 7,
+        "dark_home_hours": 184.5,
+        "dark_home_hours_evening": 146.5,
+        "lifeline_home_hours": 2274.75,
+        "lifeline_steps": 23
       }
     },
     "representative": {
@@ -275,7 +332,11 @@
         "tier3_curtailed_kwh": 0.0,
         "tier2_curtailed_kwh": 0.0,
         "overload_trips": 2,
-        "days": 7
+        "days": 7,
+        "dark_home_hours": 840.0,
+        "dark_home_hours_evening": 735.0,
+        "lifeline_home_hours": 0.0,
+        "lifeline_steps": 0
       },
       "gridsetu": {
         "evening_window_unserved_kwh": 0.0,
@@ -291,7 +352,11 @@
         "tier3_curtailed_kwh": 0.0,
         "tier2_curtailed_kwh": 0.0,
         "overload_trips": 0,
-        "days": 7
+        "days": 7,
+        "dark_home_hours": 0.0,
+        "dark_home_hours_evening": 0.0,
+        "lifeline_home_hours": 0.0,
+        "lifeline_steps": 0
       },
       "gridsetu_coordinated": {
         "evening_window_unserved_kwh": 0.0,
@@ -307,19 +372,23 @@
         "tier3_curtailed_kwh": 0.0,
         "tier2_curtailed_kwh": 0.0,
         "overload_trips": 0,
-        "days": 7
+        "days": 7,
+        "dark_home_hours": 0.0,
+        "dark_home_hours_evening": 0.0,
+        "lifeline_home_hours": 0.0,
+        "lifeline_steps": 0
       }
     }
   },
   "fairness_stress_week": {
-    "events": 12,
+    "events": 4,
     "households_ever_curtailed": 420,
-    "max_household_hours": 4.0,
-    "mean_hours_if_curtailed": 3.556547619047619,
-    "gini_curtailment_hours": 0.04175851763299462,
-    "consecutive_interval_violations": 4,
-    "requests": 6629,
-    "refusals": 654
+    "max_household_hours": 6.5,
+    "mean_hours_if_curtailed": 5.792857142857143,
+    "gini_curtailment_hours": 0.03257001937643121,
+    "consecutive_interval_violations": 22,
+    "requests": 10815,
+    "refusals": 1083
   },
   "comm_slices_stress_week": [
     {
@@ -361,20 +430,24 @@
   ],
   "comms_degraded_stress_week": {
     "metrics": {
-      "evening_window_unserved_kwh": 568.7333391359675,
-      "total_unserved_kwh": 1031.8875630578505,
-      "gross_unserved_kwh": 1078.2549366523272,
+      "evening_window_unserved_kwh": 477.21034984652727,
+      "total_unserved_kwh": 802.3169432941498,
+      "gross_unserved_kwh": 903.2756091261418,
       "critical_outage_hours": 0.0,
       "critical_unserved_kwh": 0.0,
-      "feeder_outage_hours": 4.0,
+      "feeder_outage_hours": 2.25,
       "solar_utilisation_pct": 99.95572576818614,
-      "feeder_peak_import_kw": 288.6995853479834,
-      "battery_cycles": 4.445886842366507,
-      "battery_discharge_kwh": 755.8007632023061,
-      "tier3_curtailed_kwh": 65.83353713404485,
-      "tier2_curtailed_kwh": 6.867251314049701,
+      "feeder_peak_import_kw": 291.0,
+      "battery_cycles": 4.403533901190036,
+      "battery_discharge_kwh": 748.6007632023061,
+      "tier3_curtailed_kwh": 137.37471503117717,
+      "tier2_curtailed_kwh": 18.53383681328566,
       "overload_trips": 0,
-      "days": 7
+      "days": 7,
+      "dark_home_hours": 986.5,
+      "dark_home_hours_evening": 636.25,
+      "lifeline_home_hours": 1188.75,
+      "lifeline_steps": 12
     },
     "slices": [
       {

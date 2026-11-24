@@ -31,10 +31,11 @@ rebuilds it, so a hand edit is overwritten and the check fails.
 - `end_to_end`: `held`, and no trip from a lost protection (SPS) message.
 
 **Result.** `own_peak_held` is 100% on all 1,260 forecasts, so the confidence is honest about
-what it covers. On all 60 evenings with a DISCOM call, the request was 1.2 to 4.3 times the
-published reserve, the call was not met, and the feeder was rotated off (Tier 1 islanded). The
-confidence still said 100% because it never looks at the call. Planned fix: a second confidence
-for the expected call, and calls bounded by the published reserve.
+what it covers. In the first version, on all 60 evenings with a DISCOM call the request was
+far above the published reserve and the call was not met. That led to lifeline mode and the
+second (call) confidence, scored by `call_met`: see "Lifeline mode and the second confidence"
+below. Now 20 of 60 calls are met as the DISCOM calls today, and 58 of 60 when calls are
+bounded by our offer.
 
 **Scores.** Brier score = mean of (stated probability − outcome)², 0 is perfect. With every
 forecast at 100%, a reliability diagram collapses to one point, so the chart shows stated vs
@@ -123,3 +124,34 @@ Tests re-check all of this. The synthetic case inside the study equals the headl
 **Likely question.** *Is your household load real?* No. Weather and prices are real; load is synthetic until we get smart-meter data. The data card lists every input with its label.
 
 **Time zone trap.** NASA's "LST" is UTC+5, not IST. IST = LST + 30 min; we proved it by fitting solar geometry, and a test keeps it that way.
+
+## Lifeline mode and the second confidence (`feeder.py`, `calibration.py`)
+
+**What it does.** When a DISCOM request is larger than the battery, Tier 3 and Tier 2 can give,
+the controller finds the highest common load limit L (at least 200 W) such that capping every
+home at L frees enough power. `_lifeline` does this by bisection. Homes above L are cut back to
+it; 5% of them exceed it and their meter disconnects them. If even 200 W per home isn't
+enough, the feeder is switched off as before, with the critical loads islanded on the battery.
+
+**The second confidence.** Each published reserve also carries:
+- **call capacity:** the battery's energy spread over the whole evening, plus Tier 2, plus
+  what lifeline could free (from each home's load at the same time yesterday, so no peeking
+  at the future), taken at the q10;
+- **call confidence:** the chance that capacity is really there, about 90%.
+
+The calibration scores it on calls inside the offer.
+
+**What it found.**
+- Monthly home-hours without supply fall from 5,740 to 291, and whole-feeder outage from 13.7 h to 0.5 h.
+- With calls bounded by the day-ahead offer, 58 of 60 call evenings are met, and the 90% call confidence held 97.6% of the time.
+- With calls as the DISCOM makes them today (median 1.58 times our offer), 20 of 60 are met.
+- Across 20 feeders, home-hours without supply in the stress week fall 75% at full adoption (26% before lifeline).
+
+**Bugs it exposed and fixed.**
+- An accepted DISCOM cap outside the rotation group could be missed with no consequence.
+- A missed call was recorded at size zero.
+- The first call offer counted Tier 3 twice; the calibration caught it, because stated 90% came out at 48%.
+
+**Likely question.** *Why not always use lifeline instead of the battery?* Lifeline limits
+every home; the battery limits nobody. So the battery goes first, then Tier 3 and Tier 2, and
+lifeline only when those run out.

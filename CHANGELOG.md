@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased: lifeline mode and the second confidence (November 2026)
+
+### Added
+- **Lifeline mode** (`pilot_feeder.lifeline`, on): when a DISCOM request exceeds battery and flexible load, every home's smart meter is capped at a common limit (at least 200 W) instead of the feeder being switched off. New metrics: dark and lifeline home-hours.
+- The Reliability Reserve publishes a firm **call capacity** and a **call confidence**; `calibrate` scores it. `calibrate --bounded-calls` runs the ADMS dispatch case where calls are bounded by the day-ahead offer (`outputs/calibration_bounded/`).
+- Dashboard: lifeline state and dimly lit lifeline homes.
+- 4 tests (67 in total).
+
+### Changed (headline figures)
+- GridSetu evening unserved energy 529 → 484 kWh/month (−82%); whole-feeder outage 2.8 → 0.5 h/month; home-hours without supply 5,740 (baseline) → 291.
+- DISCOM call evenings met: 0 → 20 of 60 (calls as today); 58 of 60 with calls bounded by the offer.
+- 20-feeder fleet, stress week, full adoption: home-hours dark −75% (was −26%).
+- MATLAB low-voltage results re-run on the new loads (GridSetu losses 2,215 → 2,226 kWh; agreement with the Python twin 5e-9).
+
+### Fixed
+- An accepted DISCOM cap outside the rotation group could be missed with no consequence; lifeline now meets it or the shortfall is visible.
+- Missed calls are recorded at their full size.
+- The README results chart is now the generated one (`outputs/charts/slide8_baseline_vs_proposed.png`), not a static copy.
+
 ## Unreleased: real weather and prices (November 2026)
 
 ### Added

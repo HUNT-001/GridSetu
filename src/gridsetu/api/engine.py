@@ -30,11 +30,11 @@ from ..simulate import stress_and_representative
 from ..wams import wams_study
 from ..citymap import build_map
 
-ENGINE_VERSION = "1.1.0"
+ENGINE_VERSION = "1.2.0"
 WEEKS = ("stress", "representative")
 STATE_CODES = ["normal", "cap", "sps_relief", "rotation_trip", "sps_trip", "cap_shortfall_trip",
                "cap_shortfall_trip+island", "rotation_trip+island", "sps_trip+island",
-               "local_trip", "local_trip+island", "overload_event"]
+               "local_trip", "local_trip+island", "overload_event", "cap+lifeline"]
 
 
 def run_id_for(overrides: dict | None, seeds: int, config_path=None) -> str:

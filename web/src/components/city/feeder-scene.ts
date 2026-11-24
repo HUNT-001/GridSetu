@@ -1,5 +1,5 @@
 /* Pilot feeder F07 inset: the same 420 households under the baseline and under GridSetu,
- * side by side. Each house eases towards its state (supplied, Tier-3 curtailed, dark) in
+ * side by side. Each house eases towards its state (supplied, Tier-3 curtailed, lifeline, dark) in
  * ~120 ms, so step changes read as a continuous dimming instead of a flicker. */
 import type { FeederPayload, Variant } from "@/lib/types";
 import { at, clamp, decodeB64 } from "@/lib/utils";
@@ -80,7 +80,7 @@ export class FeederScene {
       for (let h = 0; h < this.nHh; h++) {
         const s = pn.status[off + h];
         const introOn = h / this.nHh < this.intro;
-        const target = !introOn ? 0 : s === 0 ? 1 : s === 1 ? 0.55 : 0;
+        const target = !introOn ? 0 : s === 0 ? 1 : s === 1 ? 0.55 : s === 3 ? 0.3 : 0;   // 3 = lifeline (lights and fans only)
         pn.cur[h] += (target - pn.cur[h]) * k;
         pn.cur3[h] += ((s === 1 ? 1 : 0) - pn.cur3[h]) * k;
         const col = h % COLS, row = Math.floor(h / COLS);

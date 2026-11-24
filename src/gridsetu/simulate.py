@@ -84,7 +84,8 @@ def run_week(sc: Scenario, label: str, cloudy_days: list[int] | None = None,
                                      ("gridsetu", "gridsetu", "baseline"),
                                      ("gridsetu_coordinated", "gridsetu", "coordinated")):
         log(f"[{label}] simulating pilot feeder: {variant}")
-        feeders[variant] = simulate_feeder(sc, fl, fc, signals[city_name], mode, draws, comm_cfg)
+        feeders[variant] = simulate_feeder(sc, fl, fc, signals[city_name], mode, draws, comm_cfg,
+                                           hist_last=hist[0])
     return WeekResult(label, sc, wx, fl, fc, skill, city, feeders, signals, model, hist[0])
 
 

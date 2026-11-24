@@ -129,7 +129,8 @@ def rotation_schedule(shed_frac: np.ndarray, n_groups: int, group: int) -> np.nd
 
 # --------------------------------------------------------------------------- simulation
 def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
-                    mode: str, trip_draws: np.ndarray, comm_cfg: dict | None = None) -> FeederResult:
+                    mode: str, trip_draws: np.ndarray, comm_cfg: dict | None = None,
+                    hist_last: FeederLoads | None = None) -> FeederResult:
     assert mode in ("baseline", "gridsetu")
     f = sc.feeder
     b = f["battery"]
@@ -154,12 +155,21 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     b_res = dict(b, soc_min=floor_kwh / E)   # what planning and published reserves may use
     t2_all = (fl.ent_tier2 * fl.ent_optin[:, None])
     sizing_log, reserves = [], []
+    lf = f.get("lifeline", {}) if gs else {}
+    lifeline_on = bool(lf.get("enabled", False))
+    lifeline_min = float(lf.get("min_kw_per_home", 0.3))
+    lifeline_rng = sc.rng(5150)
+    lifeline_steps = 0
+    call_rng = sc.rng(6060)
+    bounded_calls = bool(f.get("discom_calls_bounded_by_offer", False)) and gs
+    offer_today = None
+    headroom_fc = _lifeline_headroom_forecast(fl, hist_last, spd, lifeline_min) if lifeline_on else None
 
     n_hh = fl.hh_load.shape[0]
     hh_status = np.zeros((n, n_hh), np.uint8)   # 0 supplied, 1 Tier-3 curtailed, 2 dark
     rec = {k: np.zeros(n) for k in (
         "gross", "net", "import", "battery_kw", "soc", "unserved", "curtail_t3", "curtail_t2",
-        "tier1_unserved", "solar_avail", "solar_used", "spill", "limit", "cap_request",
+        "tier1_unserved", "solar_avail", "solar_used", "spill", "limit", "cap_request", "lifeline_kw",
         "rebound", "t3_avail")}
     state = np.empty(n, dtype=object)
     relief_req = np.zeros(n)   # kW of relief the DISCOM asked of this feeder
@@ -182,7 +192,9 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
             plan[steps] = p["battery_kw"]
             ws_local = int(steps[window[steps]][0] - steps[0])
             reserves.append(_reserve_object("T-24h", sc, fl, fc, steps, window, p["soc"][ws_local],
-                                            int(steps[window[steps]][0]) - spd, 0.0, 1.0, P, E, b_res, rng))
+                                            int(steps[window[steps]][0]) - spd, 0.0, 1.0, P, E, b_res, rng,
+                                            headroom=headroom_fc, call_rng=call_rng))
+            offer_today = reserves[-1].get("call_capacity_kw")   # the day-ahead offer the DISCOM contracts
 
         for t in steps:
             hh3 = fl.hh_tier3[:, t]
@@ -205,16 +217,27 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
             elif sig.shed_frac_rt[t] > 1e-4:
                 base_imp = max(gross - roof - cpv, 0.0)
                 request = base_imp * sig.shed_frac_rt[t]
+                if bounded_calls and offer_today is not None:
+                    # ADMS/DERMS dispatches a flexible feeder up to its day-ahead offer, not beyond
+                    request = min(request, offer_today)
                 if gs and slices["control_2g4g"].send():
                     # can GridSetu deliver the requested relief? if not, the DISCOM
                     # treats the feeder like any other and applies the rotation trip
                     p_dis = min(P, max(soc - floor_kwh, 0) * b["eta_discharge"] / dt)
                     flex = p_dis + hh3.sum() * (1 - f["refusal_prob_tier3"]) + t2_all[:, t].sum()
+                    # lifeline: smart meters cap every home at a small allowance (lights, fans,
+                    # phones), so the request can be met without switching the feeder off
+                    lifeline_flex = flex + float(np.maximum(fl.hh_load[:, t] - lifeline_min, 0).sum()) \
+                        - hh3.sum() * (1 - f["refusal_prob_tier3"]) if lifeline_on else flex
                     if flex >= 0.95 * request or not sig.rotation_trip[t]:
                         cap_req, st = base_imp - request, "cap"
                         relief_req[t] = request
+                    elif lifeline_on and lifeline_flex >= 0.95 * request:
+                        cap_req, st = base_imp - request, "cap+lifeline"
+                        relief_req[t] = request
                     else:
                         upstream_trip, st = True, "cap_shortfall_trip"
+                        relief_req[t] = request      # recorded so a missed call is measured at full size
                 elif sig.rotation_trip[t]:
                     upstream_trip, st = True, "rotation_trip"
                 if not gs:
@@ -241,7 +264,7 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
                 if imp < -f["export_limit_kw"]:
                     spill = min(cpv, -f["export_limit_kw"] - imp)
                     imp += spill
-                c3 = c2 = 0.0
+                c3 = c2 = c_life = 0.0
                 excess = imp - limit
                 if gs and excess > 1e-6:
                     c3, cmask = ledger.step(excess, hh3, dt)
@@ -251,6 +274,19 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
                         c2 = min(excess, t2_all[:, t].sum())
                         excess -= c2
                     imp -= c3 + c2
+                    # lifeline whenever an accepted DISCOM request still cannot be met: an accepted
+                    # cap is a promise, whether or not the feeder's rotation group is due
+                    if excess > 1e-6 and lifeline_on and st in ("cap", "cap+lifeline"):
+                        st = "cap+lifeline"
+                        c_life, dark = _lifeline(fl.hh_load[:, t] - np.where(cmask, hh3, 0.0), excess,
+                                                 lifeline_min, float(lf.get("meter_trip_prob", 0.05)),
+                                                 lifeline_rng)
+                        lim = (fl.hh_load[:, t] - np.where(cmask, hh3, 0.0)) > lifeline_min + 1e-9
+                        hh_status[t, lim] = 3
+                        hh_status[t, dark] = 2
+                        lifeline_steps += 1
+                        imp -= c_life
+                        rec["lifeline_kw"][t] = c_life
                 else:
                     ledger.step(0.0, hh3, dt)
                 # serve the rebound queue only with headroom and no active request
@@ -269,7 +305,7 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
                 soc -= (pb / b["eta_discharge"] if pb > 0 else pb * b["eta_charge"]) * dt
                 rec["import"][t] = imp
                 rec["battery_kw"][t] = pb
-                rec["unserved"][t] = c3 + c2
+                rec["unserved"][t] = c3 + c2 + c_life
                 rec["curtail_t3"][t] = c3
                 rec["curtail_t2"][t] = c2
                 rec["spill"][t] = spill
@@ -311,7 +347,8 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
             state[t] = st
 
         if gs:  # T-1h / T-15min / delivered / post-event for this day's window
-            reserves.extend(_window_updates(sc, fl, fc, steps, window, rec, P, E, b_res, rng))
+            reserves.extend(_window_updates(sc, fl, fc, steps, window, rec, P, E, b_res, rng,
+                                            headroom=headroom_fc, call_rng=call_rng))
 
     if gs:  # AMI interval reads (verification/settlement) and dashboard pushes
         slices["mmtc_ami"].bulk(fl.hh_load.shape[0] * n)
@@ -321,10 +358,64 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     ts["relief_requested"] = relief_req
     ts["tier1"] = t1_all
     metrics = feeder_metrics(sc, fl, ts, window, E, b, queue)
+    metrics["dark_home_hours"] = float((hh_status == 2).sum() * dt)              # home fully without supply
+    metrics["dark_home_hours_evening"] = float((hh_status[window] == 2).sum() * dt)
+    metrics["lifeline_home_hours"] = float((hh_status == 3).sum() * dt)          # home limited to the lifeline
+    metrics["lifeline_steps"] = int(lifeline_steps) if gs else 0
     return FeederResult(mode, ts, metrics, ledger.summary() if gs else {}, reserves,
                         [s.stats() for s in slices.values()] if gs else [], sizing_log,
                         {"household_hours": ledger.hours.copy(), "hh_status": hh_status,
                          "household_events": ledger.events.copy()})
+
+
+def _lifeline(load: np.ndarray, need_kw: float, floor_kw: float, trip_prob: float,
+              rng: np.random.Generator) -> tuple[float, np.ndarray]:
+    """Lowest common per-home limit L >= floor_kw that removes need_kw. Homes above L are cut
+    back to L; a share of them exceed it anyway and their meter relay disconnects them.
+    Returns (kW removed, mask of disconnected homes)."""
+    def cut(L):
+        return float(np.maximum(load - L, 0).sum())
+    lo, hi = floor_kw, float(load.max()) if load.size else floor_kw
+    if cut(lo) <= need_kw:                    # even the floor is not enough: everyone at floor
+        L = lo
+    else:
+        for _ in range(40):
+            mid = (lo + hi) / 2
+            lo, hi = (mid, hi) if cut(mid) >= need_kw else (lo, mid)
+        L = lo
+    over = load > L + 1e-9
+    dark = over & (rng.random(load.size) < trip_prob)
+    removed = float(np.maximum(load - L, 0)[over & ~dark].sum() + load[dark].sum())
+    return removed, dark
+
+
+def _lifeline_headroom_forecast(fl, hist_last, spd: int, floor_kw: float) -> np.ndarray:
+    """Forecast of the load lifeline could remove at each step: every home's load at the same
+    time the day before, above the lifeline allowance. Day 1 uses the last history week."""
+    hh = fl.hh_load
+    ref = np.empty_like(hh)
+    ref[:, spd:] = hh[:, :-spd]
+    if hist_last is not None:
+        ref[:, :spd] = hist_last.hh_load[:, -spd:]
+    else:                       # no history passed: use the second day as a stand-in for day 1
+        ref[:, :spd] = hh[:, spd:2 * spd]
+    return np.maximum(ref - floor_kw, 0).sum(axis=0)
+
+
+def _call_capacity(sc, fc, wsteps, flex_kw: float, headroom: np.ndarray, scale: float,
+                   rng: np.random.Generator, n: int = 800, q: float = 0.10) -> tuple[float, float]:
+    """Relief GridSetu offers to a DISCOM call over the window (battery + Tier 3 + Tier 2 +
+    lifeline) and P(the real capacity is at least that). The lifeline part moves with household
+    load, so its uncertainty follows the net-load forecast spread; the published capacity is the
+    q10 of that distribution (a firm offer), so the stated confidence should come out near 90%."""
+    q50 = np.maximum(fc["net_load"].q50[wsteps], 1e-6)
+    rel_sig = fc["net_load"].spread[wsteps] / 2.563 / q50 * scale
+    z = 0.8 * rng.normal(size=(n, 1)) + 0.6 * rng.normal(size=(n, len(wsteps)))
+    # lifeline headroom scales roughly with household load; floor at zero
+    head = np.maximum(headroom[wsteps] * (1 + rel_sig * z * 2.0), 0)
+    cap_samples = (flex_kw + head).min(axis=1)          # the weakest step limits a firm offer
+    offer = float(np.quantile(cap_samples, q))
+    return offer, float(np.mean(cap_samples >= offer))
 
 
 def _deliverability(sc, fc, wsteps, soc_now, flex_kwh, bias, scale, b, E, rng, n=800):
@@ -340,7 +431,7 @@ def _deliverability(sc, fc, wsteps, soc_now, flex_kwh, bias, scale, b, E, rng, n
 
 
 def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias, scale,
-                    P, E, b, rng, delivered=None):
+                    P, E, b, rng, delivered=None, headroom=None, call_rng=None):
     wsteps = steps[window[steps]]
     ws, we = wsteps[0], wsteps[-1]
     dur = len(wsteps) * sc.dt_h
@@ -349,6 +440,15 @@ def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias,
     t3 = float(fl.hh_tier3[:, wsteps].sum(axis=0).mean() * (1 - sc.feeder["refusal_prob_tier3"]))
     t2 = float((fl.ent_tier2[:, wsteps] * fl.ent_optin[:, None]).sum(axis=0).mean())
     conf = _deliverability(sc, fc, wsteps, soc_ws, (t3 + t2) * dur, bias, scale, b, E, rng)
+    call_kw = call_conf = None
+    if headroom is not None:
+        # DISCOM calls can last the whole evening (17:00-23:00), not just our 2-hour window, so a
+        # firm offer spreads the battery's energy over 6 hours; load-side flexibility counts in full
+        # lifeline headroom (all load above the allowance) already contains the Tier-3 appliances,
+        # so Tier 3 is not added again
+        bat_call_kw = min(P, e_bat / 6.0)
+        call_kw, call_conf = _call_capacity(sc, fc, wsteps, bat_call_kw + t2, headroom, scale,
+                                            call_rng if call_rng is not None else rng)
     return ReliabilityReserve(
         feeder_id=FEEDER_ID, stage=stage, issued_at=str(sc.index[max(issued_step, 0)]),
         window_start=str(sc.index[ws]), window_end=str(sc.index[we] + pd.Timedelta(minutes=15)),
@@ -356,10 +456,12 @@ def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias,
         duration_h=dur, confidence_pct=round(100 * conf, 1),
         cost_inr_kwh=round(b["degradation_cost_inr_kwh"] + 2.0, 2),
         battery_kw=round(bat_kw, 1), tier3_kw=round(t3, 1), tier2_kw=round(t2, 1),
-        delivered_kw=delivered).to_dict()
+        delivered_kw=delivered,
+        call_capacity_kw=None if call_kw is None else round(call_kw, 1),
+        call_confidence_pct=None if call_conf is None else round(100 * call_conf, 1)).to_dict()
 
 
-def _window_updates(sc, fl, fc, steps, window, rec, P, E, b, rng) -> list:
+def _window_updates(sc, fl, fc, steps, window, rec, P, E, b, rng, headroom=None, call_rng=None) -> list:
     wsteps = steps[window[steps]]
     ws = wsteps[0]
     out = []
@@ -367,7 +469,7 @@ def _window_updates(sc, fl, fc, steps, window, rec, P, E, b, rng) -> list:
         soc_now = rec["soc"][ws - lead]
         bias = rec["net"][ws - lead] - fc["net_load"].q50[ws - lead]   # persistence nowcast
         out.append(_reserve_object(stage, sc, fl, fc, steps, window, soc_now, ws - lead,
-                                   bias, scale, P, E, b, rng))
+                                   bias, scale, P, E, b, rng, headroom=headroom, call_rng=call_rng))
     delivered = float(np.mean(np.maximum(rec["battery_kw"][wsteps], 0)
                               + rec["curtail_t3"][wsteps] + rec["curtail_t2"][wsteps]))
     rt = dict(out[-1])

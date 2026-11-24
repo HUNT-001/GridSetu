@@ -19,7 +19,8 @@ from .wams import wams_study
 ADDITIVE = ["evening_window_unserved_kwh", "total_unserved_kwh", "gross_unserved_kwh",
             "critical_outage_hours", "critical_unserved_kwh", "feeder_outage_hours",
             "battery_cycles", "battery_discharge_kwh", "tier3_curtailed_kwh",
-            "tier2_curtailed_kwh", "overload_trips"]
+            "tier2_curtailed_kwh", "overload_trips", "dark_home_hours", "dark_home_hours_evening",
+            "lifeline_home_hours"]
 REP_WEEKS_PER_MONTH = 3
 VARIANTS = ("baseline", "gridsetu", "gridsetu_coordinated")
 

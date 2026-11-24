@@ -81,6 +81,8 @@ class ReliabilityReserve:
     tier3_kw: float
     tier2_kw: float
     delivered_kw: float | None = None
+    call_capacity_kw: float | None = None      # relief offered to a DISCOM call (incl. lifeline)
+    call_confidence_pct: float | None = None   # P(the call capacity is really there)
     cim_profile: str = "IEC 61968-5 DERGroupForecast"
 
     def to_dict(self) -> dict:

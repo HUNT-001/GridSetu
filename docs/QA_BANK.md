@@ -18,22 +18,23 @@ found this ourselves and pinned the versions.
 
 **Q: "Never the same home twice in a row": is that true?**
 Almost. The rule is enforced inside dispatch, but if honouring it would leave the DISCOM's request
-unmet, it's relaxed for that interval and logged. In the stress week that happened in 4 intervals.
+unmet, it's relaxed for that interval and logged. In the stress week that happened in 22 intervals,
+more than before lifeline because GridSetu now meets requests it used to miss.
 We report the count rather than claim "never".
 
 ## Reliability Reserve confidence
 
 **Q: Your reserve says 100% confidence. Is it ever wrong?**
 On what it measures, no: across 1,260 published forecasts the feeder held its own evening peak
-every time. But on the 60 evenings when the DISCOM called for relief, it asked for 1.2 to 4.3
-times what we had published, and we could not meet it. The feeder was rotated off like its
-neighbours, with the clinic, school and pump on battery. We show both numbers, and we're adding
-a second confidence for the expected call.
+every time. The DISCOM's call is a separate promise, so it now has its own number: a firm call
+capacity with a 90% confidence. When calls are bounded by our day-ahead offer, as in an ADMS
+dispatch contract, the call was met on 58 of 60 evenings and the 90% held 97.6% of the time.
 
-**Q: Why would the DISCOM ask for more than you offered?**
-In our model the DISCOM shares the shortfall across feeders by their load, not by what each one
-published. In a real ADMS/DERMS integration the published reserve is what the operator dispatches
-against, so calls should be bounded by it. That change is next.
+**Q: And if the DISCOM asks for more than you offered?**
+That is how our model's DISCOM behaves today: it asks for the feeder's full share of the
+shortage, a median 1.58 times our call capacity. Lifeline still met the call on 20 of 60
+evenings; on the rest the feeder was switched off for part of the evening, with the clinic,
+school and pump on the battery. We report both cases.
 
 **Q: Then what's the value on the worst nights?**
 Critical loads never go dark, and GridSetu is honest about what it can't do, so the operator can
@@ -53,8 +54,8 @@ named bus; a test proves the bus loads add up to the feeder import at every step
 
 **Q: Does GridSetu reduce technical losses?**
 Only where the storage sits. With the battery at the transformer, line losses are unchanged
-(2,204 vs 2,215 kWh in the stress week, the extra being energy served instead of shed). Split
-across the three circuits, the same battery cuts technical losses about 7%, to 2,042 kWh. We
+(2,204 vs 2,226 kWh in the stress week, the extra being energy served instead of shed). Split
+across the three circuits, the same battery cuts technical losses about 7%, to 2,047 kWh. We
 now recommend the split layout.
 
 **Q: What does it do for the transformer?**
@@ -94,3 +95,26 @@ the synthetic number was slightly flattering, and we report the real one.
 **Q: How did you get the IEX data?**
 From IEX's public market snapshot page, 15-minute blocks. Each day's 96 prices average exactly
 to IEX's published daily figure, and a test checks it.
+
+## Lifeline mode
+
+**Q: What is lifeline?**
+When the DISCOM needs more relief than the battery and flexible loads can give, a normal feeder
+is switched off. GridSetu instead sets a load limit on every home's smart meter, as low as
+200 W: lights, a fan, phone charging. The DISCOM gets its relief and the homes are not dark.
+Over a month, home-hours without supply fall from 5,740 to 291.
+
+**Q: Can smart meters really do that?**
+Indian prepaid smart-meter specifications (for example MSEDCL's, which follows IS 16444)
+already include a utility-set load limit with automatic disconnect and reconnect, and remote
+connect/disconnect. Whether the limit can be changed remotely in real time is something we
+still have to confirm with a DISCOM or meter vendor, and rationing would need the regulator's
+approval. We say so.
+
+**Q: Isn't 200 W an arbitrary number?**
+It's our assumption, and it matters: at 400 W lifeline helps far less. A DISCOM and regulator
+would set it. We show the sensitivity.
+
+**Q: What happens to a home that uses more than 200 W?**
+Its meter disconnects it, as prepaid meters already do when a load limit is exceeded. We assume
+5% of limited homes do that, and count them as dark.

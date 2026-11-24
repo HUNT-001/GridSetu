@@ -22,6 +22,9 @@ def main(argv=None):
     ca.add_argument("--out", default="outputs")
     ca.add_argument("--config", default=None)
     ca.add_argument("--workers", type=int, default=2)
+    ca.add_argument("--bounded-calls", action="store_true",
+                    help="scenario: the DISCOM dispatches the feeder only up to its day-ahead offer "
+                         "(writes outputs/calibration_bounded/)")
     nu = sub.add_parser("numbers", help="rebuild outputs/numbers.json and check documents against it")
     nu.add_argument("--out", default="outputs")
     nu.add_argument("--check", nargs="*", default=["README.md"], help="files whose figures must match")
@@ -84,7 +87,12 @@ def main(argv=None):
         from pathlib import Path
         from .calibration import run_calibration
         from .numbers import build_numbers
-        r = run_calibration(args.seeds, args.out, args.config, args.workers)
+        if args.bounded_calls:
+            r = run_calibration(args.seeds, args.out, args.config, args.workers,
+                                overrides={"pilot_feeder": {"discom_calls_bounded_by_offer": True}},
+                                sub="calibration_bounded")
+        else:
+            r = run_calibration(args.seeds, args.out, args.config, args.workers)
         a = r["all_stages"]["held"]
         print(f"{a['n_forecasts']} forecasts: stated {a['stated_mean_pct']}%, call met {a['observed_pct']}%, "
               f"own peak held {r['all_stages']['own_peak_held']['observed_pct']}%")
