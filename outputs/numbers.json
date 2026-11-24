@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-24T06:40:35+00:00",
-    "git_commit": "cb93629",
+    "generated_at": "2026-11-24T07:23:49+00:00",
+    "git_commit": "dac6806",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -481,6 +481,139 @@
       "unit": "ratio",
       "display": "1.52",
       "source": "economics/economics.json:annual.at_reference_values.diesel_backup.benefit_cost_ratio",
+      "check": false
+    },
+    "households.synthetic_daily_kwh": {
+      "value": 8.638,
+      "unit": "kWh/day",
+      "display": "8.6 kWh a day",
+      "source": "households/households.json:synthetic.daily_kwh_mean",
+      "check": true
+    },
+    "households.measured_daily_kwh": {
+      "value": 4.637,
+      "unit": "kWh/day",
+      "display": "4.6 kWh a day",
+      "source": "households/households.json:measured_aug_oct.daily_kwh_mean",
+      "check": true
+    },
+    "households.tn_daily_kwh": {
+      "value": 3.51,
+      "unit": "kWh/day",
+      "display": "3.5 kWh a day",
+      "source": "households/households.json:about.tn_domestic_kwh_per_day",
+      "check": true
+    },
+    "households.synthetic_evening_above_200w_pct": {
+      "value": 64,
+      "unit": "%",
+      "display": "64%",
+      "source": "households/households.json:synthetic.evening_above_200w_share",
+      "check": false
+    },
+    "households.synthetic_coincidence": {
+      "value": 0.854,
+      "unit": "",
+      "display": "0.85",
+      "source": "households/households.json:synthetic.coincidence",
+      "check": false
+    },
+    "households.measured_evening_above_200w_pct": {
+      "value": 37,
+      "unit": "%",
+      "display": "37%",
+      "source": "households/households.json:measured.evening_above_200w_share",
+      "check": false
+    },
+    "households.measured_coincidence": {
+      "value": 0.354,
+      "unit": "",
+      "display": "0.35",
+      "source": "households/households.json:measured.coincidence",
+      "check": false
+    },
+    "households.homes_420.baseline.evening_window_unserved_kwh": {
+      "value": 2713.1,
+      "unit": "per month",
+      "display": "2,713",
+      "source": "households/households.json:same_feeder_demand_more_homes.420.baseline.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_420.baseline.dark_home_hours": {
+      "value": 5740.0,
+      "unit": "per month",
+      "display": "5,740",
+      "source": "households/households.json:same_feeder_demand_more_homes.420.baseline.dark_home_hours",
+      "check": false
+    },
+    "households.homes_420.gridsetu.evening_window_unserved_kwh": {
+      "value": 483.5,
+      "unit": "per month",
+      "display": "484",
+      "source": "households/households.json:same_feeder_demand_more_homes.420.gridsetu.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_420.gridsetu.dark_home_hours": {
+      "value": 291.2,
+      "unit": "per month",
+      "display": "291",
+      "source": "households/households.json:same_feeder_demand_more_homes.420.gridsetu.dark_home_hours",
+      "check": false
+    },
+    "households.homes_720.baseline.evening_window_unserved_kwh": {
+      "value": 2428.1,
+      "unit": "per month",
+      "display": "2,428",
+      "source": "households/households.json:same_feeder_demand_more_homes.720.baseline.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_720.baseline.dark_home_hours": {
+      "value": 9120.0,
+      "unit": "per month",
+      "display": "9,120",
+      "source": "households/households.json:same_feeder_demand_more_homes.720.baseline.dark_home_hours",
+      "check": false
+    },
+    "households.homes_720.gridsetu.evening_window_unserved_kwh": {
+      "value": 555.4,
+      "unit": "per month",
+      "display": "555",
+      "source": "households/households.json:same_feeder_demand_more_homes.720.gridsetu.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_720.gridsetu.dark_home_hours": {
+      "value": 1692.3,
+      "unit": "per month",
+      "display": "1,692",
+      "source": "households/households.json:same_feeder_demand_more_homes.720.gridsetu.dark_home_hours",
+      "check": false
+    },
+    "households.homes_1030.baseline.evening_window_unserved_kwh": {
+      "value": 2715.2,
+      "unit": "per month",
+      "display": "2,715",
+      "source": "households/households.json:same_feeder_demand_more_homes.1030.baseline.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_1030.baseline.dark_home_hours": {
+      "value": 14076.7,
+      "unit": "per month",
+      "display": "14,077",
+      "source": "households/households.json:same_feeder_demand_more_homes.1030.baseline.dark_home_hours",
+      "check": false
+    },
+    "households.homes_1030.gridsetu.evening_window_unserved_kwh": {
+      "value": 554.7,
+      "unit": "per month",
+      "display": "555",
+      "source": "households/households.json:same_feeder_demand_more_homes.1030.gridsetu.evening_window_unserved_kwh",
+      "check": false
+    },
+    "households.homes_1030.gridsetu.dark_home_hours": {
+      "value": 2969.6,
+      "unit": "per month",
+      "display": "2,970",
+      "source": "households/households.json:same_feeder_demand_more_homes.1030.gridsetu.dark_home_hours",
       "check": false
     },
     "lv.stress.baseline.technical_loss_kwh": {

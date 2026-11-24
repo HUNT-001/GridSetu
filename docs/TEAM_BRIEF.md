@@ -175,3 +175,19 @@ most.
 **Likely question.** *Why not just assume a value of lost load?* There's no solid Indian
 figure for this kind of community. A break-even lets the DISCOM or a funder put in their own
 number and see the answer at once.
+
+## Household check: `householdcheck.py`
+
+**What it does.** Compares our 420 synthetic homes with 116 measured Indian homes (Prayas eMARC,
+CC0). The 368 MB file was processed in the browser and only a summary was kept
+(`data/real/emarc_mainline_summary.json`). With `--sensitivity`, it re-runs the month with the same
+feeder demand over 720 and 1,030 homes.
+
+**What it found.**
+- Our homes use 8.6 kWh a day, against 4.6 measured and 3.5 for the TN average.
+- Our coincidence is 0.85, against 0.35 for real homes.
+- 64% of our evening load is above 200 W, against 37% for real homes.
+- Feeder results hold (about −80% evening unserved energy, 0 h critical outage). Lifeline's benefit shrinks.
+
+**Likely question.** *So your homes are wrong?* Per home, yes, and we found it ourselves. The
+feeder total is what the transformer sees, and that's what our headline results depend on.

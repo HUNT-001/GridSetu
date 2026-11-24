@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased: households against real Indian data (November 2026)
+
+### Added
+- `data/real/emarc_mainline_summary.json`: a summary of Prayas eMARC smart-meter data (116 homes, 2018–20, CC0), from 6.1 million readings, with checks.
+- `python -m gridsetu household-check [--sensitivity]`: our homes against measured homes and the Tamil Nadu average; the same feeder demand over 420, 720 and 1,030 homes. Chart, README section, data card, Q&A; 2 tests (71).
+
+### Found
+- Our synthetic homes use 8.6 kWh a day (measured 4.6; TN average 3.5) and are far too coincident (0.85 vs 0.35). Feeder-level results hold with more, lighter homes; lifeline helps less.
+
 ## Unreleased: business case (November 2026)
 
 ### Added

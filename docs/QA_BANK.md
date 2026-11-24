@@ -142,3 +142,17 @@ arbitrage income.
 Battery price is the biggest lever: at utility-scale cost the break-even falls to about
 ₹15/kWh. Viability gap funding, pooling several feeders' batteries in one tender, or RDSS
 funding for the smart plugs would all help.
+
+## Household data
+
+**Q: Is your household load realistic?**
+Not per home, and we checked. Against 116 measured Indian homes (Prayas eMARC, public domain),
+ours use 8.6 kWh a day against 4.6, and peak together far more. The Tamil Nadu
+average is 3.5 kWh a day. What drives the results is the feeder's total demand, which is set
+by its transformer. Spread the same demand over 720 or 1,030 lighter homes and GridSetu still cuts
+evening unserved energy by about 80%, with the critical loads always on. Lifeline helps less,
+and we show that.
+
+**Q: Why not fix it?**
+We're fitting the household model to the measured data next: real homes are spiky individually,
+rarely peak together and have a morning peak. Until then we report both.

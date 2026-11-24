@@ -58,6 +58,20 @@ re-checks this.
 (S2) area price and not a retail tariff. The ₹10,000/MWh values are the exchange's price
 ceiling, so the true scarcity value in those blocks was at least that.
 
+### Household load: Prayas eMARC (REAL, summarised)
+
+| | |
+|---|---|
+| File | `data/real/emarc_mainline_summary.json` |
+| Source | Prayas (Energy Group), *Monitoring and Analysis of Residential Electricity Consumption (eMARC): Processed data*, Harvard Dataverse, doi:10.7910/DVN/YJ5SP1 |
+| Licence | CC0 1.0 (public domain) |
+| Homes | 116 main-line meters: 42 in Pune city, 74 in Pune district, Aurangabad, Kanpur rural and Gonda |
+| Period and resolution | January 2018 to June 2020, 15-minute blocks |
+| Retrieved | 24 Nov 2026 |
+| Method | The 368 MB block file was processed in full in the browser; only complete home-days were kept, and only the summary (daily energy, evening load, share above 200 W, peaks, coincidence, mean profiles) is stored |
+| Check | 6,138,085 main-line readings, 61,918 complete home-days, 297,424 kWh. The mean daily energy equals the integral of the mean profile (tested) |
+| Not | Tamil Nadu. For Tamil Nadu we use the state average from TN DES 2022-23: 30,602 MU over 23,861,586 domestic connections, 3.5 kWh a day |
+
 ## Derived data
 
 | Item | Method | Effect |
@@ -98,7 +112,7 @@ These come from documents, not from our feeder. Details and links are in
 |---|---|---|
 | Weather for the headline results | `src/gridsetu/weather.py` | Yes. Real sunshine was lower (4.1 vs 5.2 kWh/m²/day over the same 63 days) and steadier. |
 | Exchange price curve for the headline results | `exchange_price` in `config/city.yaml` | Yes. The real evening reached the ₹10 ceiling on 6 of 7 days; ours stops at ₹9.8. Real midday prices were far lower. |
-| Household, enterprise and critical loads; Tier 1/2/3 split; temperature sensitivity | `config/city.yaml`, `src/gridsetu/profiles.py` | No. The biggest remaining gap: no smart-meter data yet. |
+| Household, enterprise and critical loads; Tier 1/2/3 split; temperature sensitivity | `config/city.yaml`, `src/gridsetu/profiles.py` | Partly. Against measured Indian homes, ours use about 1.9× the energy and peak together far more (coincidence 0.85 vs 0.35). Feeder-level results hold with the same demand over more homes; see README |
 | Wind generation | `src/gridsetu/weather.py` (also used in real-weather runs) | No |
 | City generation fleet, network, forced outage | `config/city.yaml` | No |
 | DISCOM relief requests and rotation | `config/city.yaml`, `src/gridsetu/market.py` | No |
