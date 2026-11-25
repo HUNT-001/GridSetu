@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-25T14:30:43+00:00",
-    "git_commit": "c76c557",
+    "generated_at": "2026-11-25T19:36:00+00:00",
+    "git_commit": "00b30ff",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -386,16 +386,16 @@
       "check": false
     },
     "bounded_calls.met_pct": {
-      "value": 86.7,
+      "value": 88.3,
       "unit": "%",
-      "display": "87%",
+      "display": "88%",
       "source": "calibration_bounded/calibration.json:discom_request_evenings.all_calls_met_pct",
       "check": false
     },
     "bounded_calls.met_evenings": {
-      "value": 52,
+      "value": 53,
       "unit": "count",
-      "display": "52 of 60",
+      "display": "53 of 60",
       "source": "calibration_bounded/calibration.json:discom_request_evenings.all_calls_met_pct x n_evenings",
       "check": true
     },
@@ -414,16 +414,16 @@
       "check": false
     },
     "bounded_calls.call_confidence_observed_pct": {
-      "value": 89.7,
+      "value": 90.8,
       "unit": "%",
-      "display": "89.7%",
+      "display": "90.8%",
       "source": "calibration_bounded/calibration.json:call_confidence.within_offer.observed_pct",
       "check": true
     },
     "bounded_calls.call_confidence_n": {
-      "value": 155,
+      "value": 153,
       "unit": "count",
-      "display": "155 forecasts",
+      "display": "153 forecasts",
       "source": "calibration_bounded/calibration.json:call_confidence.within_offer.n_forecasts",
       "check": false
     },

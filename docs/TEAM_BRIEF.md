@@ -35,7 +35,7 @@ what it covers. In the first version, on all 60 evenings with a DISCOM call the 
 far above the published reserve and the call was not met. That led to lifeline mode and the
 second (call) confidence, scored by `call_met`: see "Lifeline mode and the second confidence"
 below. With the fitted homes, 0 of 60 calls are met in full as the DISCOM calls today, and
-52 of 60 when calls are bounded by our offer.
+53 of 60 when calls are bounded by our offer.
 
 **Scores.** Brier score = mean of (stated probability − outcome)², 0 is perfect. With every
 forecast at 100%, a reliability diagram collapses to one point, so the chart shows stated vs
@@ -143,7 +143,7 @@ The calibration scores it on calls inside the offer.
 
 **What it found.**
 - Monthly home-hours without supply fall from 18,167 to 2,483, and whole-feeder outage from 16.7 h to 2.2 h (fitted homes).
-- With calls bounded by the day-ahead offer, 52 of 60 call evenings are met, and the 90% call confidence held 89.7% of the time: well calibrated.
+- With calls bounded by the day-ahead offer, 53 of 60 call evenings are met, and the 90% call confidence held 90.8% of the time: well calibrated.
 - With calls as the DISCOM makes them today (median 2.15 times our offer), 0 of 60 are met in full.
 - Across 20 feeders, home-hours without supply in the stress week fall 44% at full adoption (75% with the first, heavier homes; 26% before lifeline).
 

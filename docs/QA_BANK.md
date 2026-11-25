@@ -28,7 +28,7 @@ We report the count rather than claim "never".
 On what it measures, no: across 1,260 published forecasts the feeder held its own evening peak
 every time. The DISCOM's call is a separate promise, so it now has its own number: a firm call
 capacity with a 90% confidence. When calls are bounded by our day-ahead offer, as in an ADMS
-dispatch contract, the call was met on 52 of 60 evenings and the 90% held 89.7% of the time.
+dispatch contract, the call was met on 53 of 60 evenings and the 90% held 90.8% of the time.
 
 **Q: And if the DISCOM asks for more than you offered?**
 That is how our model's DISCOM behaves today: it asks for the feeder's full share of the

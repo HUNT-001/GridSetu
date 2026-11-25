@@ -12,6 +12,7 @@
 ### Results after the full regeneration
 - Stress-week forecast coverage 72% → 78% (nominal 80%), median error 4.7% → 4.4%; real-weather backtest 73.6% → 79.2%.
 - Monthly evening unserved energy 2,223 → 574 kWh (was 577); home-hours dark 18,167 → 2,483; break-even ₹21.7 per kWh (was ₹21.8). Critical loads, overload trips and feeder outage unchanged.
+- DISCOM calls bounded by the offer: 53 of 60 met (was 52); 90% call confidence held 90.8% of the time over 153 forecasts (was 89.7%).
 
 ## Unreleased: Simulink islanding model (November 2026)
 
