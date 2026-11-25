@@ -142,11 +142,59 @@ pilot_feeder:
     eta_charge: 0.95
     eta_discharge: 0.95
     degradation_cost_inr_kwh: 1.5
+  reserve_price:                 # INR/kWh quoted to the DISCOM in each Reliability Reserve object
+    # price = battery.degradation_cost_inr_kwh + adder. The adder was a hard-coded 2.0 in feeder.py with
+    # no documented build-up. When every build-up item below is filled (with a source in
+    # docs/economics/cost_inputs.md), their sum replaces the adder.
+    adder_inr_kwh: 2.0           # ASSUMPTION (undocumented): kept so results do not move
+    build_up_inr_kwh:            # PENDING_SOURCE (Parthasarathy, cost_inputs.md)
+      om_and_insurance: null
+      platform_and_comms: null
+      cooperative_margin: null
   reserve:
     k_sigma: 1.0                 # reserve energy = k * (q90 - q10) spread over the window
     risk_threshold: 0.20         # P(shortfall > reserve) above this widens the reserve
     widen_factor: 1.5
   peak_charge_inr_kw_day: 12.0   # DISCOM demand-charge proxy used by the day-ahead LP
+
+# ---------------------------------------------------------------- business case (economics.py)
+# Every cost input of `python -m gridsetu economics`. Values marked ASSUMPTION are ours; sourced values
+# carry the link and date. null = PENDING_SOURCE: never fill one without a source in
+# docs/economics/cost_inputs.md.
+economics:
+  # Headline method: the battery is priced as a service at the 2025 Indian benchmark tariff for
+  # 2-hour standalone storage, which already includes capital, O&M and return.
+  tariff_method:
+    bess_benchmark_inr_per_mw_month: 230000.0     # IEEFA-JMK 2026: 2025 indicative benchmark, 2-hour BESS
+    bess_lowest_2025_inr_per_mw_month: 148000.0   # lowest 2025 discovered tariff, same source
+    community_scale_premium: 2.0                  # ASSUMPTION: small unit vs utility tender
+    smart_plug_inr_per_home: 1500.0               # ASSUMPTION: Wi-Fi/4G relay plug, installed
+    homes_with_tier3_share: 1.0                   # every simulated home has a Tier-3 share, so every home gets a plug
+    smart_plug_life_years: 5.0                    # ASSUMPTION
+    controller_comms_inr_per_year: 25000.0        # ASSUMPTION: edge controller (5-yr life) + 4G + platform
+    stress_weeks_per_year: 13                     # matches the headline month (3 normal + 1 stress)
+    diesel_inr_per_litre: 99.55                   # Chennai, 17 Nov 2026 (DT Next)
+    genset_kwh_per_litre: 3.0                     # ASSUMPTION: small diesel generator
+    iex_ceiling_inr_per_kwh: 10.0                 # IEX day-ahead price ceiling
+  sources:
+    bess_benchmark: https://www.ess-news.com/2026/05/19/india-awards-10-4-gw-of-standalone-bess-capacity-in-2025-but-tariff-viability-remains-a-concern/
+    diesel: https://www.dtnext.in/news/chennai/check-out-petrol-and-diesel-prices-in-chennai-on-november-17-2026
+    iex: data/real/iex_dam_2025-09-14_20.csv
+  # Second method (not the headline): build cost + running cost over the battery's life. Its outputs
+  # are skipped until every input below has a sourced value. Phase 1's ~INR 42 lakh / 8 % estimate is
+  # deliberately NOT used: it was never sourced.
+  capex_method:
+    battery_inr_per_kwh: null                     # PENDING_SOURCE: LFP pack installed, new (and second-life below)
+    battery_second_life_inr_per_kwh: null         # PENDING_SOURCE
+    inverter_inr_per_kw: null                     # PENDING_SOURCE: grid-forming battery inverter / PCS
+    controller_meters_comms_inr: null             # PENDING_SOURCE: edge controller, relays, comms, one-off
+    installation_inr: null                        # PENDING_SOURCE: civil, protection, commissioning
+    om_pct_of_capex_per_year: null                # PENDING_SOURCE
+    life_years: null                              # PENDING_SOURCE: calendar/cycle life of the pack
+    discount_rate_pct: null                       # PENDING_SOURCE (0 = undiscounted)
+  deferral:                                       # value of the transformer upgrade GridSetu delays
+    transformer_augmentation_inr: null            # PENDING_SOURCE: TNPDCL schedule of rates or RDSS cost norm
+    deferral_years: null                          # PENDING_SOURCE / study result
 
 # Communication slices (slice layer). loss = per-message packet loss probability.
 comm_slices:

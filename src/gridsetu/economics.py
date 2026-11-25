@@ -22,6 +22,13 @@ Chennai, Nov 2026, at about 3 kWh per litre).
 
 Annualisation: the headline "month" is 3 normal + 1 stress week, i.e. 13 stress weeks a year.
 A sensitivity uses 4 (stress only in the hottest month).
+
+Also reported: the cost per household-hour of outage avoided, and what each kWh the battery
+delivers costs at the tariff (to compare with the INR 10/kWh IEX ceiling it could earn by trading).
+
+Every cost input is in config/city.yaml (economics:). A second method (build cost + running cost
+over the battery's life) is computed only once all its inputs have sourced values; until then
+economics.json reports it as PENDING_SOURCE with the missing inputs.
 """
 from __future__ import annotations
 
@@ -38,28 +45,24 @@ from .realdata import iex_price_curve
 from .simulate import stress_and_representative
 
 LAKH = 1e5
-ASSUMPTIONS = {
-    "bess_benchmark_inr_per_mw_month": 2.3e5,     # IEEFA-JMK 2026: 2025 indicative benchmark, 2-hour BESS
-    "bess_lowest_2025_inr_per_mw_month": 1.48e5,  # lowest 2025 discovered tariff, same source
-    "community_scale_premium": 2.0,               # ASSUMPTION: small unit vs utility tender
-    "smart_plug_inr_per_home": 1500.0,            # ASSUMPTION: Wi-Fi/4G relay plug, installed
-    # The simulator gives every home a Tier-3 share (tier3_share_of_household), so every home is
-    # costed a plug. eMARC suggests only ~41% of homes own an AC or water heater (89 of 216
-    # deployments); concentrating Tier 3 in those homes would cut this cost and is future work.
-    "homes_with_tier3_share": 1.0,
-    "smart_plug_life_years": 5.0,                 # ASSUMPTION
-    "homes": 1090,                                # replaced by the scenario's home count in run_study
-    "controller_comms_inr_per_year": 25000.0,     # ASSUMPTION: edge controller (5-yr life) + 4G + platform
-    "stress_weeks_per_year": 13,                  # matches the headline month (3 normal + 1 stress)
-    "diesel_inr_per_litre": 99.55,                # Chennai, 17 Nov 2026 (DT Next)
-    "genset_kwh_per_litre": 3.0,                  # ASSUMPTION: small diesel generator
-    "iex_ceiling_inr_per_kwh": 10.0,              # IEX day-ahead price ceiling
-}
-SOURCES = {
-    "bess_benchmark": "https://www.ess-news.com/2026/05/19/india-awards-10-4-gw-of-standalone-bess-capacity-in-2025-but-tariff-viability-remains-a-concern/",
-    "diesel": "https://www.dtnext.in/news/chennai/check-out-petrol-and-diesel-prices-in-chennai-on-november-17-2026",
-    "iex": "data/real/iex_dam_2025-09-14_20.csv",
-}
+# Cost inputs live in config/city.yaml (economics:), each with its source or marked ASSUMPTION.
+
+
+def load_inputs(config_path=None) -> dict:
+    """Tariff-method assumptions, sources and the capex/deferral slots from the scenario config."""
+    sc = load_scenario(config_path)
+    e = sc.raw["economics"]
+    return {"assumptions": {**e["tariff_method"], "homes": int(sc.feeder["households"])},
+            "sources": dict(e["sources"]), "capex": dict(e["capex_method"]), "deferral": dict(e["deferral"]),
+            "battery_kwh": float(sc.feeder["battery"]["energy_kwh"]),
+            "battery_kw": float(sc.feeder["battery"]["power_kw"]),
+            "usable_kwh": float(sc.feeder["battery"]["energy_kwh"]
+                                * (sc.feeder["battery"]["soc_max"] - sc.feeder["battery"]["soc_min"]))}
+
+
+_DEFAULT = load_inputs()
+ASSUMPTIONS = _DEFAULT["assumptions"]
+SOURCES = _DEFAULT["sources"]
 
 
 def _week_numbers(week, price: np.ndarray, dt: float) -> dict:
@@ -70,7 +73,8 @@ def _week_numbers(week, price: np.ndarray, dt: float) -> dict:
         out[v] = {"unserved_kwh": float(f.metrics["total_unserved_kwh"]),
                   "import_kwh": float(imp.sum() * dt),
                   "energy_cost_inr": float((imp * price).sum() * dt * 1000 / 1000),   # price is INR/kWh
-                  "battery_discharge_kwh": float(f.metrics["battery_discharge_kwh"])}
+                  "battery_discharge_kwh": float(f.metrics["battery_discharge_kwh"]),
+                  "dark_home_hours": float(f.metrics["dark_home_hours"])}
     return out
 
 
@@ -114,7 +118,7 @@ def annual(weekly: dict, a: dict) -> dict:
                      "reliability_value_inr": round(benefit),
                      "net_inr_per_year": round(benefit - d_energy_cost - total_cost),
                      "benefit_cost_ratio": round(benefit / (total_cost + d_energy_cost), 2)}
-    return {
+    out = {
         "unserved_avoided_kwh_per_year": round(d_unserved),
         "extra_energy_cost_inr_per_year": round(d_energy_cost),
         "avg_purchase_price_inr_per_kwh": {k: round(v, 2) for k, v in avg_price.items()},
@@ -124,6 +128,47 @@ def annual(weekly: dict, a: dict) -> dict:
         "breakeven_value_inr_per_kwh": round(breakeven, 2),
         "at_reference_values": ref,
     }
+    if "dark_home_hours" in weekly["stress"]["baseline"]:
+        # per household-hour of outage avoided (a home fully dark; lifeline hours are not outages)
+        d_dark = yr("baseline", "dark_home_hours") - yr("gridsetu", "dark_home_hours")
+        out["home_outage_hours_avoided_per_year"] = round(d_dark)
+        out["cost_per_avoided_home_outage_hour_inr"] = round((total_cost + d_energy_cost) / d_dark, 2) if d_dark > 0 else None
+    if "battery_discharge_kwh" in weekly["stress"]["gridsetu"]:
+        # what each kWh the battery delivers costs at the tariff, vs the IEX ceiling it could earn
+        dis = yr("gridsetu", "battery_discharge_kwh")
+        out["battery_discharge_kwh_per_year"] = round(dis)
+        out["battery_cost_per_kwh_delivered_inr"] = round(cost["battery"] / dis, 2) if dis > 0 else None
+    return out
+
+
+def capex_method(weekly: dict, inputs: dict) -> dict:
+    """Build cost + running cost over the battery's life, per kWh delivered and per home-month.
+    Skipped (status PENDING_SOURCE) until every capex input in config/city.yaml is sourced."""
+    c = inputs["capex"]
+    missing = sorted(k for k, v in c.items() if v is None)
+    if missing:
+        return {"status": "PENDING_SOURCE", "missing_inputs": missing,
+                "note": "outputs skipped until sourced prices arrive (docs/economics/cost_inputs.md)"}
+    a = inputs["assumptions"]
+    ns, nn = a["stress_weeks_per_year"], 52 - a["stress_weeks_per_year"]
+    yr = lambda v, k: ns * weekly["stress"][v][k] + nn * weekly["representative"][v][k]
+    build = (c["battery_inr_per_kwh"] * inputs["battery_kwh"] + c["inverter_inr_per_kw"] * inputs["battery_kw"]
+             + c["controller_meters_comms_inr"] + c["installation_inr"])
+    om = build * c["om_pct_of_capex_per_year"] / 100
+    n, r = int(c["life_years"]), c["discount_rate_pct"] / 100
+    disc = [1 / (1 + r) ** t for t in range(1, n + 1)]
+    life_cost = build + om * sum(disc)
+    dis = yr("gridsetu", "battery_discharge_kwh")
+    one_cycle = inputs["usable_kwh"] * 365
+    out = {"status": "COMPUTED", "build_cost_inr": round(build), "om_inr_per_year": round(om),
+           "life_cost_inr": round(life_cost), "life_years": n, "discount_rate_pct": c["discount_rate_pct"],
+           "cost_per_kwh_one_cycle_per_day_inr": round(life_cost / (one_cycle * sum(disc)), 2),
+           "cost_per_kwh_at_model_cycling_inr": round(life_cost / (dis * sum(disc)), 2) if dis > 0 else None,
+           "cost_per_home_per_month_inr": round(life_cost / n / a["homes"] / 12, 1)}
+    if "dark_home_hours" in weekly["stress"]["baseline"]:
+        d_dark = yr("baseline", "dark_home_hours") - yr("gridsetu", "dark_home_hours")
+        out["cost_per_avoided_home_outage_hour_inr"] = round(life_cost / (d_dark * sum(disc)), 2) if d_dark > 0 else None
+    return out
 
 
 def sensitivity(weekly: dict, a: dict) -> list[dict]:
@@ -183,8 +228,9 @@ def _charts(out: Path, res: dict) -> None:
         ax.text(s["breakeven_low"], i + 0.32, s["low_setting"], ha="center", fontsize=8, color=MUTED)
         ax.text(s["breakeven_high"], i + 0.32, s["high_setting"], ha="center", fontsize=8, color=MUTED)
     ax.axvline(base, color=INK, lw=1.2)
-    diesel = ASSUMPTIONS["diesel_inr_per_litre"] / ASSUMPTIONS["genset_kwh_per_litre"]
-    for x, name in ((ASSUMPTIONS["iex_ceiling_inr_per_kwh"], "IEX ceiling ₹10"), (diesel, f"diesel backup ₹{diesel:.0f}")):
+    a = res["about"]["assumptions"]
+    diesel = a["diesel_inr_per_litre"] / a["genset_kwh_per_litre"]
+    for x, name in ((a["iex_ceiling_inr_per_kwh"], "IEX ceiling ₹10"), (diesel, f"diesel backup ₹{diesel:.0f}")):
         ax.axvline(x, color=AMBER, lw=1.2, ls="--")
         ax.text(x, -0.75, f" {name}", color=AMBER, fontsize=9, va="center")
     ax.set_ylim(-1.0, len(sens) - 0.3)
@@ -200,12 +246,17 @@ def run_study(out_dir: str | Path = "outputs/economics", config_path=None, seeds
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     sim = simulate(seeds, config_path)
-    a = {**ASSUMPTIONS, "homes": int(load_scenario(config_path).feeder["households"])}
+    inputs = load_inputs(config_path)
+    a = inputs["assumptions"]
     res = {"about": {"label": "SIMULATION priced with real IEX prices; costs from the 2025 Indian BESS benchmark",
-                     "seeds": seeds, "assumptions": a, "sources": SOURCES},
+                     "seeds": seeds, "assumptions": a, "sources": inputs["sources"],
+                     "annualisation": "the simulated month (3 normal + 1 stress week) repeats all year"},
            "weekly_mean": sim["mean"],
            "annual": annual(sim["mean"], a),
-           "sensitivity": sensitivity(sim["mean"], a)}
+           "sensitivity": sensitivity(sim["mean"], a),
+           "capex_method": capex_method(sim["mean"], inputs),
+           "deferral": ({"status": "PENDING_SOURCE", "missing_inputs": sorted(k for k, v in inputs["deferral"].items() if v is None)}
+                        if any(v is None for v in inputs["deferral"].values()) else {"status": "INPUTS_SET", **inputs["deferral"]})}
     (out / "economics.json").write_text(json.dumps(res, indent=2), encoding="utf-8")
     _charts(out, res)
     return res
