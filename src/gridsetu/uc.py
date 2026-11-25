@@ -102,8 +102,10 @@ def _day_network(sc: Scenario, inp, steps: np.ndarray, known_outage: dict, commi
 def _solve(n):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        status, cond = n.optimize(solver_name="highs", solver_options={"mip_rel_gap": 0.005, "time_limit": 60,
-                                                                        "output_flag": False})
+        # No time limit, a fixed seed and one thread: the schedule then depends only on the inputs and the
+        # 0.5 % optimality gap, not on how fast or how many-cored the machine is.
+        status, cond = n.optimize(solver_name="highs", solver_options={"mip_rel_gap": 0.005, "random_seed": 0,
+                                                                        "threads": 1, "output_flag": False})
     if status != "ok":
         raise RuntimeError(f"PyPSA solve failed: {status} {cond}")
 
