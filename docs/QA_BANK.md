@@ -128,6 +128,26 @@ battery, priced from the 2025 Indian benchmark for 2-hour storage and doubled fo
 It pays for itself if an avoided outage is worth more than ₹21.8 per kWh. Diesel backup costs
 about ₹33/kWh, so for anyone who would otherwise run a generator, it pays.
 
+**Q: Who owns the battery and who runs it?**
+We recommend the DISCOM buys feeder reliability as a service: a local operator owns the battery
+and is paid a fixed monthly availability fee, the same contract form as India's 2025 utility
+battery tenders. A trained local operator, for example from a women's self-help group, does the
+daily checks and the help desk; the residents' committee sets the fairness rules; the vendor
+maintains the battery. The Electricity (Amendment) Rules, 2025 allow an independent storage
+provider to own a battery and lease its capacity to a DISCOM. Details in docs/OWNERSHIP.md.
+
+**Q: Will low-income homes have to pay?**
+No. The DISCOM pays the availability fee and the smart plugs are a one-off grant. The whole
+cost is about ₹76 per home per month; Tamil Nadu's recent move to 200 free units costs about
+₹99 per benefiting home per month, so reliability costs less than the subsidy the state already
+chose to pay.
+
+**Q: Why would the DISCOM pay?**
+It gets a transformer upgrade put off (₹20 lakh, worth about ₹1.9 lakh a year), fewer
+technical losses, no overload trips, the clinic and pump always on, and a day-ahead reserve it
+can count on. Net of those savings it pays about ₹8.45 for each kWh of outage avoided, below the
+₹10 exchange ceiling it faces on short evenings.
+
 **Q: At ₹10/kWh it doesn't pay. Isn't that a problem?**
 On energy value alone, no, it doesn't: benefit ÷ cost is 0.46 at the IEX ceiling. We say so.
 The case rests on reliability: the clinic, school and pump never go dark, homes keep a lifeline

@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased: fast-transfer islanding, recalibrated forecast band (November 2026)
+
+### Added
+- Islanding variant 2: an inverter that is always grid-forming plus a static transfer switch (sense + transfer 4 ms, ABB data sheet). The critical bus is below 0.7 pu for 12 ms and below 0.9 pu for 23 ms, within the ITIC curve; variant 1 (grid-following, 100 ms) is not. `run_islanding` runs all three variants and reports the ITIC check.
+
+### Changed
+- Forecast band: cross-conformal calibration over all 8 history weeks (4 folds) instead of the 2 newest, final models fitted on all weeks, and a daily adaptive update from the previous day's misses (adaptive conformal inference). On 6 held-out weeks q10–q90 coverage rose from about 75% to about 80%.
+
 ## Unreleased: Simulink islanding model (November 2026)
 
 ### Added

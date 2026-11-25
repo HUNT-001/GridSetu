@@ -91,6 +91,7 @@ These come from documents, not from our feeder. Details and links are in
 | 315 kVA distribution transformer: impedance 4.5%, losses 1,025 W at 50% load and 3,100 W at 100% | WBSEDCL specification to IS 1180 (Part 1) Energy Efficiency Level 2 |
 | ACSR Rabbit conductor resistance 0.5426 Ω/km at 20 °C | Apar Industries ACSR datasheet |
 | Transformer thermal model and ageing law | IEC 60076-7. Distribution-transformer default constants are used and marked as still to be confirmed against the standard. |
+| Static transfer switch: sense + transfer time under 4 ms (islanding model, variant 2) | ABB Cyberex SuperSwitch 4 technical data (a data-centre switch; the same thyristor technology would separate the critical bus) |
 | ₹10/kWh exchange price ceiling | IEX day-ahead market rules (confirmed in the IEX data above) |
 | Smart meters with a utility-set load limit, automatic disconnect and reconnect, and remote connect/disconnect (used by lifeline mode) | MSEDCL smart prepaid meter specification, which follows IS 16444 (clauses 6.34, 6.35, 13.01, 13.02, 6.41.01). Remote real-time changes to the limit are not stated explicitly and must be confirmed. |
 

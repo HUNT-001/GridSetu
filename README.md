@@ -31,6 +31,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 - [The dashboard](#the-dashboard)
 - [How it works](#how-it-works)
 - [Results](#results)
+  - [Who owns it, who runs it, who pays](#who-owns-it-who-runs-it-who-pays)
 - [Run it locally](#run-it-locally)
 - [Project structure](#project-structure)
 - [Modelling assumptions](#modelling-assumptions)
@@ -509,11 +510,13 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 
 Everything above works in 15-minute steps. [`matlab/islanding/`](matlab/islanding/) builds a Simulink model of the moment the feeder trips at 18:45 and runs it at 0.1 ms steps (`run_islanding` in MATLAB). Battery inverter, island switch and critical loads are modelled as an average-value circuit with assumed, marked settings.
 
-- **The feeder trips at 1.0 s.** The inverter cannot hold up the whole feeder, so the voltage falls to 0.55 pu. After 40 ms the controller confirms loss of grid and opens the tie to the rest of the feeder; after 100 ms the inverter is forming its own island and the clinic, school, pump and street lights are back at 0.99 pu.
+- **The feeder trips at 1.0 s.** We modelled two inverter designs:
+  - *Inverter following the grid, ordinary island switch:* the voltage falls to 0.55 pu, loss of grid is confirmed after 40 ms and the tie opens after 100 ms. The lights flicker, but this is outside the ITIC curve for sensitive electronics.
+  - *Inverter always grid-forming, static transfer switch (recommended):* the inverter holds the voltage up to its current limit (0.34 pu with the whole feeder on it) and a thyristor switch separates the critical bus within 4 ms (ABB's published sense-plus-transfer time). The bus is below 0.7 pu for 12 ms and below 0.9 pu for 23 ms, **within the ITIC curve**, so clinic equipment rides through without a UPS.
 - **The water pump starts in the island.** Five times its rated current dips the voltage to 0.965 pu and the frequency to 49.84 Hz; secondary control brings it back to 50 Hz.
 - **The grid returns 115° out of phase.** The island speeds up by 0.3 Hz to catch the grid's phase and closes the tie only within 10° and 0.1 Hz, at 6.94 s. The battery then ramps back to its 90 kW evening dispatch.
 - **Baseline:** the critical bus is dark for the whole outage.
-- **Honest limit:** the 100 ms dip to 0.55 pu is a flicker for lights, fans and the pump but outside the ITIC curve for sensitive electronics. The clinic needs a small UPS, or the inverter should stay grid-forming while connected; that variant is next.
+- **What it costs:** the recommended design needs a grid-forming inverter and a static transfer switch; their extra cost is not yet in the business case and needs a vendor quote.
 
 <img src="docs/images/islanding-simulink-model.png" alt="The generated Simulink model: clock, variant switch, GridSetu critical-bus function, state memory, scopes" width="100%">
 
@@ -607,6 +610,28 @@ GridSetu does not lower the average price paid for each kWh (₹4.00 in both cas
 <img src="outputs/economics/charts/business_case.png" alt="Annual cost of GridSetu against the value of outages avoided" width="100%">
 
 <img src="outputs/economics/charts/business_case_sensitivity.png" alt="Break-even value of avoided outage under different assumptions" width="100%">
+
+### Who owns it, who runs it, who pays
+
+Full model, roles and maintenance plan: [`docs/OWNERSHIP.md`](docs/OWNERSHIP.md). Computed by `python -m gridsetu ownership`.
+
+- **Allowed:** the Electricity (Amendment) Rules, 2025 let a DISCOM, an independent storage service provider or a consumer own or operate a battery and sell, lease or rent its capacity.
+- **Recommended model:** the DISCOM buys feeder reliability as a service. A local operator (a small energy-service company or a cooperative) owns the battery and is paid a fixed monthly availability fee: the same contract form as India's 2025 utility battery tenders. A trained local operator, for example from a women's self-help group, does the daily checks and runs the help desk. The residents' committee sets the fairness rules and hears complaints. The battery vendor holds the maintenance contract.
+- **Who pays:** the DISCOM pays ₹6.73 lakh a year (battery, controller, local operator); the smart plugs are a one-off grant of ₹16.4 lakh (state scheme or company CSR). **Homes pay nothing extra.**
+- **What the DISCOM gets back:** a ₹20.0 lakh transformer upgrade put off (₹1.90 lakh a year) and fewer technical losses (₹0.43 lakh a year). Its net cost is ₹4.40 lakh a year, **₹8.47 per kWh of outage avoided**.
+- **Affordable?** The whole cost is ₹76.5 per home per month. Tamil Nadu's May 2026 move from 100 to 200 free units per bill costs about ₹99 per benefiting home per month; GridSetu costs less and buys reliability, not units.
+
+```mermaid
+flowchart LR
+    D["DISCOM"] -->|"availability fee"| OP["Local operator<br/>(owns battery)"]
+    OP -->|"day-ahead Reliability Reserve, reserve on call"| D
+    S["State scheme / CSR"] -->|"one-off smart-plug grant"| OP
+    OP -->|"wage"| L["Local operator staff<br/>(self-help group)"]
+    OP -->|"maintenance contract"| V["Battery vendor"]
+    R["Residents' committee"] -->|"fairness rules, complaints"| OP
+    D -->|"power, no extra charge"| H["Homes, workshops,<br/>clinic, school, pump"]
+    H -->|"bills as today"| D
+```
 
 ---
 
@@ -739,7 +764,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 ## Limitations
 
 - The headline results use synthetic data. Weather and exchange prices have been checked against real 2025 data, and household load is fitted to measured homes in Maharashtra and Uttar Pradesh (not Tamil Nadu); the city's generation and the feeder itself are still synthetic. No live DISCOM telemetry or feeder measurement was used.
-- The cooperative ownership model has not had legal review.
+- The ownership model (docs/OWNERSHIP.md) has not had legal or regulatory review; the DISCOM contract, the local operator wage and the cost of the grid-forming inverter and static switch are assumptions or still to be quoted.
 - Feeder results use the linear market. Unit commitment is a separate study, and its schedule leaves ramp limits out. Real time assumes perfect foresight for fast units within each day.
 - In the fleet study, feeders respond to the city but the city does not respond to them: the fleet's reserve is not yet offered back into the market.
 - The frequency model is a two-area aggregate, not a full dynamic network model.

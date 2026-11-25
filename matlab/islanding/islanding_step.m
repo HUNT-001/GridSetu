@@ -3,7 +3,9 @@ function [xn, y] = islanding_step(x, t, variant, p)
 %   [xn, y] = islanding_step(x, t, variant, p)
 %   x        state vector (16x1), see ISLANDING_X0
 %   t        time, s
-%   variant  1 = GridSetu (battery inverter, island switch); 0 = baseline (no battery)
+%   variant  0 = baseline (no battery)
+%            1 = GridSetu, inverter follows the grid, island switch (40 ms detect + 60 ms open)
+%            2 = GridSetu, inverter always grid-forming, static switch (10 ms + 5 ms)
 %   p        parameters from ISLANDING_PARAMS
 %   y        [t f_hz v_pu p_inv_kw q_inv_kvar p_served_kw i_bat_a v_bat_v soc tie mode angle_deg]'
 %
@@ -60,19 +62,30 @@ else
         else
             % grid gone, tie still closed: the inverter's current cannot hold up the whole
             % feeder, so the voltage collapses until the island is detected and separated
-            Pm = Pm + dt/p.tau_p*(pref - Pm);
-            V = min(1, sqrt(max(Pm, 0)/(P0 + p.p_feeder_rest)));
+            if variant > 1.5
+                % grid-forming: holds its voltage until it reaches its current limit with the
+                % whole feeder hanging on it
+                q_rest = p.p_feeder_rest*tan(acos(p.pf_feeder_rest));
+                s_all = sqrt((P0 + p.p_feeder_rest)^2 + (Q0 + q_rest)^2);
+                V = min(1, p.s_rated*p.s_overload/s_all);
+                Pm = (P0 + p.p_feeder_rest)*V^2;
+                t_det = p.t_detect_fast; t_sw = p.t_switch_fast;
+            else
+                Pm = Pm + dt/p.tau_p*(pref - Pm);
+                V = min(1, sqrt(max(Pm, 0)/(P0 + p.p_feeder_rest)));
+                t_det = p.t_detect; t_sw = p.t_switch;
+            end
             if V < p.uv_detect
                 uvt = uvt + dt;
             else
                 uvt = 0;
             end
-            if uvt >= p.t_detect && swt < 0
+            if uvt >= t_det && swt < 0
                 swt = 0;                          % trip the static switch
             end
             if swt >= 0
                 swt = swt + dt;
-                if swt >= p.t_switch               % tie open: become grid-forming
+                if swt >= t_sw                     % tie open: run the island
                     tie = 0; mode = 1; dsec = 0; synct = 0;
                     Pm = P0*V^2; Qm = Q0*V^2;      % re-initialise the measurement
                 end
