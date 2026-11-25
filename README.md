@@ -443,7 +443,7 @@ The feeder has 1,090 homes whose load is fitted to measured Indian smart-meter d
 - **City:** energy not served fell from 723 MWh to 494 MWh with solar-hour irrigation and industrial DR. Traction, municipal, commercial and industrial loads were never shed.
 - **Protection:** in Case A the frequency nadir was 49.70 Hz and GridSetu's fast response cut special-protection shedding from 62 to 57 MW. In Case B (islanding) the nadir was 49.16 Hz, with two under-frequency stages operating.
 - **Isolated microgrid:** unserved energy fell from 613 to 114 kWh per week, diesel run hours from 139 to 116, and wasted solar from 441 to 22 kWh.
-- **AC power flow:** the most-loaded 220 kV line peaked at 110% of its thermal rating in 8 samples during the outage. Feeder voltages stayed within 0.99 to 1.03 pu.
+- **AC power flow:** the most-loaded 220 kV line peaked at 110% of its thermal rating in 8 samples during the outage. Voltages at the 33 kV substation buses stayed within 0.99 to 1.03 pu (the low-voltage network is covered by the MATLAB model below).
 - **Planning factors:** city peak 474 MW, load factor 0.70, reserve margin at peak 1.9%.
 
 ### City-wide fleet (Phase 2)

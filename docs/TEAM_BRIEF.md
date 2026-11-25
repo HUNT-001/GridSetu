@@ -85,10 +85,11 @@ temperature and an ageing rate V = 2^((θh − 98)/6).
 up to the Python simulator's import at every step; MATLAB and the independent Python twin agree
 to 1e-8 at every step of every case.
 
-**What it found.** GridSetu cuts the transformer's peak loading from 1.37 to 1.19 pu and its
-hot-spot peak by about 9 °C. A battery at the transformer cannot reduce line losses or voltage
-drop; splitting the same storage across the circuits cuts losses about 7% and lifts the worst
-voltage from 0.79 to 0.83 pu. Voltage is outside ±6% on the assumed network in every case.
+**What it found.** GridSetu cuts the transformer's peak loading from 1.37 to 1.20 pu and its
+hot-spot peak by about 5.5 °C (89.0 to 83.5 °C). A battery at the transformer cannot reduce
+losses or voltage drop: technical losses go from 4,411 to 4,480 kWh in the stress week, because
+more energy is served. Splitting the same storage across the circuits brings them to 4,202 kWh
+(about 5% below the baseline) and lifts the worst voltage from 0.79 to 0.81 pu. Voltage is outside ±6% on the assumed network in every case.
 
 **Likely question.** *Your voltages look terrible. Is the model wrong?* Three 600 m circuits
 each carry about 113 kW at the evening peak: roughly 166 A per phase, above Rabbit's 156 A
