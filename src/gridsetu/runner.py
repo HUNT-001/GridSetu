@@ -37,6 +37,14 @@ def monthly_composite(stress: dict, rep: dict) -> dict:
     return out
 
 
+def feeder_losses(pf, h_per_sample: float) -> dict:
+    """Pilot 11 kV feeder line losses over the week from the power-flow samples (each sample
+    stands for ``h_per_sample`` hours). Percent is of the energy delivered into the feeder head."""
+    loss = float(pf["feeder_line_loss_mw"].sum() * 1000 * h_per_sample)
+    head = float(pf["feeder_head_mw"].clip(lower=0).sum() * 1000 * h_per_sample)
+    return {"loss_kwh": loss, "energy_in_kwh": head, "loss_pct": 100 * loss / head if head else 0.0}
+
+
 def _agg(values: list[dict]) -> dict:
     keys = values[0].keys()
     return {k: {"mean": float(np.mean([v[k] for v in values])),
@@ -139,6 +147,9 @@ def run_all(out_dir: str | Path = "outputs", seeds: int = 3, config_path=None,
             "feeder_min_v_pu_gridsetu": float(np.nanmin(pf_gs["feeder_min_v_pu"])),
             "v_33kV_range_pu": [float(pf_base.filter(like="33kV").min().min()),
                                 float(pf_base.filter(like="33kV").max().max())],
+            "feeder_11kv_losses": {v: feeder_losses(pf, sc.dt_h * pf_every)
+                                   for v, pf in (("baseline", pf_base), ("gridsetu", pf_gs))},
+            "sample_every_steps": pf_every,
         },
     }
 
