@@ -146,10 +146,12 @@ that file is committed. Values below come from my run (PROVISIONAL), compared wi
 | Shedding, UC vs linear market | 356 vs 337 MWh | 363 vs 337 MWh | `uc.shed_uc_mwh`, `uc.shed_lp_mwh` | **differs** |
 | Extra cost of UC | ₹12 lakh (0.7%) | ₹11 lakh (0.6%) | `uc.extra_cost_lakh`, `uc.extra_cost_pct` | **differs** |
 
-**Why UC differs:** `uc.py:105` solves with `mip_rel_gap: 0.005` and a 60 s `time_limit`, so the
-schedule depends on machine speed and can land anywhere inside the 0.5% gap. Neither number is wrong. The
-README should quote the committed file and say "within the solver's 0.5% optimality gap". For the same
-reason `phase2` is **not** added to `scripts/reproduce.sh`, which needs agreement to one part in a billion.
+**Why UC differs:** until this branch, `uc.py` solved with `mip_rel_gap: 0.005` and a 60 s `time_limit`,
+so the schedule could depend on machine speed and land anywhere inside the 0.5% gap. The README's
+363 MWh / ₹11 lakh came from such a run. The time limit is now removed and HiGHS runs with a fixed seed on one
+thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The README should quote the
+committed file and say "within the solver's 0.5% optimality gap". `phase2` is still not part of
+`scripts/reproduce.sh`; adding it would cost about 6 minutes of CI per run.
 
 ## 7. Not registered: don't quote until there's a file behind them
 
@@ -185,12 +187,16 @@ reason `phase2` is **not** added to `scripts/reproduce.sh`, which needs agreemen
 
 ## To finish this ledger (needs Linux, Python 3.13, `requirements-lock.txt`)
 
+Run the **Regenerate outputs** workflow (`.github/workflows/regenerate-outputs.yml`, Actions tab →
+Run workflow) and commit the `outputs/` artifact it uploads. It runs:
+
 ```bash
 pip install -r requirements-lock.txt
 python -m gridsetu run --seeds 3 --out outputs           # ~3 min
+python -m gridsetu real-data --out outputs/real_data     # ~1 min; real_data.json stores every feeder metric
 python -m gridsetu economics --out outputs/economics     # ~5 min
 python -m gridsetu phase2 --out outputs/phase2           # ~6 min
 python -m gridsetu numbers --check README.md             # fix each MISMATCH in the README
-bash scripts/reproduce.sh                                # must print REPRODUCED three times
 ```
-Then change PROVISIONAL to the committed values in this file.
+After committing, CI's `reproduce` job must print REPRODUCED three times. Then change PROVISIONAL to
+the committed values in this file.
