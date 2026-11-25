@@ -54,7 +54,7 @@ or in part, to a DISCOM or any other person.
 | Technical losses avoided with the battery split across the circuits (10,741 kWh at ₹4.00) | 0.43 lakh |
 | **DISCOM net cost** | **4.40 lakh** |
 
-That is **₹8.47 for each kWh of outage avoided**. For scale, the exchange's price ceiling is
+That is **₹8.45 for each kWh of outage avoided**. For scale, the exchange's price ceiling is
 ₹10/kWh, and in our real IEX week the evening hit it on 6 of 7 days, so a kWh at those hours was
 worth at least that. (The community's own value of an avoided outage is higher: about ₹33/kWh
 against diesel backup.)

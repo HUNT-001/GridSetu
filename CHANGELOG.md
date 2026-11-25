@@ -1,12 +1,17 @@
 # Changelog
 
-## Unreleased: fast-transfer islanding, recalibrated forecast band (November 2026)
+## Unreleased: fast-transfer islanding, recalibrated forecast band, ownership model (November 2026)
 
 ### Added
+- `python -m gridsetu ownership` and `docs/OWNERSHIP.md`: who owns, runs and pays for one feeder. Recommended model: the DISCOM buys reliability as a service from a local operator (availability fee ₹6.73 lakh a year); smart plugs as a one-off grant (₹16.4 lakh); homes pay nothing extra. The DISCOM gets back a deferred transformer upgrade (₹1.90 lakh a year) and lower losses (₹0.43 lakh a year): net ₹4.40 lakh, ₹8.45 per kWh of outage avoided. Roles, maintenance schedule, training, money flow, open questions. Every input tagged SOURCED or ASSUMED; checked by `tests/test_ownership.py` and `scripts/reproduce.sh`.
 - Islanding variant 2: an inverter that is always grid-forming plus a static transfer switch (sense + transfer 4 ms, ABB data sheet). The critical bus is below 0.7 pu for 12 ms and below 0.9 pu for 23 ms, within the ITIC curve; variant 1 (grid-following, 100 ms) is not. `run_islanding` runs all three variants and reports the ITIC check.
 
 ### Changed
 - Forecast band: cross-conformal calibration over all 8 history weeks (4 folds) instead of the 2 newest, final models fitted on all weeks, and a daily adaptive update from the previous day's misses (adaptive conformal inference). On 6 held-out weeks q10–q90 coverage rose from about 75% to about 80%.
+
+### Results after the full regeneration
+- Stress-week forecast coverage 72% → 78% (nominal 80%), median error 4.7% → 4.4%; real-weather backtest 73.6% → 79.2%.
+- Monthly evening unserved energy 2,223 → 574 kWh (was 577); home-hours dark 18,167 → 2,483; break-even ₹21.7 per kWh (was ₹21.8). Critical loads, overload trips and feeder outage unchanged.
 
 ## Unreleased: Simulink islanding model (November 2026)
 

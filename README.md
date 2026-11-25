@@ -11,7 +11,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 ![Python](https://img.shields.io/badge/python-3.11-3776AB)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![React](https://img.shields.io/badge/UI-React%2019-61DAFB)
-![Tests](https://img.shields.io/badge/tests-72%20passing-2DD4BF)
+![Tests](https://img.shields.io/badge/tests-73%20passing-2DD4BF)
 ![Data](https://img.shields.io/badge/data-synthetic%20simulation-F5A623)
 
 ![Power flowing through the simulated city from 13:00 to midnight on the stress day](docs/images/power-flow.gif)
@@ -426,21 +426,21 @@ Monthly composite of three normal weeks and one stress week (a forced 125 MW coa
 
 | Metric, per month | Baseline | GridSetu | Change | + city DR |
 |---|--:|--:|--:|--:|
-| Unserved energy, 17:30 to 19:30 | 2,223 kWh | 577 kWh | −74% | 483 kWh |
-| Unserved energy, all hours (net of rebound) | 4,913 kWh | 914 kWh | −81% | 625 kWh |
+| Unserved energy, 17:30 to 19:30 | 2,223 kWh | 574 kWh | −74% | 461 kWh |
+| Unserved energy, all hours (net of rebound) | 4,913 kWh | 907 kWh | −82% | 599 kWh |
 | Critical-load outage | 16.7 h | 0.0 h | −100% | 0.0 h |
 | Whole-feeder outage | 16.7 h | 2.2 h | −86% | 1.2 h |
-| Homes fully without supply | 18,167 home-hours | 2,484 home-hours | −86% | 1,389 home-hours |
-| Homes on the 200 W lifeline instead | – | 1,017 home-hours | | 1,185 home-hours |
+| Homes fully without supply | 18,167 home-hours | 2,483 home-hours | −86% | 1,298 home-hours |
+| Homes on the 200 W lifeline instead | – | 1,002 home-hours | | 1,204 home-hours |
 | Transformer overload trips | 13 | 0 | −100% | 0 |
 | Peak drawn from the grid | 340 kW | 291 kW | −14% | 291 kW |
-| Battery cycles | – | 22.9 | | 22.8 |
+| Battery cycles | – | 23.0 | | 22.8 |
 
-The feeder has 1,090 homes whose load is fitted to measured Indian smart-meter data (see "Our homes against real Indian homes"). *+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 1,124 to 3,062 kWh; GridSetu 442 to 652 kWh.
+The feeder has 1,090 homes whose load is fitted to measured Indian smart-meter data (see "Our homes against real Indian homes"). *+ city DR* adds city-level solar-hour irrigation and 15 MW of industrial demand response. Seed ranges: baseline evening unserved energy 1,124 to 3,062 kWh; GridSetu 445 to 651 kWh.
 
 **Other studies (stress week)**
-- **Fairness:** 841 of the 1,090 homes had a Tier-3 appliance running while curtailment was needed, and 829 of them shared it, at most 5.5 hours each. Gini of paused hours among those homes 0.21, with 1,471 user overrides honoured. The other homes had nothing to pause, so they were never asked.
-- **Forecast:** the q10 to q90 band covered the actual net load 72% of the time (nominal 80%), with a median error of 4.7%. Real homes are spikier than our first model, and the band is now too narrow; the published reserve uses its own, more cautious bound and held every evening (see below).
+- **Fairness:** 842 of the 1,090 homes had a Tier-3 appliance running while curtailment was needed, and 830 of them shared it, at most 5.5 hours each. Gini of paused hours among those homes 0.22, with 1,486 user overrides honoured. The other homes had nothing to pause, so they were never asked.
+- **Forecast:** the q10 to q90 band covered the actual net load 78% of the time (nominal 80%), with a median error of 4.4%. The band is calibrated on all eight history weeks (cross-conformal) and then adjusts itself each day to the misses of the day before (adaptive conformal inference); before this change it covered 72%. The published reserve still uses its own, more cautious bound and held every evening (see below).
 - **City:** energy not served fell from 723 MWh to 494 MWh with solar-hour irrigation and industrial DR. Traction, municipal, commercial and industrial loads were never shed.
 - **Protection:** in Case A the frequency nadir was 49.70 Hz and GridSetu's fast response cut special-protection shedding from 62 to 57 MW. In Case B (islanding) the nadir was 49.16 Hz, with two under-frequency stages operating.
 - **Isolated microgrid:** unserved energy fell from 613 to 114 kWh per week, diesel run hours from 139 to 116, and wasted solar from 441 to 22 kWh.
@@ -494,16 +494,16 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 
 | Stress week | Baseline | GridSetu, battery at the transformer | GridSetu, storage split across the 3 circuits |
 |---|--:|--:|--:|
-| Technical losses (lines + transformer) | 4,411 kWh | 4,480 kWh | 4,202 kWh |
-| Voltage violations (±6 %) | 1,869 bus-hours | 1,896 bus-hours | 1,839 bus-hours |
+| Technical losses (lines + transformer) | 4,411 kWh | 4,480 kWh | 4,203 kWh |
+| Voltage violations (±6 %) | 1,869 bus-hours | 1,896 bus-hours | 1,838 bus-hours |
 | Peak transformer loading | 1.37 pu | 1.20 pu | 1.15 pu |
-| Peak transformer hot-spot | 89.0 °C | 83.5 °C | 82.2 °C |
+| Peak transformer hot-spot | 89.0 °C | 83.4 °C | 82.1 °C |
 
 <img src="outputs/lv/charts/lv_placement.png" alt="Losses, voltage violations and peak transformer loading for three storage placements" width="100%">
 
 - **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.5 °C.
 - **A battery at the transformer cannot cut line losses or voltage drop.** The current on the wires to the homes is the same either way, so technical losses barely move (they rise 2%, because GridSetu serves more energy and recharges the battery over the same wires).
-- **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 5% and lifts the worst voltage from 0.79 to 0.81 pu. This is now the recommended layout.
+- **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 5% and lifts the worst voltage from 0.79 to 0.80 pu. This is now the recommended layout.
 - **Voltage stays outside limits on the assumed network in every case.** Long, heavily loaded LT circuits are the cause; GridSetu's bus-level voltage map shows the DISCOM exactly where reconductoring would pay off.
 
 ### The critical bus at millisecond resolution (Simulink)
@@ -541,7 +541,7 @@ Household load stays synthetic (fitted to measured homes) in every case.
 
 <img src="outputs/real_data/charts/weather_real_vs_synthetic.png" alt="Daily solar energy, NASA POWER against synthetic weather, July to September" width="100%">
 
-**Forecast backtest on real weather.** The forecaster was trained on six weeks and tested on the next, for three test weeks. On real weather, with only yesterday's weather as the weather forecast, the actual net load fell inside the 80% range 73.6% of the time, against 74.3% on synthetic weather. Real weather costs the forecast almost nothing; the shortfall from 80% comes from the spiky fitted homes, and widening the range for them is on our list.
+**Forecast backtest on real weather.** The forecaster was trained on six weeks and tested on the next, for three test weeks. On real weather, with only yesterday's weather as the weather forecast, the actual net load fell inside the 80% range 79.2% of the time, against 78.0% on synthetic weather. Real weather costs the forecast nothing, and the self-adjusting band now sits close to its 80% target on the spiky fitted homes.
 
 <img src="outputs/real_data/charts/forecast_backtest_real_weather.png" alt="Day-ahead forecast range against actual feeder net load on real weather" width="100%">
 
@@ -549,9 +549,9 @@ Household load stays synthetic (fitted to measured homes) in every case.
 
 | Inputs | Baseline | GridSetu |
 |---|--:|--:|
-| Synthetic weather and prices (as in the results above) | 886 kWh | 652 kWh |
-| Real weather | 800 kWh | 462 kWh |
-| Real weather and real IEX prices | 809 kWh | 517 kWh |
+| Synthetic weather and prices (as in the results above) | 886 kWh | 651 kWh |
+| Real weather | 800 kWh | 465 kWh |
+| Real weather and real IEX prices | 809 kWh | 513 kWh |
 
 Our synthetic stress week forces two deeply overcast days; the real week of 14–20 September 2025 had none, so GridSetu does better on it. The critical loads stay powered in all three cases. We keep the harsher synthetic week for the headline figures.
 
@@ -580,8 +580,8 @@ The fitted homes match measured energy, evening load and diversity closely. The 
 
 | | First model, 420 homes | Fitted model, 1,090 homes |
 |---|--:|--:|
-| Evening unserved energy, baseline → GridSetu | 2,713 → 484 kWh | 2,223 → 577 kWh |
-| Home-hours fully dark, baseline → GridSetu | 5,740 → 291 | 18,167 → 2,484 |
+| Evening unserved energy, baseline → GridSetu | 2,713 → 482 kWh | 2,223 → 574 kWh |
+| Home-hours fully dark, baseline → GridSetu | 5,740 → 291 | 18,167 → 2,483 |
 | Whole-feeder outage with GridSetu | 0.5 h | 2.2 h |
 | Critical-load outage with GridSetu | 0 h | 0 h |
 
@@ -597,12 +597,12 @@ The core results hold on realistic homes: the clinic, school and pump never go d
 | Smart plugs for Tier 3 (₹1,500 a home, 5-year life) | 3.27 lakh |
 | Edge controller and comms | 0.25 lakh |
 | **Total** | **₹9.0 lakh a year**, or ₹69 per home per month |
-| Extra energy bought for the outages avoided (at IEX prices) | 2.29 lakh |
+| Extra energy bought for the outages avoided (at IEX prices) | 2.24 lakh |
 
-GridSetu avoids 51,988 kWh of outage a year. So it pays for itself if an avoided outage is worth more than **₹21.8 per kWh** to the community:
+GridSetu avoids 52,081 kWh of outage a year. So it pays for itself if an avoided outage is worth more than **₹21.7 per kWh** to the community:
 
 - Valued at the IEX price ceiling (₹10/kWh), it does not: benefit ÷ cost is 0.46.
-- Valued at what diesel backup costs (₹99.55 a litre in Chennai, about ₹33/kWh), it does: benefit ÷ cost is 1.52.
+- Valued at what diesel backup costs (₹99.55 a litre in Chennai, about ₹33/kWh), it does: benefit ÷ cost is 1.53.
 - The battery's price matters most: at utility-scale cost the break-even falls to about ₹16/kWh, at three times it rises to about ₹27/kWh. Smart plugs come next: every home in the model has some Tier-3 load, so every home gets one, though only about 41% of measured homes own an AC or water heater.
 
 GridSetu does not lower the average price paid for each kWh (₹4.00 in both cases), because it serves more energy in the expensive evening. Its value is reliability, not arbitrage.
@@ -618,7 +618,7 @@ Full model, roles and maintenance plan: [`docs/OWNERSHIP.md`](docs/OWNERSHIP.md)
 - **Allowed:** the Electricity (Amendment) Rules, 2025 let a DISCOM, an independent storage service provider or a consumer own or operate a battery and sell, lease or rent its capacity.
 - **Recommended model:** the DISCOM buys feeder reliability as a service. A local operator (a small energy-service company or a cooperative) owns the battery and is paid a fixed monthly availability fee: the same contract form as India's 2025 utility battery tenders. A trained local operator, for example from a women's self-help group, does the daily checks and runs the help desk. The residents' committee sets the fairness rules and hears complaints. The battery vendor holds the maintenance contract.
 - **Who pays:** the DISCOM pays ₹6.73 lakh a year (battery, controller, local operator); the smart plugs are a one-off grant of ₹16.4 lakh (state scheme or company CSR). **Homes pay nothing extra.**
-- **What the DISCOM gets back:** a ₹20.0 lakh transformer upgrade put off (₹1.90 lakh a year) and fewer technical losses (₹0.43 lakh a year). Its net cost is ₹4.40 lakh a year, **₹8.47 per kWh of outage avoided**.
+- **What the DISCOM gets back:** a ₹20.0 lakh transformer upgrade put off (₹1.90 lakh a year) and fewer technical losses (₹0.43 lakh a year). Its net cost is ₹4.40 lakh a year, **₹8.45 per kWh of outage avoided**.
 - **Affordable?** The whole cost is ₹76.5 per home per month. Tamil Nadu's May 2026 move from 100 to 200 free units per bill costs about ₹99 per benefiting home per month; GridSetu costs less and buys reliability, not units.
 
 ```mermaid
@@ -661,7 +661,7 @@ The first start simulates the reference scenario (3 seeds, plus the 20-feeder fl
 |---|---|
 | `python -m gridsetu serve` | API plus built dashboard on port 8000 |
 | `python -m gridsetu run --seeds 3` | Batch study: charts, CSVs and `outputs/summary.txt` |
-| `pytest -q` | 72 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
+| `pytest -q` | 73 tests: physics and safety invariants, unit commitment, the fleet and the map, copilot tools, the Claude and OpenAI-compatible tool loops, offline answers and replay |
 | `python -m gridsetu calibrate --seeds 30` | Checks every published reserve confidence against the outcome (about 14 minutes on 2 cores) |
 | `python -m gridsetu numbers --check README.md` | Rebuilds `outputs/numbers.json` and fails if the README quotes a figure that no longer matches |
 | `bash scripts/reproduce.sh` | Re-runs the full study and fails if any committed result changes by more than one part in a billion (install `requirements-lock.txt` first) |

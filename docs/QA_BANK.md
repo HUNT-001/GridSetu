@@ -90,8 +90,9 @@ assumed.
 
 **Q: How good is the forecast on real weather?**
 Backtested on three real weeks with only yesterday's weather as the weather forecast, the
-actual load fell inside our 80% range 79% of the time. On synthetic weather it was 85%, so
-the synthetic number was slightly flattering, and we report the real one.
+actual load fell inside our 80% range 79.2% of the time (78.0% on synthetic weather). The
+range calibrates itself on all past weeks and adjusts each day to the previous day's misses,
+so it stays close to 80% even on spiky real homes.
 
 **Q: How did you get the IEX data?**
 From IEX's public market snapshot page, 15-minute blocks. Each day's 96 prices average exactly
@@ -103,7 +104,7 @@ to IEX's published daily figure, and a test checks it.
 When the DISCOM needs more relief than the battery and flexible loads can give, a normal feeder
 is switched off. GridSetu instead sets a load limit on every home's smart meter, as low as
 200 W: lights, a fan, phone charging. The DISCOM gets its relief and the homes are not dark.
-Over a month, home-hours without supply fall from 18,167 to 2,484.
+Over a month, home-hours without supply fall from 18,167 to 2,483.
 
 **Q: Can smart meters really do that?**
 Indian prepaid smart-meter specifications (for example MSEDCL's, which follows IS 16444)
@@ -125,7 +126,7 @@ Its meter disconnects it, as prepaid meters already do when a load limit is exce
 **Q: What does it cost, and who pays?**
 About ₹9.0 lakh a year for one 1,090-home feeder, or ₹69 per home per month. Most of it is the
 battery, priced from the 2025 Indian benchmark for 2-hour storage and doubled for small scale.
-It pays for itself if an avoided outage is worth more than ₹21.8 per kWh. Diesel backup costs
+It pays for itself if an avoided outage is worth more than ₹21.7 per kWh. Diesel backup costs
 about ₹33/kWh, so for anyone who would otherwise run a generator, it pays.
 
 **Q: Who owns the battery and who runs it?**
