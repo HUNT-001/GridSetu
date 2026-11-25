@@ -132,6 +132,7 @@ pilot_feeder:
     max_prob_per_step: 0.25
     restore_steps: 4             # 1 h for a lineman to replace the fuse / reclose
   evening_window: ["17:30", "19:30"]
+  reliability_window: ["17:00", "23:00"]   # evening window for supply availability (SAIDI/SAIFI cover all hours)
   battery:
     energy_kwh: 200
     power_kw: 100

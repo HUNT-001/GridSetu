@@ -20,7 +20,7 @@ ADDITIVE = ["evening_window_unserved_kwh", "total_unserved_kwh", "gross_unserved
             "critical_outage_hours", "critical_unserved_kwh", "feeder_outage_hours",
             "battery_cycles", "battery_discharge_kwh", "tier3_curtailed_kwh",
             "tier2_curtailed_kwh", "overload_trips", "dark_home_hours", "dark_home_hours_evening",
-            "lifeline_home_hours"]
+            "lifeline_home_hours", "saidi_h", "saifi", "customer_interruptions", "evening_dark_home_hours"]
 REP_WEEKS_PER_MONTH = 3
 VARIANTS = ("baseline", "gridsetu", "gridsetu_coordinated")
 
@@ -30,6 +30,10 @@ def monthly_composite(stress: dict, rep: dict) -> dict:
     out["feeder_peak_import_kw"] = max(rep["feeder_peak_import_kw"], stress["feeder_peak_import_kw"])
     out["solar_utilisation_pct"] = (REP_WEEKS_PER_MONTH * rep["solar_utilisation_pct"]
                                     + stress["solar_utilisation_pct"]) / (REP_WEEKS_PER_MONTH + 1)
+    if "saidi_h" in stress:   # reliability indices (reliability.py): weeks add, availability averages
+        out["caidi_h"] = out["saidi_h"] / out["saifi"] if out["saifi"] else 0.0
+        out["evening_supply_availability_pct"] = (REP_WEEKS_PER_MONTH * rep["evening_supply_availability_pct"]
+                                                  + stress["evening_supply_availability_pct"]) / (REP_WEEKS_PER_MONTH + 1)
     return out
 
 
@@ -104,6 +108,10 @@ def run_all(out_dir: str | Path = "outputs", seeds: int = 3, config_path=None,
             "seeds": seeds, "month_definition": f"{REP_WEEKS_PER_MONTH} representative weeks + 1 stress week",
             "headline_attribution": "baseline and gridsetu run on the same city signals; "
                                     "gridsetu_coordinated adds city-level solar-hour irrigation and industrial DR",
+            "baseline_definition": "today's rotational load-shedding by the DISCOM, with no storage "
+                                   "and no demand response on the feeder",
+            "reliability_definitions": "SAIDI and SAIFI per household; interrupted = fully dark (homes on the "
+                                       "lifeline allowance are supplied); see src/gridsetu/reliability.py",
             "runtime_s": None,
         },
         "pilot_feeder_monthly": pilot,
@@ -183,6 +191,9 @@ def format_summary(r: dict) -> str:
         ("Feeder peak import", "kW", "feeder_peak_import_kw"),
         ("Solar utilisation", "%", "solar_utilisation_pct"),
         ("Battery cycles", "per month", "battery_cycles"),
+        ("SAIDI (dark hours per household)", "h/month", "saidi_h"),
+        ("SAIFI (interruptions per household)", "per month", "saifi"),
+        ("Evening supply availability 17:00-23:00", "%", "evening_supply_availability_pct"),
     ]
     lines = ["GridSetu Phase 1: pilot feeder, SIMULATION (synthetic data, not field measurement)",
              f"Monthly composite = {r['about']['month_definition']}; mean over {r['about']['seeds']} seeds",

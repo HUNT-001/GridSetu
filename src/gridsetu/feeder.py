@@ -14,6 +14,7 @@ from .comms import build_slices
 from .config import Scenario
 from .fairness import FairnessLedger
 from .profiles import FeederLoads
+from .reliability import reliability_indices
 from .reserve import ReliabilityReserve, size_reserve
 
 SOLVER = "appsi_highs"
@@ -362,6 +363,7 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     metrics["dark_home_hours_evening"] = float((hh_status[window] == 2).sum() * dt)
     metrics["lifeline_home_hours"] = float((hh_status == 3).sum() * dt)          # home limited to the lifeline
     metrics["lifeline_steps"] = int(lifeline_steps) if gs else 0
+    metrics.update(reliability_indices(hh_status, dt, sc.time_mask(*f.get("reliability_window", ("17:00", "23:00")))))
     return FeederResult(mode, ts, metrics, ledger.summary() if gs else {}, reserves,
                         [s.stats() for s in slices.values()] if gs else [], sizing_log,
                         {"household_hours": ledger.hours.copy(), "hh_status": hh_status,
