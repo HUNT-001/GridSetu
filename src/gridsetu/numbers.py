@@ -90,6 +90,89 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
                 add(f"pilot.{side}.{k}", round(node["mean"]), "home-hours/month", f"{node['mean']:,.0f} home-hours",
                     f"results.json:{PILOT}.{side}.{k}.mean", check=not (side == "baseline" and k == "lifeline_home_hours"))
 
+    # "+ city DR" column of the README results table
+    co = res[PILOT].get("gridsetu_coordinated")
+    if co:
+        src = f"results.json:{PILOT}.gridsetu_coordinated"
+        for k, field, dp, tmpl in (("evening_unserved_kwh", "evening_window_unserved_kwh", 0, "{v} kWh"),
+                                   ("all_hours_unserved_kwh", "total_unserved_kwh", 0, "{v} kWh"),
+                                   ("feeder_outage_h", "feeder_outage_hours", 1, "{v} h"),
+                                   ("dark_home_hours", "dark_home_hours", 0, "{v} home-hours"),
+                                   ("lifeline_home_hours", "lifeline_home_hours", 0, "{v} home-hours"),
+                                   ("battery_cycles", "battery_cycles", 1, "{v}")):
+            if field in co:
+                v = co[field]["mean"]
+                add(f"pilot.coordinated.{k}", round(v, dp), "per month", tmpl.format(v=_num(v, dp)), f"{src}.{field}.mean")
+    g = res[PILOT]["gridsetu"]
+    add("pilot.gridsetu.battery_cycles", round(g["battery_cycles"]["mean"], 1), "per month",
+        f"{g['battery_cycles']['mean']:.1f}", f"results.json:{PILOT}.gridsetu.battery_cycles.mean")
+
+    # reliability in the DISCOM's terms (reliability.py); not yet quoted in the README, so not checked
+    if "saidi_h" in g:
+        for side in ("baseline", "gridsetu", "gridsetu_coordinated"):
+            m = res[PILOT][side]
+            tag = "coordinated" if side == "gridsetu_coordinated" else side
+            src = f"results.json:{PILOT}.{side}"
+            add(f"reliability.{tag}.saidi_h", round(m["saidi_h"]["mean"], 1), "h per household per month",
+                f"{m['saidi_h']['mean']:.1f} h", f"{src}.saidi_h.mean", check=False)
+            add(f"reliability.{tag}.saifi", round(m["saifi"]["mean"], 1), "interruptions per household per month",
+                f"{m['saifi']['mean']:.1f}", f"{src}.saifi.mean", check=False)
+            add(f"reliability.{tag}.caidi_h", round(m["caidi_h"]["mean"], 2), "h per interruption",
+                f"{m['caidi_h']['mean']:.2f} h", f"{src}.caidi_h.mean", check=False)
+            add(f"reliability.{tag}.evening_availability_pct", round(m["evening_supply_availability_pct"]["mean"], 1),
+                "% of household-hours 17:00-23:00", f"{m['evening_supply_availability_pct']['mean']:.1f}%",
+                f"{src}.evening_supply_availability_pct.mean", check=False)
+        for side, tag in (("baseline", "baseline"), ("gridsetu", "gridsetu")):
+            s = res[PILOT][side]["saidi_h"]["mean"]
+            add(f"reliability.{tag}.saidi_h_per_year", round(12 * s), "h per household per year",
+                f"{12 * s:,.0f} h a year", f"12 x results.json:{PILOT}.{side}.saidi_h.mean "
+                "(if the simulated month repeats all year)", check=False)
+
+    # city, protection, isolated microgrid, AC power flow, planning factors (results.json)
+    cs = res["city"]["stress"]
+    add("city.baseline.ens_mwh", round(cs["baseline"]["energy_not_served_mwh"]), "MWh/stress week",
+        f"{cs['baseline']['energy_not_served_mwh']:,.0f} MWh", "results.json:city.stress.baseline.energy_not_served_mwh")
+    add("city.coordinated.ens_mwh", round(cs["coordinated"]["energy_not_served_mwh"]), "MWh/stress week",
+        f"{cs['coordinated']['energy_not_served_mwh']:,.0f} MWh", "results.json:city.stress.coordinated.energy_not_served_mwh")
+    w = res["wams"]["runs"]
+    add("wams.A_baseline.nadir_hz", round(w["A_baseline"]["nadir_hz"], 2), "Hz", f"{w['A_baseline']['nadir_hz']:.2f} Hz",
+        "results.json:wams.runs.A_baseline.nadir_hz")
+    add("wams.B_baseline.nadir_hz", round(w["B_baseline"]["nadir_hz"], 2), "Hz", f"{w['B_baseline']['nadir_hz']:.2f} Hz",
+        "results.json:wams.runs.B_baseline.nadir_hz")
+    add("wams.A.sps_shed_mw", [round(w["A_baseline"]["load_shed_mw"]), round(w["A_gridsetu"]["load_shed_mw"])], "MW",
+        f"{w['A_baseline']['load_shed_mw']:.0f} to {w['A_gridsetu']['load_shed_mw']:.0f} MW",
+        "results.json:wams.runs.A_baseline/A_gridsetu.load_shed_mw")
+    isl = res["island_microgrid"]
+    for k, unit, suffix in (("unserved_kwh", "kWh/week", ""), ("diesel_run_hours", "h/week", ""),
+                            ("pv_curtailed_kwh", "kWh/week", " kWh")):
+        if k in isl.get("legacy", {}):
+            a, b = isl["legacy"][k], isl["gridsetu"][k]
+            add(f"island.{k}_change", [round(a), round(b)], unit, f"{a:.0f} to {b:.0f}{suffix}",
+                f"results.json:island_microgrid.legacy/gridsetu.{k}")
+    pf = res["power_flow_stress"]
+    add("power_flow.max_220kv_line_loading_pct", round(pf["max_line_loading_pct"]), "%",
+        f"{pf['max_line_loading_pct']:.0f}%", "results.json:power_flow_stress.max_line_loading_pct")
+    add("power_flow.samples_over_100pct", pf["samples_over_100pct"], "samples", f"in {pf['samples_over_100pct']} samples",
+        "results.json:power_flow_stress.samples_over_100pct")
+    lo, hi = pf["v_33kV_range_pu"]
+    add("power_flow.v_33kv_range_pu", [round(lo, 2), round(hi, 2)], "pu", f"{lo:.2f} to {hi:.2f} pu",
+        "results.json:power_flow_stress.v_33kV_range_pu (the 33 kV buses, not the 11 kV feeder)")
+    for side in ("baseline", "gridsetu"):     # pilot 11 kV feeder line losses, stress week
+        fl = pf.get("feeder_11kv_losses", {}).get(side)
+        if fl:
+            src = f"results.json:power_flow_stress.feeder_11kv_losses.{side}"
+            add(f"losses.python_11kv.{side}.kwh", round(fl["loss_kwh"]), "kWh/stress week", f"{fl['loss_kwh']:,.0f} kWh",
+                f"{src}.loss_kwh", check=False)
+            add(f"losses.python_11kv.{side}.pct", round(fl["loss_pct"], 2), "% of energy into the feeder",
+                f"{fl['loss_pct']:.2f}%", f"{src}.loss_pct", check=False)
+    sf = res["system_factors_stress"]
+    add("planning.city_peak_mw", round(sf["city_peak_mw"]), "MW", f"{sf['city_peak_mw']:.0f} MW",
+        "results.json:system_factors_stress.city_peak_mw")
+    add("planning.city_load_factor", round(sf["city_load_factor"], 2), "", f"load factor {sf['city_load_factor']:.2f}",
+        "results.json:system_factors_stress.city_load_factor")
+    add("planning.reserve_margin_at_peak_pct", round(sf["reserve_margin_at_peak_pct"], 1), "%",
+        f"{sf['reserve_margin_at_peak_pct']:.1f}%", "results.json:system_factors_stress.reserve_margin_at_peak_pct")
+
     fair = res["fairness_stress_week"]
     add("fairness.gini", round(fair["gini_curtailment_hours"], 2), "", f"{fair['gini_curtailment_hours']:.2f}",
         "results.json:fairness_stress_week.gini_curtailment_hours")
@@ -200,6 +283,60 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             r = e["at_reference_values"][k]
             add(f"economics.bcr_{k}", r["benefit_cost_ratio"], "ratio", f"{r['benefit_cost_ratio']:.2f}",
                 f"{src}.at_reference_values.{k}.benefit_cost_ratio", check=False)
+        for k, v in e["costs_inr_per_year"].items():           # README cost table
+            add(f"economics.cost_{k}_lakh", round(v / 1e5, 2), "INR lakh/year", f"{v / 1e5:.2f} lakh",
+                f"{src}.costs_inr_per_year.{k}")
+        add("economics.extra_energy_cost_lakh", round(e["extra_energy_cost_inr_per_year"] / 1e5, 2), "INR lakh/year",
+            f"{e['extra_energy_cost_inr_per_year'] / 1e5:.2f} lakh", f"{src}.extra_energy_cost_inr_per_year")
+        if e.get("cost_per_avoided_home_outage_hour_inr") is not None:
+            add("economics.cost_per_avoided_home_outage_hour", e["cost_per_avoided_home_outage_hour_inr"], "INR/home-hour",
+                f"₹{e['cost_per_avoided_home_outage_hour_inr']:.1f} per household-hour of outage avoided",
+                f"{src}.cost_per_avoided_home_outage_hour_inr", check=False)
+            add("economics.home_outage_hours_avoided", e["home_outage_hours_avoided_per_year"], "home-hours/year",
+                f"{e['home_outage_hours_avoided_per_year']:,} home-hours", f"{src}.home_outage_hours_avoided_per_year",
+                check=False)
+        if e.get("battery_cost_per_kwh_delivered_inr") is not None:
+            add("economics.battery_cost_per_kwh_delivered", e["battery_cost_per_kwh_delivered_inr"], "INR/kWh",
+                f"₹{e['battery_cost_per_kwh_delivered_inr']:.1f} per kWh delivered",
+                f"{src}.battery_cost_per_kwh_delivered_inr", check=False)
+
+    # 20-feeder fleet and unit commitment (python -m gridsetu phase2)
+    p2_path = out / "phase2" / "phase2.json"
+    if p2_path.exists():
+        p2 = json.loads(p2_path.read_text(encoding="utf-8"))
+        fs = p2["fleet"]["stress"]
+        src = "phase2/phase2.json:fleet.stress"
+        add("fleet.feeders_overloaded", fs["feeders_overloaded_at_peak"], "count",
+            f"{fs['feeders_overloaded_at_peak']} of {fs['n_feeders']}", f"{src}.feeders_overloaded_at_peak")
+        for c in fs["curve"]:
+            n, i = c["feeders"], f"{src}.curve[adoption={c['adoption']}]"
+            add(f"fleet.stress.{n}.critical_site_hours", round(c["critical_site_hours"]), "h/stress week",
+                f"{c['critical_site_hours']:,.0f}", f"{i}.critical_site_hours", check=False)   # bare numbers
+            add(f"fleet.stress.{n}.home_hours_dark", round(c["household_dark_hours"]), "home-hours/stress week",
+                f"{c['household_dark_hours']:,.0f}", f"{i}.household_dark_hours", check=c["household_dark_hours"] >= 1000)
+            add(f"fleet.stress.{n}.unserved_kwh", round(c["total_unserved_kwh"]), "kWh/stress week",
+                f"{c['total_unserved_kwh']:,.0f} kWh", f"{i}.total_unserved_kwh")
+            if c["batteries_kwh"]:
+                add(f"fleet.stress.{n}.batteries_kwh", round(c["batteries_kwh"]), "kWh",
+                    f"{c['batteries_kwh']:,.0f} kWh", f"{i}.batteries_kwh")
+        c0, c1 = fs["curve"][0], fs["curve"][-1]
+        ch = _pct_change(c0["household_dark_hours"], c1["household_dark_hours"])
+        add("fleet.stress.home_hours_dark_change", ch, "%", ch, f"derived from {src}.curve[0/-1].household_dark_hours")
+        r0 = p2["fleet"]["representative"]["curve"][0]
+        add("fleet.representative.0.home_hours_dark", round(r0["household_dark_hours"]), "home-hours/week",
+            f"{r0['household_dark_hours']:,.0f} home-hours", "phase2/phase2.json:fleet.representative.curve[0].household_dark_hours")
+        u = p2["uc"]["stress"]
+        src = "phase2/phase2.json:uc.stress"
+        gas = next(iter(u["hours_on_lp"]))
+        add("uc.gas_starts", u["startups"][gas], "starts/stress week", f"{u['startups'][gas]} times", f"{src}.startups.{gas}")
+        add("uc.gas_hours_uc", round(u["hours_on_uc"][gas]), "h", f"{u['hours_on_uc'][gas]:.0f} hours", f"{src}.hours_on_uc.{gas}")
+        add("uc.gas_hours_lp", round(u["hours_on_lp"][gas]), "h", f"{u['hours_on_lp'][gas]:.0f} in", f"{src}.hours_on_lp.{gas}")
+        add("uc.shed_uc_mwh", round(u["shed_uc_mwh"]), "MWh", f"{u['shed_uc_mwh']:.0f}", f"{src}.shed_uc_mwh", check=False)
+        add("uc.shed_lp_mwh", round(u["shed_lp_mwh"]), "MWh", f"{u['shed_lp_mwh']:.0f} MWh", f"{src}.shed_lp_mwh")
+        d = u["cost_uc_inr"]["total"] - u["cost_lp_inr"]["total"]
+        add("uc.extra_cost_lakh", round(d / 1e5), "INR lakh", f"₹{d / 1e5:.0f} lakh", f"{src}.cost_uc_inr.total - cost_lp_inr.total")
+        pct = 100 * d / u["cost_lp_inr"]["total"]
+        add("uc.extra_cost_pct", round(pct, 1), "%", f"{pct:.1f}%", f"{src}.cost_uc_inr.total / cost_lp_inr.total - 1")
 
     # households against real Indian smart-meter data (python -m gridsetu household-check)
     hh_path = out / "households" / "households.json"

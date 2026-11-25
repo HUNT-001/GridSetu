@@ -3,9 +3,9 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-24T09:11:41+00:00",
-    "git_commit": "d1d01f3",
-    "python": "3.13.18",
+    "generated_at": "2026-11-25T17:49:10+00:00",
+    "git_commit": "561facb",
+    "python": "3.13.5",
     "libraries": {
       "numpy": "2.4.6",
       "pandas": "2.3.3",
@@ -191,6 +191,168 @@
       "unit": "home-hours/month",
       "display": "1,017 home-hours",
       "source": "results.json:pilot_feeder_monthly.gridsetu.lifeline_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.evening_unserved_kwh": {
+      "value": 483.0,
+      "unit": "per month",
+      "display": "483 kWh",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.evening_window_unserved_kwh.mean",
+      "check": true
+    },
+    "pilot.coordinated.all_hours_unserved_kwh": {
+      "value": 625.0,
+      "unit": "per month",
+      "display": "625 kWh",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.total_unserved_kwh.mean",
+      "check": true
+    },
+    "pilot.coordinated.feeder_outage_h": {
+      "value": 1.2,
+      "unit": "per month",
+      "display": "1.2 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.feeder_outage_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.dark_home_hours": {
+      "value": 1389.0,
+      "unit": "per month",
+      "display": "1,389 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.dark_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.lifeline_home_hours": {
+      "value": 1185.0,
+      "unit": "per month",
+      "display": "1,185 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.lifeline_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.battery_cycles": {
+      "value": 22.8,
+      "unit": "per month",
+      "display": "22.8",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.battery_cycles.mean",
+      "check": true
+    },
+    "pilot.gridsetu.battery_cycles": {
+      "value": 22.9,
+      "unit": "per month",
+      "display": "22.9",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.battery_cycles.mean",
+      "check": true
+    },
+    "city.baseline.ens_mwh": {
+      "value": 723,
+      "unit": "MWh/stress week",
+      "display": "723 MWh",
+      "source": "results.json:city.stress.baseline.energy_not_served_mwh",
+      "check": true
+    },
+    "city.coordinated.ens_mwh": {
+      "value": 494,
+      "unit": "MWh/stress week",
+      "display": "494 MWh",
+      "source": "results.json:city.stress.coordinated.energy_not_served_mwh",
+      "check": true
+    },
+    "wams.A_baseline.nadir_hz": {
+      "value": 49.7,
+      "unit": "Hz",
+      "display": "49.70 Hz",
+      "source": "results.json:wams.runs.A_baseline.nadir_hz",
+      "check": true
+    },
+    "wams.B_baseline.nadir_hz": {
+      "value": 49.16,
+      "unit": "Hz",
+      "display": "49.16 Hz",
+      "source": "results.json:wams.runs.B_baseline.nadir_hz",
+      "check": true
+    },
+    "wams.A.sps_shed_mw": {
+      "value": [
+        62,
+        57
+      ],
+      "unit": "MW",
+      "display": "62 to 57 MW",
+      "source": "results.json:wams.runs.A_baseline/A_gridsetu.load_shed_mw",
+      "check": true
+    },
+    "island.unserved_kwh_change": {
+      "value": [
+        613,
+        114
+      ],
+      "unit": "kWh/week",
+      "display": "613 to 114",
+      "source": "results.json:island_microgrid.legacy/gridsetu.unserved_kwh",
+      "check": true
+    },
+    "island.diesel_run_hours_change": {
+      "value": [
+        139,
+        116
+      ],
+      "unit": "h/week",
+      "display": "139 to 116",
+      "source": "results.json:island_microgrid.legacy/gridsetu.diesel_run_hours",
+      "check": true
+    },
+    "island.pv_curtailed_kwh_change": {
+      "value": [
+        441,
+        22
+      ],
+      "unit": "kWh/week",
+      "display": "441 to 22 kWh",
+      "source": "results.json:island_microgrid.legacy/gridsetu.pv_curtailed_kwh",
+      "check": true
+    },
+    "power_flow.max_220kv_line_loading_pct": {
+      "value": 110,
+      "unit": "%",
+      "display": "110%",
+      "source": "results.json:power_flow_stress.max_line_loading_pct",
+      "check": true
+    },
+    "power_flow.samples_over_100pct": {
+      "value": 8,
+      "unit": "samples",
+      "display": "in 8 samples",
+      "source": "results.json:power_flow_stress.samples_over_100pct",
+      "check": true
+    },
+    "power_flow.v_33kv_range_pu": {
+      "value": [
+        0.99,
+        1.03
+      ],
+      "unit": "pu",
+      "display": "0.99 to 1.03 pu",
+      "source": "results.json:power_flow_stress.v_33kV_range_pu (the 33 kV buses, not the 11 kV feeder)",
+      "check": true
+    },
+    "planning.city_peak_mw": {
+      "value": 474,
+      "unit": "MW",
+      "display": "474 MW",
+      "source": "results.json:system_factors_stress.city_peak_mw",
+      "check": true
+    },
+    "planning.city_load_factor": {
+      "value": 0.7,
+      "unit": "",
+      "display": "load factor 0.70",
+      "source": "results.json:system_factors_stress.city_load_factor",
+      "check": true
+    },
+    "planning.reserve_margin_at_peak_pct": {
+      "value": 1.9,
+      "unit": "%",
+      "display": "1.9%",
+      "source": "results.json:system_factors_stress.reserve_margin_at_peak_pct",
       "check": true
     },
     "fairness.gini": {
@@ -468,6 +630,34 @@
       "display": "1.52",
       "source": "economics/economics.json:annual.at_reference_values.diesel_backup.benefit_cost_ratio",
       "check": false
+    },
+    "economics.cost_battery_lakh": {
+      "value": 5.52,
+      "unit": "INR lakh/year",
+      "display": "5.52 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.battery",
+      "check": true
+    },
+    "economics.cost_smart_plugs_lakh": {
+      "value": 3.27,
+      "unit": "INR lakh/year",
+      "display": "3.27 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.smart_plugs",
+      "check": true
+    },
+    "economics.cost_controller_comms_lakh": {
+      "value": 0.25,
+      "unit": "INR lakh/year",
+      "display": "0.25 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.controller_comms",
+      "check": true
+    },
+    "economics.extra_energy_cost_lakh": {
+      "value": 2.29,
+      "unit": "INR lakh/year",
+      "display": "2.29 lakh",
+      "source": "economics/economics.json:annual.extra_energy_cost_inr_per_year",
+      "check": true
     },
     "households.synthetic_daily_kwh": {
       "value": 4.894,

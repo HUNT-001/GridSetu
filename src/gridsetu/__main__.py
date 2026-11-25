@@ -42,6 +42,8 @@ def main(argv=None):
     hc.add_argument("--sensitivity", action="store_true", help="also re-run with 720 and 1,030 homes (~10 min)")
     ec = sub.add_parser("economics", help="rupee business case priced with real IEX prices")
     ec.add_argument("--out", default="outputs/economics")
+    p2 = sub.add_parser("phase2", help="20-feeder fleet and unit-commitment studies into outputs/ (~minutes)")
+    p2.add_argument("--out", default="outputs/phase2")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
     rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
@@ -121,6 +123,12 @@ def main(argv=None):
         print(json.dumps(r["annual"], indent=2))
         for srow in r["sensitivity"]:
             print(f"  {srow['assumption']}: break-even {srow['breakeven_low']} .. {srow['breakeven_high']} INR/kWh")
+        return
+    if args.cmd == "phase2":
+        from .phase2 import run_studies
+        r = run_studies(args.out)
+        print(json.dumps({"fleet_curve_stress": r["fleet"]["stress"]["curve"], "uc": r["uc"]["stress"]},
+                         indent=1, default=float))
         return
     if args.cmd == "real-data":
         from .realstudy import run_study
