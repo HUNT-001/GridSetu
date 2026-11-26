@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-26T02:23:19+00:00",
-    "git_commit": "6057118",
+    "generated_at": "2026-11-26T13:22:43+00:00",
+    "git_commit": "6c5a45b",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -961,16 +961,16 @@
       "check": true
     },
     "uc.gas_starts": {
-      "value": 8,
+      "value": 7,
       "unit": "starts/stress week",
-      "display": "8 times",
+      "display": "7 times",
       "source": "phase2/phase2.json:uc.stress.startups.G2",
       "check": true
     },
     "uc.gas_hours_uc": {
-      "value": 48,
+      "value": 50,
       "unit": "h",
-      "display": "48 hours",
+      "display": "50 hours",
       "source": "phase2/phase2.json:uc.stress.hours_on_uc.G2",
       "check": true
     },
@@ -996,16 +996,16 @@
       "check": true
     },
     "uc.extra_cost_lakh": {
-      "value": 12,
+      "value": 10,
       "unit": "INR lakh",
-      "display": "₹12 lakh",
+      "display": "₹10 lakh",
       "source": "phase2/phase2.json:uc.stress.cost_uc_inr.total - cost_lp_inr.total",
       "check": true
     },
     "uc.extra_cost_pct": {
-      "value": 0.7,
+      "value": 0.5,
       "unit": "%",
-      "display": "0.7%",
+      "display": "0.5%",
       "source": "phase2/phase2.json:uc.stress.cost_uc_inr.total / cost_lp_inr.total - 1",
       "check": true
     },

@@ -6,7 +6,7 @@
     "headline_attribution": "baseline and gridsetu run on the same city signals; gridsetu_coordinated adds city-level solar-hour irrigation and industrial DR",
     "baseline_definition": "today's rotational load-shedding by the DISCOM, with no storage and no demand response on the feeder",
     "reliability_definitions": "SAIDI and SAIFI per household; interrupted = fully dark (homes on the lifeline allowance are supplied); see src/gridsetu/reliability.py",
-    "runtime_s": 83.6
+    "runtime_s": 92.3
   },
   "pilot_feeder_monthly": {
     "baseline": {

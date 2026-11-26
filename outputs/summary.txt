@@ -21,4 +21,4 @@ WAMS case A (G1B trip): SPS shed 62 MW baseline -> 57 MW with GridSetu FFR; case
 Comms degraded (60 % loss, stress week): critical outage 0.0 h, whole-feeder outage 3.5 h (vs 3.0 h nominal)
 Isolated microgrid: unserved 613 -> 114 kWh/week, diesel hours 139 -> 116
 Power flow: max 220 kV line loading 110% (8 samples over 100%)
-Runtime 83.6 s
+Runtime 92.3 s

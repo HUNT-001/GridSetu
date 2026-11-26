@@ -2,7 +2,7 @@
   "about": {
     "label": "SIMULATION: synthetic data, not field measurement",
     "seed": 42,
-    "runtime_s": 52.7
+    "runtime_s": 57.7
   },
   "fleet": {
     "stress": {
@@ -1761,23 +1761,23 @@
       "startups": {
         "G1A": 0,
         "G1B": 1,
-        "G2": 8
+        "G2": 7
       },
       "hours_on_uc": {
         "G1A": 168.0,
         "G1B": 139.0,
-        "G2": 48.5
+        "G2": 50.0
       },
       "hours_on_lp": {
         "G2": 56.75
       },
-      "shed_uc_mwh": 356.49997482993984,
+      "shed_uc_mwh": 356.04365890894627,
       "shed_lp_mwh": 337.26938869923697,
       "cost_uc_inr": {
-        "energy": 178100537.61830035,
-        "startup": 1380000.0,
-        "shed": 4069562.3325407077,
-        "total": 183550099.95084107
+        "energy": 177932039.3488963,
+        "startup": 1320000.0,
+        "shed": 4064542.85740978,
+        "total": 183316582.20630607
       },
       "cost_lp_inr": {
         "energy": 178446997.72209612,

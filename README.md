@@ -467,8 +467,8 @@ All 20 R3 domestic feeders (about 22,000 homes; 18 of 20 transformers overloaded
 
 A day-ahead mixed-integer schedule (PyPSA with HiGHS) against the linear market, stress week:
 - **Coal stays on all week.** Stopping a coal unit overnight saves less than its ₹9 lakh restart.
-- **Gas is started 8 times** for evening peaks and runs 48 hours, against 57 in the linear market.
-- **Peaks cost more than the linear market assumes.** A ₹60,000 start and a 20 MW minimum load make the gas unit too expensive for short spikes, so the schedule sheds more (356 against 337 MWh) and costs ₹12 lakh (0.7%) more. Flexible demand, such as a GridSetu reserve, is worth more than the linear market suggests.
+- **Gas is started 7 times** for evening peaks and runs 50 hours, against 57 in the linear market.
+- **Peaks cost more than the linear market assumes.** A ₹60,000 start and a 20 MW minimum load make the gas unit too expensive for short spikes, so the schedule sheds more (356 against 337 MWh) and costs ₹10 lakh (0.5%) more. Flexible demand, such as a GridSetu reserve, is worth more than the linear market suggests.
 
 Feeder results use the linear market so they stay comparable with Phase 1.
 

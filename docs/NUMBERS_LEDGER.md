@@ -142,28 +142,28 @@ Regenerate outputs workflow. "Before" is what the README said until that file wa
 | Unserved energy | 26,861 / 23,346 / 20,259 / 18,836 / 17,170 kWh | 26,861 / 23,349 / 20,268 / 18,845 / 17,182 kWh | `fleet.stress.N.unserved_kwh` | CHECKED; README updated (moves under 0.1%) |
 | Home-hours dark, change at full adoption | −44% | "falls by 44%" | `fleet.stress.home_hours_dark_change` | CHECKED; README wording updated |
 | Normal week, home-hours dark at 0% | 45,424 | 45,424 | `fleet.representative.0.home_hours_dark` | CHECKED |
-| Gas starts / hours on (UC vs linear) | 8 / 48 h vs 57 h | 8 / 49 vs 57 | `uc.gas_starts`, `uc.gas_hours_*` | CHECKED; 48.5 h, rounded half to even |
-| Shedding, UC vs linear market | 356 vs 337 MWh | 363 vs 337 MWh | `uc.shed_uc_mwh`, `uc.shed_lp_mwh` | 356 REGISTERED (unchecked), 337 CHECKED; README updated |
-| Extra cost of UC | ₹12 lakh (0.7%) | ₹11 lakh (0.6%) | `uc.extra_cost_lakh`, `uc.extra_cost_pct` | CHECKED; README updated |
+| Gas starts / hours on (UC vs linear) | 7 / 50 h vs 57 h | 8 / 49 vs 57 | `uc.gas_starts`, `uc.gas_hours_*` | CHECKED; README updated |
+| Shedding, UC vs linear market | 356 vs 337 MWh (356.04 vs 337.27) | 363 vs 337 MWh | `uc.shed_uc_mwh`, `uc.shed_lp_mwh` | 356 REGISTERED (unchecked), 337 CHECKED; README updated |
+| Extra cost of UC | ₹10 lakh (0.5%) (₹9.62 lakh, 0.53%) | ₹11 lakh (0.6%) | `uc.extra_cost_lakh`, `uc.extra_cost_pct` | CHECKED; README updated |
 
 **Why UC differs:** until this branch, `uc.py` solved with `mip_rel_gap: 0.005` and a 60 s `time_limit`,
 so the schedule could depend on machine speed and land anywhere inside the 0.5% gap. The README's
 363 MWh / ₹11 lakh came from such a run. The time limit is now removed and HiGHS runs with a fixed seed on one
-thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The README now quotes the
-committed file.
+thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The gap is now 0.01%
+(`mip_rel_gap: 0.0001`), and the committed `phase2.json` comes from the Regenerate outputs workflow at that
+gap. The README quotes that file.
 
-**Gap sensitivity (26 Nov, same seed, 1 thread, stress week):**
+**Why 0.01% (26 Nov, same seed, 1 thread, stress week; laptop runs, not registered):**
 
 | `mip_rel_gap` | Gas starts | Gas hours (UC vs linear 56.75) | Shed, UC vs linear 337.27 MWh | Extra cost | Run time |
 |---|--:|--:|--:|--:|--:|
-| 0.5% (committed) | 8 | 48.5 | 356.5 | ₹11.96 lakh (0.66%) | 13 s |
+| 0.5% (used before) | 8 | 48.5 | 356.5 | ₹11.96 lakh (0.66%) | 13 s |
 | 0.1% | 7 | 50.0 | 353.9 | ₹9.89 lakh (0.54%) | 12 s |
-| 0.01% | 7 | 50.0 | 356.0 | ₹9.62 lakh (0.53%) | 13 s |
+| 0.01% (now used) | 7 | 50.0 | 356.0 | ₹9.62 lakh (0.53%) | 13 s |
 
-The direction holds at every gap (UC sheds more and costs more than the linear market), but the
-figures do not: a tighter gap gives one start fewer and about ₹2 lakh less. So the README no
-longer says "a tighter solver gap does not change this". These are my Windows runs, not
-registered. `phase2` is still not part of
+The direction holds at every gap (UC sheds more and costs more than the linear market), but at
+0.5% the figures were one start and about ₹2 lakh away from the tighter answer, at no saving in
+run time. The 0.01% row matches the committed Linux run. `phase2` is still not part of
 `scripts/reproduce.sh`; adding it would cost about 6 minutes of CI per run.
 
 ## 7. Not registered: don't quote until there's a file behind them
