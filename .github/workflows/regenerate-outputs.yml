@@ -7,6 +7,11 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [main]
+    paths:                       # only changes that can move a result; docs-only pushes skip the ~8 min run
+      - "src/**"
+      - "config/**"
+      - "data/**"
+      - "requirements-lock.txt"
 
 jobs:
   regenerate:
