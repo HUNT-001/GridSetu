@@ -9,18 +9,19 @@
       "smart_plug_inr_per_home": 1500.0,
       "homes_with_tier3_share": 1.0,
       "smart_plug_life_years": 5.0,
-      "homes": 1090,
       "controller_comms_inr_per_year": 25000.0,
       "stress_weeks_per_year": 13,
       "diesel_inr_per_litre": 99.55,
       "genset_kwh_per_litre": 3.0,
-      "iex_ceiling_inr_per_kwh": 10.0
+      "iex_ceiling_inr_per_kwh": 10.0,
+      "homes": 1090
     },
     "sources": {
       "bess_benchmark": "https://www.ess-news.com/2026/05/19/india-awards-10-4-gw-of-standalone-bess-capacity-in-2025-but-tariff-viability-remains-a-concern/",
       "diesel": "https://www.dtnext.in/news/chennai/check-out-petrol-and-diesel-prices-in-chennai-on-november-17-2026",
       "iex": "data/real/iex_dam_2025-09-14_20.csv"
-    }
+    },
+    "annualisation": "the simulated month (3 normal + 1 stress week) repeats all year"
   },
   "weekly_mean": {
     "stress": {
@@ -28,13 +29,15 @@
         "unserved_kwh": 2248.5701007284024,
         "import_kwh": 37513.48035925083,
         "energy_cost_inr": 145805.09759635033,
-        "battery_discharge_kwh": 0.0
+        "battery_discharge_kwh": 0.0,
+        "dark_home_hours": 8356.666666666666
       },
       "gridsetu": {
         "unserved_kwh": 900.4769424624474,
         "import_kwh": 38925.927956704,
         "energy_cost_inr": 151609.82848899774,
-        "battery_discharge_kwh": 1015.954739187845
+        "battery_discharge_kwh": 1015.954739187845,
+        "dark_home_hours": 2483.1666666666665
       }
     },
     "representative": {
@@ -42,13 +45,15 @@
         "unserved_kwh": 888.1079760395036,
         "import_kwh": 38345.91985379678,
         "energy_cost_inr": 154875.94297893354,
-        "battery_discharge_kwh": 0.0
+        "battery_discharge_kwh": 0.0,
+        "dark_home_hours": 3270.0
       },
       "gridsetu": {
         "unserved_kwh": 2.0711226259803097,
         "import_kwh": 39312.33297017301,
         "energy_cost_inr": 158687.5486048336,
-        "battery_discharge_kwh": 962.4938075976106
+        "battery_discharge_kwh": 962.4938075976106,
+        "dark_home_hours": 0.0
       }
     }
   },
@@ -80,7 +85,11 @@
         "net_inr_per_year": 600095,
         "benefit_cost_ratio": 1.53
       }
-    }
+    },
+    "home_outage_hours_avoided_per_year": 203886,
+    "cost_per_avoided_home_outage_hour_inr": 5.53,
+    "battery_discharge_kwh_per_year": 50745,
+    "battery_cost_per_kwh_delivered_inr": 10.88
   },
   "sensitivity": [
     {
@@ -115,5 +124,26 @@
       "breakeven_high": 27.94,
       "base": 21.66
     }
-  ]
+  ],
+  "capex_method": {
+    "status": "PENDING_SOURCE",
+    "missing_inputs": [
+      "battery_inr_per_kwh",
+      "battery_second_life_inr_per_kwh",
+      "controller_meters_comms_inr",
+      "discount_rate_pct",
+      "installation_inr",
+      "inverter_inr_per_kw",
+      "life_years",
+      "om_pct_of_capex_per_year"
+    ],
+    "note": "outputs skipped until sourced prices arrive (docs/economics/cost_inputs.md)"
+  },
+  "deferral": {
+    "status": "PENDING_SOURCE",
+    "missing_inputs": [
+      "deferral_years",
+      "transformer_augmentation_inr"
+    ]
+  }
 }

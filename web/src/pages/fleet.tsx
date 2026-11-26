@@ -11,7 +11,7 @@ import { useCanvasLoop } from "@/components/city/city-view";
 import { MapScene } from "@/components/fleet/map-scene";
 import { useActiveRun, useCity, useFleet, useMap, useMeta } from "@/lib/queries";
 import { useStepInt, useUI } from "@/lib/store";
-import { f0, f1, fmtDay, fmtHM, stepDate, STATE_LABEL } from "@/lib/format";
+import { f0, f0Even, f1, fmtDay, roundHalfEven, fmtHM, stepDate, STATE_LABEL } from "@/lib/format";
 import type { FleetCurvePoint, FleetFeederRow, FleetPayload } from "@/lib/types";
 import { cn, decodeB64 } from "@/lib/utils";
 
@@ -67,7 +67,7 @@ export default function FleetPage() {
       <Card>
         <CardContent className="grid grid-cols-2 gap-5 pt-4 @[31rem]:grid-cols-5">
           {point && zero ? (<>
-            <Kpi label="Critical sites without power" unit="site-h" format={f0} value={point.critical_site_hours} baseline={zero.critical_site_hours} hint="Clinic, school, pump and street-light hours dark this week" />
+            <Kpi label="Critical sites without power" unit="site-h" format={f0Even} value={point.critical_site_hours} baseline={zero.critical_site_hours} hint="Clinic, school, pump and street-light hours dark this week" />
             <Kpi label="Homes dark" unit="home-h" format={f0} value={point.household_dark_hours} baseline={zero.household_dark_hours} />
             <Kpi label="Unserved energy" unit="kWh" format={f0} value={point.total_unserved_kwh} baseline={zero.total_unserved_kwh} />
             <Kpi label="Transformer overload trips" format={f0} value={point.overload_trips} baseline={zero.overload_trips} />
@@ -292,7 +292,7 @@ function MiniBars({ title, unit, points, level, onPick }: {
         <span className="font-medium">{title}</span><span className="text-[11.5px] text-muted-foreground">{unit}</span>
       </figcaption>
       <svg viewBox={`0 0 ${W} ${H + pad}`} className="w-full overflow-visible" role="img"
-        aria-label={`${title} by adoption level: ${points.map((p) => `${Math.round(p.x * 100)}% ${Math.round(p.y)}`).join(", ")}`}>
+        aria-label={`${title} by adoption level: ${points.map((p) => `${Math.round(p.x * 100)}% ${roundHalfEven(p.y)}`).join(", ")}`}>
         <line x1={0} x2={W} y1={H} y2={H} stroke="var(--border)" />
         {points.map((p, i) => {
           const h = (p.y / max) * (H - 18);
@@ -305,7 +305,7 @@ function MiniBars({ title, unit, points, level, onPick }: {
                 fill={on ? "var(--series-gridsetu)" : "var(--series-baseline)"} opacity={on ? 1 : 0.55}
                 className="transition-[opacity] duration-100 hover:opacity-90" />
               <text x={x + bw / 2} y={H - h - 5} textAnchor="middle" fontSize={11} fill="var(--foreground)"
-                className="num">{p.y >= 1000 ? `${(p.y / 1000).toFixed(1)}k` : Math.round(p.y)}</text>
+                className="num">{p.y >= 1000 ? `${(p.y / 1000).toFixed(1)}k` : roundHalfEven(p.y)}</text>
               <text x={x + bw / 2} y={H + 15} textAnchor="middle" fontSize={11}
                 fill={on ? "var(--foreground)" : "var(--muted-foreground)"}>{Math.round(p.x * 100)}%</text>
             </g>

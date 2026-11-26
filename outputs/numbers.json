@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-25T19:36:00+00:00",
-    "git_commit": "00b30ff",
+    "generated_at": "2026-11-26T13:22:43+00:00",
+    "git_commit": "6c5a45b",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -191,6 +191,294 @@
       "unit": "home-hours/month",
       "display": "1,002 home-hours",
       "source": "results.json:pilot_feeder_monthly.gridsetu.lifeline_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.evening_unserved_kwh": {
+      "value": 461.0,
+      "unit": "per month",
+      "display": "461 kWh",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.evening_window_unserved_kwh.mean",
+      "check": true
+    },
+    "pilot.coordinated.all_hours_unserved_kwh": {
+      "value": 599.0,
+      "unit": "per month",
+      "display": "599 kWh",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.total_unserved_kwh.mean",
+      "check": true
+    },
+    "pilot.coordinated.feeder_outage_h": {
+      "value": 1.2,
+      "unit": "per month",
+      "display": "1.2 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.feeder_outage_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.dark_home_hours": {
+      "value": 1298.0,
+      "unit": "per month",
+      "display": "1,298 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.dark_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.lifeline_home_hours": {
+      "value": 1204.0,
+      "unit": "per month",
+      "display": "1,204 home-hours",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.lifeline_home_hours.mean",
+      "check": true
+    },
+    "pilot.coordinated.battery_cycles": {
+      "value": 22.8,
+      "unit": "per month",
+      "display": "22.8",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.battery_cycles.mean",
+      "check": true
+    },
+    "pilot.gridsetu.battery_cycles": {
+      "value": 23.0,
+      "unit": "per month",
+      "display": "23.0",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.battery_cycles.mean",
+      "check": true
+    },
+    "reliability.baseline.saidi_h": {
+      "value": 16.7,
+      "unit": "h per household per month",
+      "display": "16.7 h",
+      "source": "results.json:pilot_feeder_monthly.baseline.saidi_h.mean",
+      "check": false
+    },
+    "reliability.baseline.saifi": {
+      "value": 23.7,
+      "unit": "interruptions per household per month",
+      "display": "23.7",
+      "source": "results.json:pilot_feeder_monthly.baseline.saifi.mean",
+      "check": false
+    },
+    "reliability.baseline.caidi_h": {
+      "value": 0.66,
+      "unit": "h per interruption",
+      "display": "0.66 h",
+      "source": "results.json:pilot_feeder_monthly.baseline.caidi_h.mean",
+      "check": false
+    },
+    "reliability.baseline.evening_availability_pct": {
+      "value": 91.1,
+      "unit": "% of household-hours 17:00-23:00",
+      "display": "91.1%",
+      "source": "results.json:pilot_feeder_monthly.baseline.evening_supply_availability_pct.mean",
+      "check": false
+    },
+    "reliability.gridsetu.saidi_h": {
+      "value": 2.3,
+      "unit": "h per household per month",
+      "display": "2.3 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.saidi_h.mean",
+      "check": false
+    },
+    "reliability.gridsetu.saifi": {
+      "value": 7.6,
+      "unit": "interruptions per household per month",
+      "display": "7.6",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.saifi.mean",
+      "check": false
+    },
+    "reliability.gridsetu.caidi_h": {
+      "value": 0.3,
+      "unit": "h per interruption",
+      "display": "0.30 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.caidi_h.mean",
+      "check": false
+    },
+    "reliability.gridsetu.evening_availability_pct": {
+      "value": 98.6,
+      "unit": "% of household-hours 17:00-23:00",
+      "display": "98.6%",
+      "source": "results.json:pilot_feeder_monthly.gridsetu.evening_supply_availability_pct.mean",
+      "check": false
+    },
+    "reliability.coordinated.saidi_h": {
+      "value": 1.2,
+      "unit": "h per household per month",
+      "display": "1.2 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.saidi_h.mean",
+      "check": false
+    },
+    "reliability.coordinated.saifi": {
+      "value": 4.7,
+      "unit": "interruptions per household per month",
+      "display": "4.7",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.saifi.mean",
+      "check": false
+    },
+    "reliability.coordinated.caidi_h": {
+      "value": 0.26,
+      "unit": "h per interruption",
+      "display": "0.26 h",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.caidi_h.mean",
+      "check": false
+    },
+    "reliability.coordinated.evening_availability_pct": {
+      "value": 99.3,
+      "unit": "% of household-hours 17:00-23:00",
+      "display": "99.3%",
+      "source": "results.json:pilot_feeder_monthly.gridsetu_coordinated.evening_supply_availability_pct.mean",
+      "check": false
+    },
+    "reliability.baseline.saidi_h_per_year": {
+      "value": 200,
+      "unit": "h per household per year",
+      "display": "200 h a year",
+      "source": "12 x results.json:pilot_feeder_monthly.baseline.saidi_h.mean (if the simulated month repeats all year)",
+      "check": false
+    },
+    "reliability.gridsetu.saidi_h_per_year": {
+      "value": 27,
+      "unit": "h per household per year",
+      "display": "27 h a year",
+      "source": "12 x results.json:pilot_feeder_monthly.gridsetu.saidi_h.mean (if the simulated month repeats all year)",
+      "check": false
+    },
+    "city.baseline.ens_mwh": {
+      "value": 723,
+      "unit": "MWh/stress week",
+      "display": "723 MWh",
+      "source": "results.json:city.stress.baseline.energy_not_served_mwh",
+      "check": true
+    },
+    "city.coordinated.ens_mwh": {
+      "value": 494,
+      "unit": "MWh/stress week",
+      "display": "494 MWh",
+      "source": "results.json:city.stress.coordinated.energy_not_served_mwh",
+      "check": true
+    },
+    "wams.A_baseline.nadir_hz": {
+      "value": 49.7,
+      "unit": "Hz",
+      "display": "49.70 Hz",
+      "source": "results.json:wams.runs.A_baseline.nadir_hz",
+      "check": true
+    },
+    "wams.B_baseline.nadir_hz": {
+      "value": 49.16,
+      "unit": "Hz",
+      "display": "49.16 Hz",
+      "source": "results.json:wams.runs.B_baseline.nadir_hz",
+      "check": true
+    },
+    "wams.A.sps_shed_mw": {
+      "value": [
+        62,
+        57
+      ],
+      "unit": "MW",
+      "display": "62 to 57 MW",
+      "source": "results.json:wams.runs.A_baseline/A_gridsetu.load_shed_mw",
+      "check": true
+    },
+    "island.unserved_kwh_change": {
+      "value": [
+        613,
+        114
+      ],
+      "unit": "kWh/week",
+      "display": "613 to 114",
+      "source": "results.json:island_microgrid.legacy/gridsetu.unserved_kwh",
+      "check": true
+    },
+    "island.diesel_run_hours_change": {
+      "value": [
+        139,
+        116
+      ],
+      "unit": "h/week",
+      "display": "139 to 116",
+      "source": "results.json:island_microgrid.legacy/gridsetu.diesel_run_hours",
+      "check": true
+    },
+    "island.pv_curtailed_kwh_change": {
+      "value": [
+        441,
+        22
+      ],
+      "unit": "kWh/week",
+      "display": "441 to 22 kWh",
+      "source": "results.json:island_microgrid.legacy/gridsetu.pv_curtailed_kwh",
+      "check": true
+    },
+    "power_flow.max_220kv_line_loading_pct": {
+      "value": 110,
+      "unit": "%",
+      "display": "110%",
+      "source": "results.json:power_flow_stress.max_line_loading_pct",
+      "check": true
+    },
+    "power_flow.samples_over_100pct": {
+      "value": 8,
+      "unit": "samples",
+      "display": "in 8 samples",
+      "source": "results.json:power_flow_stress.samples_over_100pct",
+      "check": true
+    },
+    "power_flow.v_33kv_range_pu": {
+      "value": [
+        0.99,
+        1.03
+      ],
+      "unit": "pu",
+      "display": "0.99 to 1.03 pu",
+      "source": "results.json:power_flow_stress.v_33kV_range_pu (the 33 kV buses, not the 11 kV feeder)",
+      "check": true
+    },
+    "losses.python_11kv.baseline.kwh": {
+      "value": 129,
+      "unit": "kWh/stress week",
+      "display": "129 kWh",
+      "source": "results.json:power_flow_stress.feeder_11kv_losses.baseline.loss_kwh",
+      "check": false
+    },
+    "losses.python_11kv.baseline.pct": {
+      "value": 0.34,
+      "unit": "% of energy into the feeder",
+      "display": "0.34%",
+      "source": "results.json:power_flow_stress.feeder_11kv_losses.baseline.loss_pct",
+      "check": false
+    },
+    "losses.python_11kv.gridsetu.kwh": {
+      "value": 132,
+      "unit": "kWh/stress week",
+      "display": "132 kWh",
+      "source": "results.json:power_flow_stress.feeder_11kv_losses.gridsetu.loss_kwh",
+      "check": false
+    },
+    "losses.python_11kv.gridsetu.pct": {
+      "value": 0.34,
+      "unit": "% of energy into the feeder",
+      "display": "0.34%",
+      "source": "results.json:power_flow_stress.feeder_11kv_losses.gridsetu.loss_pct",
+      "check": false
+    },
+    "planning.city_peak_mw": {
+      "value": 474,
+      "unit": "MW",
+      "display": "474 MW",
+      "source": "results.json:system_factors_stress.city_peak_mw",
+      "check": true
+    },
+    "planning.city_load_factor": {
+      "value": 0.7,
+      "unit": "",
+      "display": "load factor 0.70",
+      "source": "results.json:system_factors_stress.city_load_factor",
+      "check": true
+    },
+    "planning.reserve_margin_at_peak_pct": {
+      "value": 1.9,
+      "unit": "%",
+      "display": "1.9%",
+      "source": "results.json:system_factors_stress.reserve_margin_at_peak_pct",
       "check": true
     },
     "fairness.gini": {
@@ -468,6 +756,258 @@
       "display": "1.53",
       "source": "economics/economics.json:annual.at_reference_values.diesel_backup.benefit_cost_ratio",
       "check": false
+    },
+    "economics.cost_battery_lakh": {
+      "value": 5.52,
+      "unit": "INR lakh/year",
+      "display": "5.52 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.battery",
+      "check": true
+    },
+    "economics.cost_smart_plugs_lakh": {
+      "value": 3.27,
+      "unit": "INR lakh/year",
+      "display": "3.27 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.smart_plugs",
+      "check": true
+    },
+    "economics.cost_controller_comms_lakh": {
+      "value": 0.25,
+      "unit": "INR lakh/year",
+      "display": "0.25 lakh",
+      "source": "economics/economics.json:annual.costs_inr_per_year.controller_comms",
+      "check": true
+    },
+    "economics.extra_energy_cost_lakh": {
+      "value": 2.24,
+      "unit": "INR lakh/year",
+      "display": "2.24 lakh",
+      "source": "economics/economics.json:annual.extra_energy_cost_inr_per_year",
+      "check": true
+    },
+    "economics.cost_per_avoided_home_outage_hour": {
+      "value": 5.53,
+      "unit": "INR/home-hour",
+      "display": "₹5.5 per household-hour of outage avoided",
+      "source": "economics/economics.json:annual.cost_per_avoided_home_outage_hour_inr",
+      "check": false
+    },
+    "economics.home_outage_hours_avoided": {
+      "value": 203886,
+      "unit": "home-hours/year",
+      "display": "203,886 home-hours",
+      "source": "economics/economics.json:annual.home_outage_hours_avoided_per_year",
+      "check": false
+    },
+    "economics.battery_cost_per_kwh_delivered": {
+      "value": 10.88,
+      "unit": "INR/kWh",
+      "display": "₹10.9 per kWh delivered",
+      "source": "economics/economics.json:annual.battery_cost_per_kwh_delivered_inr",
+      "check": false
+    },
+    "fleet.feeders_overloaded": {
+      "value": 18,
+      "unit": "count",
+      "display": "18 of 20",
+      "source": "phase2/phase2.json:fleet.stress.feeders_overloaded_at_peak",
+      "check": true
+    },
+    "fleet.stress.0.critical_site_hours": {
+      "value": 310,
+      "unit": "site-hours/stress week",
+      "display": "310 h",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0].critical_site_hours",
+      "check": true
+    },
+    "fleet.stress.0.home_hours_dark": {
+      "value": 116088,
+      "unit": "home-hours/stress week",
+      "display": "116,088",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0].household_dark_hours",
+      "check": true
+    },
+    "fleet.stress.0.unserved_kwh": {
+      "value": 26861,
+      "unit": "kWh/stress week",
+      "display": "26,861 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0].total_unserved_kwh",
+      "check": true
+    },
+    "fleet.stress.5.critical_site_hours": {
+      "value": 194,
+      "unit": "site-hours/stress week",
+      "display": "194 h",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.25].critical_site_hours",
+      "check": true
+    },
+    "fleet.stress.5.home_hours_dark": {
+      "value": 98940,
+      "unit": "home-hours/stress week",
+      "display": "98,940",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.25].household_dark_hours",
+      "check": true
+    },
+    "fleet.stress.5.unserved_kwh": {
+      "value": 23346,
+      "unit": "kWh/stress week",
+      "display": "23,346 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.25].total_unserved_kwh",
+      "check": true
+    },
+    "fleet.stress.5.batteries_kwh": {
+      "value": 1040,
+      "unit": "kWh",
+      "display": "1,040 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.25].batteries_kwh",
+      "check": true
+    },
+    "fleet.stress.10.critical_site_hours": {
+      "value": 104,
+      "unit": "site-hours/stress week",
+      "display": "104 h",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.5].critical_site_hours",
+      "check": true
+    },
+    "fleet.stress.10.home_hours_dark": {
+      "value": 83976,
+      "unit": "home-hours/stress week",
+      "display": "83,976",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.5].household_dark_hours",
+      "check": true
+    },
+    "fleet.stress.10.unserved_kwh": {
+      "value": 20259,
+      "unit": "kWh/stress week",
+      "display": "20,259 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.5].total_unserved_kwh",
+      "check": true
+    },
+    "fleet.stress.10.batteries_kwh": {
+      "value": 2020,
+      "unit": "kWh",
+      "display": "2,020 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.5].batteries_kwh",
+      "check": true
+    },
+    "fleet.stress.15.critical_site_hours": {
+      "value": 46,
+      "unit": "site-hours/stress week",
+      "display": "46 h",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.75].critical_site_hours",
+      "check": true
+    },
+    "fleet.stress.15.home_hours_dark": {
+      "value": 75243,
+      "unit": "home-hours/stress week",
+      "display": "75,243",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.75].household_dark_hours",
+      "check": true
+    },
+    "fleet.stress.15.unserved_kwh": {
+      "value": 18836,
+      "unit": "kWh/stress week",
+      "display": "18,836 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.75].total_unserved_kwh",
+      "check": true
+    },
+    "fleet.stress.15.batteries_kwh": {
+      "value": 3020,
+      "unit": "kWh",
+      "display": "3,020 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.75].batteries_kwh",
+      "check": true
+    },
+    "fleet.stress.20.critical_site_hours": {
+      "value": 0,
+      "unit": "site-hours/stress week",
+      "display": "0 h",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=1.0].critical_site_hours",
+      "check": false
+    },
+    "fleet.stress.20.home_hours_dark": {
+      "value": 65554,
+      "unit": "home-hours/stress week",
+      "display": "65,554",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=1.0].household_dark_hours",
+      "check": true
+    },
+    "fleet.stress.20.unserved_kwh": {
+      "value": 17170,
+      "unit": "kWh/stress week",
+      "display": "17,170 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=1.0].total_unserved_kwh",
+      "check": true
+    },
+    "fleet.stress.20.batteries_kwh": {
+      "value": 4080,
+      "unit": "kWh",
+      "display": "4,080 kWh",
+      "source": "phase2/phase2.json:fleet.stress.curve[adoption=1.0].batteries_kwh",
+      "check": true
+    },
+    "fleet.stress.home_hours_dark_change": {
+      "value": "−44%",
+      "unit": "%",
+      "display": "−44%",
+      "source": "derived from phase2/phase2.json:fleet.stress.curve[0/-1].household_dark_hours",
+      "check": true
+    },
+    "fleet.representative.0.home_hours_dark": {
+      "value": 45424,
+      "unit": "home-hours/week",
+      "display": "45,424 home-hours",
+      "source": "phase2/phase2.json:fleet.representative.curve[0].household_dark_hours",
+      "check": true
+    },
+    "uc.gas_starts": {
+      "value": 7,
+      "unit": "starts/stress week",
+      "display": "7 times",
+      "source": "phase2/phase2.json:uc.stress.startups.G2",
+      "check": true
+    },
+    "uc.gas_hours_uc": {
+      "value": 50,
+      "unit": "h",
+      "display": "50 hours",
+      "source": "phase2/phase2.json:uc.stress.hours_on_uc.G2",
+      "check": true
+    },
+    "uc.gas_hours_lp": {
+      "value": 57,
+      "unit": "h",
+      "display": "57 in",
+      "source": "phase2/phase2.json:uc.stress.hours_on_lp.G2",
+      "check": true
+    },
+    "uc.shed_uc_mwh": {
+      "value": 356,
+      "unit": "MWh",
+      "display": "356",
+      "source": "phase2/phase2.json:uc.stress.shed_uc_mwh",
+      "check": false
+    },
+    "uc.shed_lp_mwh": {
+      "value": 337,
+      "unit": "MWh",
+      "display": "337 MWh",
+      "source": "phase2/phase2.json:uc.stress.shed_lp_mwh",
+      "check": true
+    },
+    "uc.extra_cost_lakh": {
+      "value": 10,
+      "unit": "INR lakh",
+      "display": "₹10 lakh",
+      "source": "phase2/phase2.json:uc.stress.cost_uc_inr.total - cost_lp_inr.total",
+      "check": true
+    },
+    "uc.extra_cost_pct": {
+      "value": 0.5,
+      "unit": "%",
+      "display": "0.5%",
+      "source": "phase2/phase2.json:uc.stress.cost_uc_inr.total / cost_lp_inr.total - 1",
+      "check": true
     },
     "ownership.discom_fee_lakh": {
       "value": 6.73,

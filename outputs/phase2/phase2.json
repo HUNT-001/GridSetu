@@ -1,0 +1,1791 @@
+{
+  "about": {
+    "label": "SIMULATION: synthetic data, not field measurement",
+    "seed": 42,
+    "runtime_s": 57.7
+  },
+  "fleet": {
+    "stress": {
+      "n_feeders": 20,
+      "homes": 22464,
+      "feeders_overloaded_at_peak": 18,
+      "curve": [
+        {
+          "adoption": 0,
+          "feeders": 0,
+          "critical_outage_hours": 103.75,
+          "feeder_outage_hours": 105.0,
+          "total_unserved_kwh": 26860.51330912416,
+          "evening_unserved_kwh": 16697.85906323702,
+          "overload_trips": 22.0,
+          "household_dark_hours": 116088.25,
+          "critical_site_hours": 310.5,
+          "r3_feeder_head_peak_kw": 6610.20092489864,
+          "batteries_kwh": 0.0
+        },
+        {
+          "adoption": 0.25,
+          "feeders": 5,
+          "critical_outage_hours": 73.75,
+          "feeder_outage_hours": 90.0,
+          "total_unserved_kwh": 23346.14706118473,
+          "evening_unserved_kwh": 14987.817564936273,
+          "overload_trips": 12.0,
+          "household_dark_hours": 98939.75,
+          "critical_site_hours": 194.5,
+          "r3_feeder_head_peak_kw": 6337.104360199725,
+          "batteries_kwh": 1040.0
+        },
+        {
+          "adoption": 0.5,
+          "feeders": 10,
+          "critical_outage_hours": 43.75,
+          "feeder_outage_hours": 74.25,
+          "total_unserved_kwh": 20259.279961212025,
+          "evening_unserved_kwh": 13454.54308965182,
+          "overload_trips": 3.0,
+          "household_dark_hours": 83976.25,
+          "critical_site_hours": 104.5,
+          "r3_feeder_head_peak_kw": 6377.969230452224,
+          "batteries_kwh": 2020.0
+        },
+        {
+          "adoption": 0.75,
+          "feeders": 15,
+          "critical_outage_hours": 21.0,
+          "feeder_outage_hours": 66.5,
+          "total_unserved_kwh": 18836.04113121695,
+          "evening_unserved_kwh": 12954.109478650109,
+          "overload_trips": 1.0,
+          "household_dark_hours": 75242.75,
+          "critical_site_hours": 46.25,
+          "r3_feeder_head_peak_kw": 6143.321754719529,
+          "batteries_kwh": 3020.0
+        },
+        {
+          "adoption": 1.0,
+          "feeders": 20,
+          "critical_outage_hours": 0.0,
+          "feeder_outage_hours": 58.25,
+          "total_unserved_kwh": 17170.209081246976,
+          "evening_unserved_kwh": 12420.809985938793,
+          "overload_trips": 0.0,
+          "household_dark_hours": 65553.75,
+          "critical_site_hours": 0.0,
+          "r3_feeder_head_peak_kw": 6329.25,
+          "batteries_kwh": 4080.0
+        }
+      ],
+      "feeders": [
+        {
+          "group": 0,
+          "id": "F00",
+          "households": 1115,
+          "peak_kw": 321.5,
+          "rating_kw": 300.0,
+          "rooftop_kwp": 273.0,
+          "community_kwp": 60,
+          "critical": {
+            "health_subcentre": 12.275229357798164,
+            "school": 0.0,
+            "water_pumping": 15.344036697247706,
+            "street_lighting_core": 6.137614678899082
+          },
+          "sps_member": false,
+          "battery_kw": 90.0,
+          "battery_kwh": 180.0,
+          "is_pilot": false,
+          "rank": 5,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 997.033189029095,
+            "evening_unserved_kwh": 654.8844035047512,
+            "overload_trips": 0,
+            "peak_import_kw": 321.50000000000006,
+            "household_dark_hours": 4738.75,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 774.5875578076456,
+            "evening_unserved_kwh": 621.6156621398288,
+            "overload_trips": 0,
+            "peak_import_kw": 291.0,
+            "household_dark_hours": 3345.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 1,
+          "id": "F01",
+          "households": 734,
+          "peak_kw": 251.2,
+          "rating_kw": 225.0,
+          "rooftop_kwp": 96.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 5.387155963302752,
+            "water_pumping": 10.100917431192661,
+            "street_lighting_core": 4.040366972477064
+          },
+          "sps_member": false,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 8,
+          "baseline": {
+            "critical_outage_hours": 6.25,
+            "feeder_outage_hours": 6.25,
+            "total_unserved_kwh": 1146.8553910310802,
+            "evening_unserved_kwh": 729.6152303679276,
+            "overload_trips": 2,
+            "peak_import_kw": 251.19999999999993,
+            "household_dark_hours": 4587.5,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 678.4198869429808,
+            "evening_unserved_kwh": 494.4099381089168,
+            "overload_trips": 0,
+            "peak_import_kw": 218.25,
+            "household_dark_hours": 2018.5,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 2,
+          "id": "F02",
+          "households": 1154,
+          "peak_kw": 325.7,
+          "rating_kw": 275.0,
+          "rooftop_kwp": 297.0,
+          "community_kwp": 60,
+          "critical": {
+            "health_subcentre": 12.704587155963303,
+            "school": 8.469724770642202,
+            "water_pumping": 15.880733944954128,
+            "street_lighting_core": 6.352293577981651
+          },
+          "sps_member": false,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": false,
+          "rank": 0,
+          "baseline": {
+            "critical_outage_hours": 7.5,
+            "feeder_outage_hours": 7.5,
+            "total_unserved_kwh": 1923.1202331602497,
+            "evening_unserved_kwh": 1270.96785490505,
+            "overload_trips": 4,
+            "peak_import_kw": 320.84538007694414,
+            "household_dark_hours": 8655.0,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.25,
+            "total_unserved_kwh": 813.2220714046482,
+            "evening_unserved_kwh": 637.931447234652,
+            "overload_trips": 0,
+            "peak_import_kw": 266.75,
+            "household_dark_hours": 3750.5,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 3,
+          "id": "F03",
+          "households": 1354,
+          "peak_kw": 440.8,
+          "rating_kw": 450.0,
+          "rooftop_kwp": 336.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 14.906422018348625,
+            "school": 0.0,
+            "water_pumping": 18.63302752293578,
+            "street_lighting_core": 7.4532110091743125
+          },
+          "sps_member": true,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 18,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 1375.684160434571,
+            "evening_unserved_kwh": 734.8018431897262,
+            "overload_trips": 0,
+            "peak_import_kw": 440.79999999999984,
+            "household_dark_hours": 5754.5,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 1019.5570897475521,
+            "evening_unserved_kwh": 700.1468755976566,
+            "overload_trips": 0,
+            "peak_import_kw": 436.5,
+            "household_dark_hours": 3723.5,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 4,
+          "id": "F04",
+          "households": 1494,
+          "peak_kw": 490.5,
+          "rating_kw": 500.0,
+          "rooftop_kwp": 306.0,
+          "community_kwp": 90,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 20.559633027522935,
+            "street_lighting_core": 8.223853211009175
+          },
+          "sps_member": false,
+          "battery_kw": 140.0,
+          "battery_kwh": 280.0,
+          "is_pilot": false,
+          "rank": 19,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 1500.0572693246834,
+            "evening_unserved_kwh": 808.7349547668323,
+            "overload_trips": 0,
+            "peak_import_kw": 490.5000000000002,
+            "household_dark_hours": 6349.5,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 1179.6439914206464,
+            "evening_unserved_kwh": 822.6026700903228,
+            "overload_trips": 0,
+            "peak_import_kw": 485.0,
+            "household_dark_hours": 4108.5,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 5,
+          "id": "F05",
+          "households": 775,
+          "peak_kw": 236.5,
+          "rating_kw": 225.0,
+          "rooftop_kwp": 184.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 10.665137614678898,
+            "street_lighting_core": 4.26605504587156
+          },
+          "sps_member": false,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 15,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 702.5868821599421,
+            "evening_unserved_kwh": 385.6354206154086,
+            "overload_trips": 0,
+            "peak_import_kw": 236.5,
+            "household_dark_hours": 3293.75,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 538.9319551458972,
+            "evening_unserved_kwh": 379.8351859157324,
+            "overload_trips": 0,
+            "peak_import_kw": 218.25,
+            "household_dark_hours": 2131.25,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 6,
+          "id": "F06",
+          "households": 1154,
+          "peak_kw": 343.4,
+          "rating_kw": 300.0,
+          "rooftop_kwp": 268.0,
+          "community_kwp": 60,
+          "critical": {
+            "health_subcentre": 12.704587155963303,
+            "school": 8.469724770642202,
+            "water_pumping": 15.880733944954128,
+            "street_lighting_core": 6.352293577981651
+          },
+          "sps_member": false,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": false,
+          "rank": 1,
+          "baseline": {
+            "critical_outage_hours": 6.75,
+            "feeder_outage_hours": 6.75,
+            "total_unserved_kwh": 1677.089530234639,
+            "evening_unserved_kwh": 1180.0980326494255,
+            "overload_trips": 3,
+            "peak_import_kw": 325.838753455751,
+            "household_dark_hours": 7789.5,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 774.1022947092831,
+            "evening_unserved_kwh": 582.5180920959095,
+            "overload_trips": 0,
+            "peak_import_kw": 291.0,
+            "household_dark_hours": 3462.0,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 7,
+          "id": "F07",
+          "households": 1090,
+          "peak_kw": 340.0,
+          "rating_kw": 300.0,
+          "rooftop_kwp": 90.0,
+          "community_kwp": 60.0,
+          "critical": {
+            "health_subcentre": 12,
+            "school": 8,
+            "water_pumping": 15,
+            "street_lighting_core": 6
+          },
+          "sps_member": true,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": true,
+          "rank": 2,
+          "baseline": {
+            "critical_outage_hours": 6.5,
+            "feeder_outage_hours": 6.5,
+            "total_unserved_kwh": 1883.3279832479238,
+            "evening_unserved_kwh": 886.2357499610541,
+            "overload_trips": 2,
+            "peak_import_kw": 340.00000000000017,
+            "household_dark_hours": 7085.0,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 1086.314999757121,
+            "evening_unserved_kwh": 650.8504616703442,
+            "overload_trips": 0,
+            "peak_import_kw": 291.0,
+            "household_dark_hours": 3270.0,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 8,
+          "id": "F08",
+          "households": 1440,
+          "peak_kw": 477.7,
+          "rating_kw": 450.0,
+          "rooftop_kwp": 430.0,
+          "community_kwp": 85,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 19.816513761467892,
+            "street_lighting_core": 7.926605504587156
+          },
+          "sps_member": false,
+          "battery_kw": 140.0,
+          "battery_kwh": 280.0,
+          "is_pilot": false,
+          "rank": 14,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 1440.5300783749817,
+            "evening_unserved_kwh": 879.443180565203,
+            "overload_trips": 0,
+            "peak_import_kw": 477.70000000000005,
+            "household_dark_hours": 6120.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 1082.1398309086271,
+            "evening_unserved_kwh": 751.3482525993513,
+            "overload_trips": 0,
+            "peak_import_kw": 436.5,
+            "household_dark_hours": 3960.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 9,
+          "id": "F09",
+          "households": 856,
+          "peak_kw": 254.9,
+          "rating_kw": 250.0,
+          "rooftop_kwp": 232.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 6.28256880733945,
+            "water_pumping": 11.77981651376147,
+            "street_lighting_core": 4.711926605504587
+          },
+          "sps_member": false,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 12,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 773.1193007551337,
+            "evening_unserved_kwh": 484.95670826693583,
+            "overload_trips": 0,
+            "peak_import_kw": 247.76504051617343,
+            "household_dark_hours": 3638.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 613.4021930329776,
+            "evening_unserved_kwh": 452.6368283440829,
+            "overload_trips": 0,
+            "peak_import_kw": 242.5,
+            "household_dark_hours": 2568.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 10,
+          "id": "F10",
+          "households": 1333,
+          "peak_kw": 398.8,
+          "rating_kw": 375.0,
+          "rooftop_kwp": 287.0,
+          "community_kwp": 70,
+          "critical": {
+            "health_subcentre": 14.675229357798164,
+            "school": 9.78348623853211,
+            "water_pumping": 18.344036697247706,
+            "street_lighting_core": 7.337614678899082
+          },
+          "sps_member": false,
+          "battery_kw": 120.0,
+          "battery_kwh": 240.0,
+          "is_pilot": false,
+          "rank": 3,
+          "baseline": {
+            "critical_outage_hours": 5.25,
+            "feeder_outage_hours": 5.25,
+            "total_unserved_kwh": 1539.0688446686393,
+            "evening_unserved_kwh": 976.1099615887753,
+            "overload_trips": 1,
+            "peak_import_kw": 398.8000000000001,
+            "household_dark_hours": 6998.25,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.25,
+            "total_unserved_kwh": 1053.0992431971051,
+            "evening_unserved_kwh": 769.2867782025596,
+            "overload_trips": 0,
+            "peak_import_kw": 363.75,
+            "household_dark_hours": 4332.25,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 11,
+          "id": "F11",
+          "households": 768,
+          "peak_kw": 246.1,
+          "rating_kw": 200.0,
+          "rooftop_kwp": 108.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 5.636697247706422,
+            "water_pumping": 10.568807339449542,
+            "street_lighting_core": 4.227522935779817
+          },
+          "sps_member": true,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 7,
+          "baseline": {
+            "critical_outage_hours": 9.5,
+            "feeder_outage_hours": 9.5,
+            "total_unserved_kwh": 1893.6360797412021,
+            "evening_unserved_kwh": 1101.3209175861366,
+            "overload_trips": 5,
+            "peak_import_kw": 243.96557035340888,
+            "household_dark_hours": 7296.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 654.444819901842,
+            "evening_unserved_kwh": 474.2704685632914,
+            "overload_trips": 0,
+            "peak_import_kw": 194.0,
+            "household_dark_hours": 2304.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 12,
+          "id": "F12",
+          "households": 1505,
+          "peak_kw": 424.0,
+          "rating_kw": 400.0,
+          "rooftop_kwp": 143.0,
+          "community_kwp": 75,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 11.045871559633028,
+            "water_pumping": 20.711009174311926,
+            "street_lighting_core": 8.284403669724771
+          },
+          "sps_member": false,
+          "battery_kw": 120.0,
+          "battery_kwh": 240.0,
+          "is_pilot": false,
+          "rank": 10,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 1325.3964222443424,
+            "evening_unserved_kwh": 810.0602937953126,
+            "overload_trips": 0,
+            "peak_import_kw": 423.99999999999994,
+            "household_dark_hours": 6396.25,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.5,
+            "total_unserved_kwh": 1183.083253705062,
+            "evening_unserved_kwh": 864.3078130792782,
+            "overload_trips": 0,
+            "peak_import_kw": 388.0,
+            "household_dark_hours": 5267.5,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 13,
+          "id": "F13",
+          "households": 916,
+          "peak_kw": 260.6,
+          "rating_kw": 250.0,
+          "rooftop_kwp": 118.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 12.605504587155965,
+            "street_lighting_core": 5.042201834862386
+          },
+          "sps_member": false,
+          "battery_kw": 80.0,
+          "battery_kwh": 160.0,
+          "is_pilot": false,
+          "rank": 16,
+          "baseline": {
+            "critical_outage_hours": 3.75,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 742.1087679575667,
+            "evening_unserved_kwh": 462.30592669260835,
+            "overload_trips": 0,
+            "peak_import_kw": 260.59999999999997,
+            "household_dark_hours": 3664.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 588.3592092953238,
+            "evening_unserved_kwh": 432.8381563552766,
+            "overload_trips": 0,
+            "peak_import_kw": 242.5,
+            "household_dark_hours": 2748.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 14,
+          "id": "F14",
+          "households": 1310,
+          "peak_kw": 446.0,
+          "rating_kw": 400.0,
+          "rooftop_kwp": 302.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 9.614678899082568,
+            "water_pumping": 18.027522935779814,
+            "street_lighting_core": 7.211009174311926
+          },
+          "sps_member": false,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 9,
+          "baseline": {
+            "critical_outage_hours": 6.0,
+            "feeder_outage_hours": 6.0,
+            "total_unserved_kwh": 2006.7014900867266,
+            "evening_unserved_kwh": 1434.7325673137482,
+            "overload_trips": 2,
+            "peak_import_kw": 439.0197497980058,
+            "household_dark_hours": 7860.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 1075.4987958102108,
+            "evening_unserved_kwh": 775.5171395347438,
+            "overload_trips": 0,
+            "peak_import_kw": 388.0,
+            "household_dark_hours": 3602.5,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 15,
+          "id": "F15",
+          "households": 1214,
+          "peak_kw": 362.6,
+          "rating_kw": 350.0,
+          "rooftop_kwp": 334.0,
+          "community_kwp": 65,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 16.706422018348622,
+            "street_lighting_core": 6.6825688073394485
+          },
+          "sps_member": true,
+          "battery_kw": 110.0,
+          "battery_kwh": 220.0,
+          "is_pilot": false,
+          "rank": 17,
+          "baseline": {
+            "critical_outage_hours": 5.0,
+            "feeder_outage_hours": 5.25,
+            "total_unserved_kwh": 1399.7990785275417,
+            "evening_unserved_kwh": 1005.4867731261595,
+            "overload_trips": 1,
+            "peak_import_kw": 360.85168183955824,
+            "household_dark_hours": 6373.5,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.5,
+            "total_unserved_kwh": 727.9118628249116,
+            "evening_unserved_kwh": 528.2425377204294,
+            "overload_trips": 0,
+            "peak_import_kw": 339.5,
+            "household_dark_hours": 3035.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 16,
+          "id": "F16",
+          "households": 957,
+          "peak_kw": 324.7,
+          "rating_kw": 300.0,
+          "rooftop_kwp": 228.0,
+          "community_kwp": 60,
+          "critical": {
+            "health_subcentre": 10.535779816513761,
+            "school": 0.0,
+            "water_pumping": 13.169724770642203,
+            "street_lighting_core": 5.267889908256881
+          },
+          "sps_member": false,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": false,
+          "rank": 4,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 963.9044047727842,
+            "evening_unserved_kwh": 591.1446072381914,
+            "overload_trips": 0,
+            "peak_import_kw": 324.7,
+            "household_dark_hours": 3828.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.5,
+            "total_unserved_kwh": 745.4061390766476,
+            "evening_unserved_kwh": 553.9279288382822,
+            "overload_trips": 0,
+            "peak_import_kw": 291.0,
+            "household_dark_hours": 2392.5,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 17,
+          "id": "F17",
+          "households": 1401,
+          "peak_kw": 452.8,
+          "rating_kw": 450.0,
+          "rooftop_kwp": 286.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 15.423853211009174,
+            "school": 0.0,
+            "water_pumping": 19.279816513761467,
+            "street_lighting_core": 7.711926605504587
+          },
+          "sps_member": false,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 6,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 1371.7762548203318,
+            "evening_unserved_kwh": 838.830681502018,
+            "overload_trips": 0,
+            "peak_import_kw": 452.79999999999984,
+            "household_dark_hours": 5604.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 2.75,
+            "total_unserved_kwh": 1146.1842442730522,
+            "evening_unserved_kwh": 860.2961166433464,
+            "overload_trips": 0,
+            "peak_import_kw": 436.5,
+            "household_dark_hours": 3852.75,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 18,
+          "id": "F18",
+          "households": 1147,
+          "peak_kw": 367.2,
+          "rating_kw": 325.0,
+          "rooftop_kwp": 218.0,
+          "community_kwp": 65,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 15.784403669724771,
+            "street_lighting_core": 6.313761467889908
+          },
+          "sps_member": false,
+          "battery_kw": 110.0,
+          "battery_kwh": 220.0,
+          "is_pilot": false,
+          "rank": 13,
+          "baseline": {
+            "critical_outage_hours": 5.75,
+            "feeder_outage_hours": 6.0,
+            "total_unserved_kwh": 1556.2942006434616,
+            "evening_unserved_kwh": 1043.0509776615597,
+            "overload_trips": 2,
+            "peak_import_kw": 367.2000000000002,
+            "household_dark_hours": 6882.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 949.3492058755755,
+            "evening_unserved_kwh": 695.2523163307139,
+            "overload_trips": 0,
+            "peak_import_kw": 315.25,
+            "household_dark_hours": 3441.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 19,
+          "id": "F19",
+          "households": 747,
+          "peak_kw": 212.0,
+          "rating_kw": 200.0,
+          "rooftop_kwp": 156.0,
+          "community_kwp": 40,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 5.482568807339449,
+            "water_pumping": 10.279816513761467,
+            "street_lighting_core": 4.111926605504587
+          },
+          "sps_member": true,
+          "battery_kw": 60.0,
+          "battery_kwh": 120.0,
+          "is_pilot": false,
+          "rank": 11,
+          "baseline": {
+            "critical_outage_hours": 4.25,
+            "feeder_outage_hours": 4.25,
+            "total_unserved_kwh": 642.423747909264,
+            "evening_unserved_kwh": 419.4429779401982,
+            "overload_trips": 0,
+            "peak_import_kw": 211.9999999999999,
+            "household_dark_hours": 3174.75,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 486.5504364098646,
+            "evening_unserved_kwh": 372.97531687407366,
+            "overload_trips": 0,
+            "peak_import_kw": 194.0,
+            "household_dark_hours": 2241.0,
+            "critical_sites": 3
+          }
+        }
+      ],
+      "note": "Feeders do not interact: DISCOM requests are a share of each feeder's own load."
+    },
+    "representative": {
+      "n_feeders": 20,
+      "homes": 22246,
+      "feeders_overloaded_at_peak": 15,
+      "curve": [
+        {
+          "adoption": 0,
+          "feeders": 0,
+          "critical_outage_hours": 39.0,
+          "feeder_outage_hours": 39.0,
+          "total_unserved_kwh": 10068.175582031712,
+          "evening_unserved_kwh": 8097.668430472527,
+          "overload_trips": 39.0,
+          "household_dark_hours": 45424.0,
+          "critical_site_hours": 114.0,
+          "r3_feeder_head_peak_kw": 6494.102902175602,
+          "batteries_kwh": 0.0
+        },
+        {
+          "adoption": 0.25,
+          "feeders": 5,
+          "critical_outage_hours": 24.0,
+          "feeder_outage_hours": 24.0,
+          "total_unserved_kwh": 5881.442450638761,
+          "evening_unserved_kwh": 4651.991741337448,
+          "overload_trips": 24.0,
+          "household_dark_hours": 28242.0,
+          "critical_site_hours": 58.0,
+          "r3_feeder_head_peak_kw": 6261.255059120165,
+          "batteries_kwh": 1020.0
+        },
+        {
+          "adoption": 0.5,
+          "feeders": 10,
+          "critical_outage_hours": 14.0,
+          "feeder_outage_hours": 14.0,
+          "total_unserved_kwh": 3078.2813057916615,
+          "evening_unserved_kwh": 2353.969821291425,
+          "overload_trips": 14.0,
+          "household_dark_hours": 14601.0,
+          "critical_site_hours": 28.0,
+          "r3_feeder_head_peak_kw": 5988.375855437855,
+          "batteries_kwh": 2160.0
+        },
+        {
+          "adoption": 0.75,
+          "feeders": 15,
+          "critical_outage_hours": 0.0,
+          "feeder_outage_hours": 0.0,
+          "total_unserved_kwh": 6.213367877940929,
+          "evening_unserved_kwh": 0.0,
+          "overload_trips": 0.0,
+          "household_dark_hours": 0.0,
+          "critical_site_hours": 0.0,
+          "r3_feeder_head_peak_kw": 5752.589158444029,
+          "batteries_kwh": 3200.0
+        },
+        {
+          "adoption": 1.0,
+          "feeders": 20,
+          "critical_outage_hours": 0.0,
+          "feeder_outage_hours": 0.0,
+          "total_unserved_kwh": 6.213367877940929,
+          "evening_unserved_kwh": 0.0,
+          "overload_trips": 0.0,
+          "household_dark_hours": 0.0,
+          "critical_site_hours": 0.0,
+          "r3_feeder_head_peak_kw": 5678.000902620707,
+          "batteries_kwh": 4100.0
+        }
+      ],
+      "feeders": [
+        {
+          "group": 0,
+          "id": "F00",
+          "households": 687,
+          "peak_kw": 199.6,
+          "rating_kw": 200.0,
+          "rooftop_kwp": 190.0,
+          "community_kwp": 35,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 5.042201834862385,
+            "water_pumping": 9.454128440366972,
+            "street_lighting_core": 3.7816513761467885
+          },
+          "sps_member": false,
+          "battery_kw": 60.0,
+          "battery_kwh": 120.0,
+          "is_pilot": false,
+          "rank": 16,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 199.60000000000002,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 165.87939091574418,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 1,
+          "id": "F01",
+          "households": 1152,
+          "peak_kw": 369.1,
+          "rating_kw": 325.0,
+          "rooftop_kwp": 331.0,
+          "community_kwp": 65,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 15.853211009174313,
+            "street_lighting_core": 6.341284403669725
+          },
+          "sps_member": false,
+          "battery_kw": 110.0,
+          "battery_kwh": 220.0,
+          "is_pilot": false,
+          "rank": 13,
+          "baseline": {
+            "critical_outage_hours": 2.0,
+            "feeder_outage_hours": 2.0,
+            "total_unserved_kwh": 458.25854901122887,
+            "evening_unserved_kwh": 293.8904398775528,
+            "overload_trips": 2,
+            "peak_import_kw": 369.1000000000001,
+            "household_dark_hours": 2304.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 286.31553963058326,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 2,
+          "id": "F02",
+          "households": 1536,
+          "peak_kw": 452.1,
+          "rating_kw": 425.0,
+          "rooftop_kwp": 354.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 11.273394495412845,
+            "water_pumping": 21.137614678899084,
+            "street_lighting_core": 8.455045871559633
+          },
+          "sps_member": false,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 7,
+          "baseline": {
+            "critical_outage_hours": 3.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 914.0632819503094,
+            "evening_unserved_kwh": 794.0210588400769,
+            "overload_trips": 3,
+            "peak_import_kw": 452.09999999999997,
+            "household_dark_hours": 4608.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 382.01493472454064,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 3,
+          "id": "F03",
+          "households": 1284,
+          "peak_kw": 436.9,
+          "rating_kw": 400.0,
+          "rooftop_kwp": 295.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 17.6697247706422,
+            "street_lighting_core": 7.0678899082568805
+          },
+          "sps_member": true,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 14,
+          "baseline": {
+            "critical_outage_hours": 2.0,
+            "feeder_outage_hours": 2.0,
+            "total_unserved_kwh": 563.3815055115051,
+            "evening_unserved_kwh": 365.4137841758901,
+            "overload_trips": 2,
+            "peak_import_kw": 436.9000000000002,
+            "household_dark_hours": 2568.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 359.71074448435945,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 4,
+          "id": "F04",
+          "households": 1040,
+          "peak_kw": 299.9,
+          "rating_kw": 250.0,
+          "rooftop_kwp": 124.0,
+          "community_kwp": 55,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 14.311926605504588,
+            "street_lighting_core": 5.724770642201835
+          },
+          "sps_member": false,
+          "battery_kw": 90.0,
+          "battery_kwh": 180.0,
+          "is_pilot": false,
+          "rank": 10,
+          "baseline": {
+            "critical_outage_hours": 3.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 608.5872717847949,
+            "evening_unserved_kwh": 538.7935462528908,
+            "overload_trips": 3,
+            "peak_import_kw": 291.0618782343569,
+            "household_dark_hours": 3120.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 242.5,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 5,
+          "id": "F05",
+          "households": 825,
+          "peak_kw": 280.7,
+          "rating_kw": 275.0,
+          "rooftop_kwp": 90.0,
+          "community_kwp": 50,
+          "critical": {
+            "health_subcentre": 9.082568807339449,
+            "school": 0.0,
+            "water_pumping": 11.353211009174313,
+            "street_lighting_core": 4.541284403669724
+          },
+          "sps_member": false,
+          "battery_kw": 80.0,
+          "battery_kwh": 160.0,
+          "is_pilot": false,
+          "rank": 3,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 280.7,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 248.50174242623572,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 6,
+          "id": "F06",
+          "households": 936,
+          "peak_kw": 263.6,
+          "rating_kw": 275.0,
+          "rooftop_kwp": 95.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 12.880733944954128,
+            "street_lighting_core": 5.152293577981652
+          },
+          "sps_member": false,
+          "battery_kw": 80.0,
+          "battery_kwh": 160.0,
+          "is_pilot": false,
+          "rank": 18,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 263.60000000000025,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 227.63512481309152,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 7,
+          "id": "F07",
+          "households": 1090,
+          "peak_kw": 340.0,
+          "rating_kw": 300.0,
+          "rooftop_kwp": 90.0,
+          "community_kwp": 60.0,
+          "critical": {
+            "health_subcentre": 12,
+            "school": 8,
+            "water_pumping": 15,
+            "street_lighting_core": 6
+          },
+          "sps_member": true,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": true,
+          "rank": 1,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 1195.9191992720012,
+            "evening_unserved_kwh": 532.3965730859503,
+            "overload_trips": 4,
+            "peak_import_kw": 340.0000000000001,
+            "household_dark_hours": 4360.0,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 6.213367877940929,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 291.0,
+            "household_dark_hours": 0.0,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 8,
+          "id": "F08",
+          "households": 739,
+          "peak_kw": 237.6,
+          "rating_kw": 250.0,
+          "rooftop_kwp": 101.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 8.135779816513761,
+            "school": 0.0,
+            "water_pumping": 10.169724770642201,
+            "street_lighting_core": 4.0678899082568805
+          },
+          "sps_member": false,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 15,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 237.59999999999994,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 196.39486008215363,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 9,
+          "id": "F09",
+          "households": 1406,
+          "peak_kw": 453.6,
+          "rating_kw": 425.0,
+          "rooftop_kwp": 315.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 10.31926605504587,
+            "water_pumping": 19.34862385321101,
+            "street_lighting_core": 7.739449541284403
+          },
+          "sps_member": false,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 6,
+          "baseline": {
+            "critical_outage_hours": 3.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 913.9588013536099,
+            "evening_unserved_kwh": 719.580012120811,
+            "overload_trips": 3,
+            "peak_import_kw": 448.28583537971537,
+            "household_dark_hours": 4218.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 367.1727052577136,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 10,
+          "id": "F10",
+          "households": 1406,
+          "peak_kw": 440.9,
+          "rating_kw": 400.0,
+          "rooftop_kwp": 393.0,
+          "community_kwp": 80,
+          "critical": {
+            "health_subcentre": 15.478899082568805,
+            "school": 10.31926605504587,
+            "water_pumping": 19.34862385321101,
+            "street_lighting_core": 7.739449541284403
+          },
+          "sps_member": false,
+          "battery_kw": 130.0,
+          "battery_kwh": 260.0,
+          "is_pilot": false,
+          "rank": 2,
+          "baseline": {
+            "critical_outage_hours": 2.0,
+            "feeder_outage_hours": 2.0,
+            "total_unserved_kwh": 721.3296212376748,
+            "evening_unserved_kwh": 721.3296212376749,
+            "overload_trips": 2,
+            "peak_import_kw": 430.8504166796103,
+            "household_dark_hours": 2812.0,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 354.8818774893026,
+            "household_dark_hours": 0.0,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 11,
+          "id": "F11",
+          "households": 988,
+          "peak_kw": 333.0,
+          "rating_kw": 350.0,
+          "rooftop_kwp": 102.0,
+          "community_kwp": 60,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 13.59633027522936,
+            "street_lighting_core": 5.438532110091743
+          },
+          "sps_member": true,
+          "battery_kw": 100.0,
+          "battery_kwh": 200.0,
+          "is_pilot": false,
+          "rank": 19,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 332.9999999999998,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 275.41286081922595,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 12,
+          "id": "F12",
+          "households": 1406,
+          "peak_kw": 469.4,
+          "rating_kw": 475.0,
+          "rooftop_kwp": 355.0,
+          "community_kwp": 85,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 10.31926605504587,
+            "water_pumping": 19.34862385321101,
+            "street_lighting_core": 7.739449541284403
+          },
+          "sps_member": false,
+          "battery_kw": 140.0,
+          "battery_kwh": 280.0,
+          "is_pilot": false,
+          "rank": 17,
+          "baseline": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 469.4000000000002,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 388.72045507724926,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 13,
+          "id": "F13",
+          "households": 1339,
+          "peak_kw": 390.0,
+          "rating_kw": 375.0,
+          "rooftop_kwp": 192.0,
+          "community_kwp": 70,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 9.827522935779816,
+            "water_pumping": 18.426605504587155,
+            "street_lighting_core": 7.370642201834862
+          },
+          "sps_member": false,
+          "battery_kw": 110.0,
+          "battery_kwh": 220.0,
+          "is_pilot": false,
+          "rank": 8,
+          "baseline": {
+            "critical_outage_hours": 1.0,
+            "feeder_outage_hours": 1.0,
+            "total_unserved_kwh": 291.13813976488063,
+            "evening_unserved_kwh": 291.13813976488063,
+            "overload_trips": 1,
+            "peak_import_kw": 390.00000000000034,
+            "household_dark_hours": 1339.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 328.7244640698928,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 14,
+          "id": "F14",
+          "households": 1445,
+          "peak_kw": 407.3,
+          "rating_kw": 350.0,
+          "rooftop_kwp": 433.0,
+          "community_kwp": 75,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 10.605504587155963,
+            "water_pumping": 19.88532110091743,
+            "street_lighting_core": 7.954128440366972
+          },
+          "sps_member": false,
+          "battery_kw": 120.0,
+          "battery_kwh": 240.0,
+          "is_pilot": false,
+          "rank": 4,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 1247.4574955172347,
+            "evening_unserved_kwh": 1198.733598332281,
+            "overload_trips": 4,
+            "peak_import_kw": 405.82861046950796,
+            "household_dark_hours": 5780.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 328.35812919534067,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 15,
+          "id": "F15",
+          "households": 830,
+          "peak_kw": 256.5,
+          "rating_kw": 250.0,
+          "rooftop_kwp": 95.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 6.091743119266055,
+            "water_pumping": 11.422018348623853,
+            "street_lighting_core": 4.568807339449541
+          },
+          "sps_member": true,
+          "battery_kw": 80.0,
+          "battery_kwh": 160.0,
+          "is_pilot": false,
+          "rank": 9,
+          "baseline": {
+            "critical_outage_hours": 1.0,
+            "feeder_outage_hours": 1.0,
+            "total_unserved_kwh": 157.73667008360826,
+            "evening_unserved_kwh": 77.5717820421489,
+            "overload_trips": 1,
+            "peak_import_kw": 256.50000000000006,
+            "household_dark_hours": 830.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 208.15808036781905,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        },
+        {
+          "group": 16,
+          "id": "F16",
+          "households": 1263,
+          "peak_kw": 402.0,
+          "rating_kw": 350.0,
+          "rooftop_kwp": 355.0,
+          "community_kwp": 70,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 17.38073394495413,
+            "street_lighting_core": 6.952293577981652
+          },
+          "sps_member": false,
+          "battery_kw": 120.0,
+          "battery_kwh": 240.0,
+          "is_pilot": false,
+          "rank": 12,
+          "baseline": {
+            "critical_outage_hours": 3.0,
+            "feeder_outage_hours": 3.0,
+            "total_unserved_kwh": 745.6609922755479,
+            "evening_unserved_kwh": 525.4400962380626,
+            "overload_trips": 3,
+            "peak_import_kw": 393.8356155717216,
+            "household_dark_hours": 3789.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 322.92524307864016,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 17,
+          "id": "F17",
+          "households": 846,
+          "peak_kw": 257.1,
+          "rating_kw": 225.0,
+          "rooftop_kwp": 99.0,
+          "community_kwp": 45,
+          "critical": {
+            "health_subcentre": 9.313761467889908,
+            "school": 6.209174311926605,
+            "water_pumping": 11.642201834862385,
+            "street_lighting_core": 4.656880733944954
+          },
+          "sps_member": false,
+          "battery_kw": 80.0,
+          "battery_kwh": 160.0,
+          "is_pilot": false,
+          "rank": 0,
+          "baseline": {
+            "critical_outage_hours": 5.0,
+            "feeder_outage_hours": 5.0,
+            "total_unserved_kwh": 1028.2401832439805,
+            "evening_unserved_kwh": 993.2168964791723,
+            "overload_trips": 5,
+            "peak_import_kw": 257.1,
+            "household_dark_hours": 4230.0,
+            "critical_sites": 4
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 218.25,
+            "household_dark_hours": 0.0,
+            "critical_sites": 4
+          }
+        },
+        {
+          "group": 18,
+          "id": "F18",
+          "households": 705,
+          "peak_kw": 235.4,
+          "rating_kw": 200.0,
+          "rooftop_kwp": 187.0,
+          "community_kwp": 40,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 0.0,
+            "water_pumping": 9.701834862385322,
+            "street_lighting_core": 3.8807339449541285
+          },
+          "sps_member": false,
+          "battery_kw": 70.0,
+          "battery_kwh": 140.0,
+          "is_pilot": false,
+          "rank": 11,
+          "baseline": {
+            "critical_outage_hours": 4.0,
+            "feeder_outage_hours": 4.0,
+            "total_unserved_kwh": 696.1796193306438,
+            "evening_unserved_kwh": 630.4319547470287,
+            "overload_trips": 4,
+            "peak_import_kw": 234.2873672035672,
+            "household_dark_hours": 2820.0,
+            "critical_sites": 2
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 194.0,
+            "household_dark_hours": 0.0,
+            "critical_sites": 2
+          }
+        },
+        {
+          "group": 19,
+          "id": "F19",
+          "households": 1323,
+          "peak_kw": 406.7,
+          "rating_kw": 375.0,
+          "rooftop_kwp": 146.0,
+          "community_kwp": 75,
+          "critical": {
+            "health_subcentre": 0.0,
+            "school": 9.710091743119266,
+            "water_pumping": 18.206422018348622,
+            "street_lighting_core": 7.28256880733945
+          },
+          "sps_member": true,
+          "battery_kw": 120.0,
+          "battery_kwh": 240.0,
+          "is_pilot": false,
+          "rank": 5,
+          "baseline": {
+            "critical_outage_hours": 2.0,
+            "feeder_outage_hours": 2.0,
+            "total_unserved_kwh": 526.2642516946917,
+            "evening_unserved_kwh": 415.7109272781057,
+            "overload_trips": 2,
+            "peak_import_kw": 390.69712951569954,
+            "household_dark_hours": 2646.0,
+            "critical_sites": 3
+          },
+          "gridsetu": {
+            "critical_outage_hours": 0.0,
+            "feeder_outage_hours": 0.0,
+            "total_unserved_kwh": 0.0,
+            "evening_unserved_kwh": 0.0,
+            "overload_trips": 0,
+            "peak_import_kw": 345.23090075178516,
+            "household_dark_hours": 0.0,
+            "critical_sites": 3
+          }
+        }
+      ],
+      "note": "Feeders do not interact: DISCOM requests are a share of each feeder's own load."
+    }
+  },
+  "uc": {
+    "stress": {
+      "startups": {
+        "G1A": 0,
+        "G1B": 1,
+        "G2": 7
+      },
+      "hours_on_uc": {
+        "G1A": 168.0,
+        "G1B": 139.0,
+        "G2": 50.0
+      },
+      "hours_on_lp": {
+        "G2": 56.75
+      },
+      "shed_uc_mwh": 356.04365890894627,
+      "shed_lp_mwh": 337.26938869923697,
+      "cost_uc_inr": {
+        "energy": 177932039.3488963,
+        "startup": 1320000.0,
+        "shed": 4064542.85740978,
+        "total": 183316582.20630607
+      },
+      "cost_lp_inr": {
+        "energy": 178446997.72209612,
+        "startup": 0.0,
+        "shed": 3907379.306552108,
+        "total": 182354377.02864823
+      },
+      "note": "Day-ahead schedules on the forecast. Ramp limits are left out of the commitment problem."
+    }
+  }
+}

@@ -25,6 +25,35 @@ def test_numbers_registry_matches_readme(tmp_path):
     assert check_files(tmp_path, [str(ROOT / "README.md")]) == []
 
 
+def test_registry_covers_city_wams_power_flow_and_planning(tmp_path):
+    # figures the audit found only checked by eye: now registered and checked against the README
+    _copy_results(tmp_path)
+    figs = build_numbers(tmp_path)["figures"]
+    for key in ("city.baseline.ens_mwh", "city.coordinated.ens_mwh", "wams.A_baseline.nadir_hz",
+                "wams.B_baseline.nadir_hz", "wams.A.sps_shed_mw", "power_flow.max_220kv_line_loading_pct",
+                "power_flow.samples_over_100pct", "power_flow.v_33kv_range_pu", "planning.city_peak_mw",
+                "planning.city_load_factor", "planning.reserve_margin_at_peak_pct",
+                "island.pv_curtailed_kwh_change", "pilot.coordinated.evening_unserved_kwh"):
+        assert figs[key]["check"], key
+
+
+def test_new_outputs_register_when_present(tmp_path):
+    # reliability indices and 11 kV losses appear once results.json carries them (not quoted yet: unchecked)
+    import json
+    r = json.loads((ROOT / "outputs" / "results.json").read_text(encoding="utf-8"))
+    for side in ("baseline", "gridsetu", "gridsetu_coordinated"):
+        r["pilot_feeder_monthly"][side].update({k: {"mean": v, "min": v, "max": v} for k, v in (
+            ("saidi_h", 10.0), ("saifi", 4.0), ("caidi_h", 2.5), ("evening_supply_availability_pct", 95.0))})
+    r["power_flow_stress"]["feeder_11kv_losses"] = {
+        s: {"loss_kwh": 100.0, "energy_in_kwh": 40000.0, "loss_pct": 0.25} for s in ("baseline", "gridsetu")}
+    (tmp_path / "results.json").write_text(json.dumps(r), encoding="utf-8")
+    figs = build_numbers(tmp_path)["figures"]
+    assert figs["reliability.baseline.saidi_h"]["display"] == "10.0 h"
+    assert figs["reliability.gridsetu.saidi_h_per_year"]["value"] == 120
+    assert figs["losses.python_11kv.gridsetu.pct"]["display"] == "0.25%"
+    assert not figs["reliability.baseline.saidi_h"]["check"]
+
+
 def test_checker_catches_a_drifted_figure(tmp_path):
     _copy_results(tmp_path)
     doc = build_numbers(tmp_path)

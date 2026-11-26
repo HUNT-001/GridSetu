@@ -145,5 +145,7 @@ def run_power_flow(sc: Scenario, inp, rt, feeder_res, every: int = 1) -> pd.Data
             "feeder_tail_v_pu": float(fv[-1]) if not tripped else np.nan,
             "feeder_min_v_pu": float(fv.min()) if not tripped else np.nan,
             "feeder_head_mw": float(lines.p_from_mw.at[net.line.index[net.line.name == "F07 section 1"][0]]),
+            # I^2R in the pilot's own 11 kV sections (not the 33/11 kV transformer or the LV network)
+            "feeder_line_loss_mw": float(lines.pl_mw[net.line.name.str.startswith("F07 section")].sum()),
         })
     return pd.DataFrame(rows).set_index("timestamp")

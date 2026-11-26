@@ -54,13 +54,14 @@ From `python -m gridsetu export-matlab`. Each home, enterprise and critical load
 named bus; a test proves the bus loads add up to the feeder import at every step.
 
 **Q: Does GridSetu reduce technical losses?**
-Only where the storage sits. With the battery at the transformer, line losses are unchanged
-(2,204 vs 2,226 kWh in the stress week, the extra being energy served instead of shed). Split
-across the three circuits, the same battery cuts technical losses about 7%, to 2,047 kWh. We
-now recommend the split layout.
+Not with the battery at the transformer. In the stress week, technical losses (lines plus
+transformer) are 4,411 kWh in the baseline and 4,480 kWh with GridSetu: about 2% more, because
+GridSetu supplies energy that the baseline shed. Split across the three circuits, the same
+battery brings them to 4,203 kWh, about 5% below the baseline. So only the placement cuts
+losses, and we recommend the split layout. (`matlab/results/summary.json`; see `docs/NUMBERS_LEDGER.md`.)
 
 **Q: What does it do for the transformer?**
-Peak loading falls from 1.37 to 1.19 pu and the hot-spot peak by about 9 °C (IEC 60076-7 model).
+Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.6 °C, from 89.0 to 83.4 °C (IEC 60076-7 model, stress week).
 In this IS 1180 Level-2 unit ageing is already low in absolute terms, so the real benefit is
 fewer overload trips and headroom, not years of life.
 

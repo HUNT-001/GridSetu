@@ -14,6 +14,7 @@ from .comms import build_slices
 from .config import Scenario
 from .fairness import FairnessLedger
 from .profiles import FeederLoads
+from .reliability import reliability_indices
 from .reserve import ReliabilityReserve, size_reserve
 
 SOLVER = "appsi_highs"
@@ -362,6 +363,7 @@ def simulate_feeder(sc: Scenario, fl: FeederLoads, fc: dict, sig: FeederSignals,
     metrics["dark_home_hours_evening"] = float((hh_status[window] == 2).sum() * dt)
     metrics["lifeline_home_hours"] = float((hh_status == 3).sum() * dt)          # home limited to the lifeline
     metrics["lifeline_steps"] = int(lifeline_steps) if gs else 0
+    metrics.update(reliability_indices(hh_status, dt, sc.time_mask(*f.get("reliability_window", ("17:00", "23:00")))))
     return FeederResult(mode, ts, metrics, ledger.summary() if gs else {}, reserves,
                         [s.stats() for s in slices.values()] if gs else [], sizing_log,
                         {"household_hours": ledger.hours.copy(), "hh_status": hh_status,
@@ -430,6 +432,16 @@ def _deliverability(sc, fc, wsteps, soc_now, flex_kwh, bias, scale, b, E, rng, n
     return float(np.mean(need <= avail))
 
 
+def reserve_price_adder(f: dict) -> float:
+    """INR/kWh added to battery degradation in the reserve price (config: pilot_feeder.reserve_price).
+    The sourced build-up replaces the flat adder only once every item in it is filled."""
+    rp = f.get("reserve_price", {})
+    items = list((rp.get("build_up_inr_kwh") or {}).values())
+    if items and all(v is not None for v in items):
+        return float(sum(items))
+    return float(rp.get("adder_inr_kwh", 2.0))
+
+
 def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias, scale,
                     P, E, b, rng, delivered=None, headroom=None, call_rng=None):
     wsteps = steps[window[steps]]
@@ -454,7 +466,7 @@ def _reserve_object(stage, sc, fl, fc, steps, window, soc_ws, issued_step, bias,
         window_start=str(sc.index[ws]), window_end=str(sc.index[we] + pd.Timedelta(minutes=15)),
         reserve_kw=round(bat_kw + t3 + t2, 1), energy_kwh=round(e_bat + (t3 + t2) * dur, 1),
         duration_h=dur, confidence_pct=round(100 * conf, 1),
-        cost_inr_kwh=round(b["degradation_cost_inr_kwh"] + 2.0, 2),
+        cost_inr_kwh=round(b["degradation_cost_inr_kwh"] + reserve_price_adder(sc.feeder), 2),
         battery_kw=round(bat_kw, 1), tier3_kw=round(t3, 1), tier2_kw=round(t2, 1),
         delivered_kw=delivered,
         call_capacity_kw=None if call_kw is None else round(call_kw, 1),

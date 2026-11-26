@@ -1,0 +1,59 @@
+name: Regenerate outputs
+
+# Rebuilds the committed study outputs on the same platform and versions CI reproduces them with
+# (Ubuntu, Python 3.13, requirements-lock.txt) and uploads outputs/ as an artifact to review and
+# commit. Outputs made on another OS differ slightly and would fail the reproduce job.
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:                       # only changes that can move a result; docs-only pushes skip the ~8 min run
+      - "src/**"
+      - "config/**"
+      - "data/**"
+      - "requirements-lock.txt"
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-lock.txt
+      - run: pip install -r requirements-lock.txt
+      - name: Main study, 3 seeds (outputs/results.json, summary.txt, charts, tables)
+        run: PYTHONPATH=src python -m gridsetu run --seeds 3 --out outputs --quiet
+      - name: Real-data validation (outputs/real_data/)
+        run: PYTHONPATH=src python -m gridsetu real-data --out outputs/real_data > /dev/null
+      - name: Business case (outputs/economics/)
+        run: |
+          PYTHONPATH=src python -m gridsetu economics --out outputs/economics > /dev/null
+          PYTHONPATH=src python -m gridsetu ownership --out outputs/economics > /dev/null
+      - name: Fleet and unit commitment (outputs/phase2/)
+        run: PYTHONPATH=src python -m gridsetu phase2 --out outputs/phase2 > /dev/null
+      - name: Rebuild numbers.json and check the README
+        id: numbers
+        continue-on-error: true      # mismatches are expected after a regeneration; they are listed here
+        shell: bash                  # bash -eo pipefail, so tee does not hide a failed check
+        run: PYTHONPATH=src python -m gridsetu numbers --check README.md 2>&1 | tee numbers-check.txt
+      - name: Upload outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: outputs-${{ github.sha }}
+          path: outputs/
+          retention-days: 14
+      - name: Summary
+        if: always()
+        run: |
+          echo "README check: ${{ steps.numbers.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat numbers-check.txt >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat outputs/summary.txt >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"

@@ -444,7 +444,7 @@ The feeder has 1,090 homes whose load is fitted to measured Indian smart-meter d
 - **City:** energy not served fell from 723 MWh to 494 MWh with solar-hour irrigation and industrial DR. Traction, municipal, commercial and industrial loads were never shed.
 - **Protection:** in Case A the frequency nadir was 49.70 Hz and GridSetu's fast response cut special-protection shedding from 62 to 57 MW. In Case B (islanding) the nadir was 49.16 Hz, with two under-frequency stages operating.
 - **Isolated microgrid:** unserved energy fell from 613 to 114 kWh per week, diesel run hours from 139 to 116, and wasted solar from 441 to 22 kWh.
-- **AC power flow:** the most-loaded 220 kV line peaked at 110% of its thermal rating in 8 samples during the outage. Feeder voltages stayed within 0.99 to 1.03 pu.
+- **AC power flow:** the most-loaded 220 kV line peaked at 110% of its thermal rating in 8 samples during the outage. Voltages at the 33 kV substation buses stayed within 0.99 to 1.03 pu (the low-voltage network is covered by the MATLAB model below).
 - **Planning factors:** city peak 474 MW, load factor 0.70, reserve margin at peak 1.9%.
 
 ### City-wide fleet (Phase 2)
@@ -453,22 +453,22 @@ All 20 R3 domestic feeders (about 22,000 homes; 18 of 20 transformers overloaded
 
 | GridSetu on | Critical-site hours dark | Home-hours dark | Unserved energy | Overload trips | Batteries |
 |---|--:|--:|--:|--:|--:|
-| 0 of 20 feeders | 311 | 116,088 | 26,861 kWh | 22 | – |
-| 5 (25%) | 195 | 98,940 | 23,349 kWh | 12 | 1,040 kWh |
-| 10 (50%) | 105 | 83,976 | 20,268 kWh | 3 | 2,020 kWh |
-| 15 (75%) | 46 | 75,243 | 18,845 kWh | 1 | 3,020 kWh |
-| 20 (100%) | 0 | 65,554 | 17,182 kWh | 0 | 4,080 kWh |
+| 0 of 20 feeders | 310 h | 116,088 | 26,861 kWh | 22 | – |
+| 5 (25%) | 194 h | 98,940 | 23,346 kWh | 12 | 1,040 kWh |
+| 10 (50%) | 104 h | 83,976 | 20,259 kWh | 3 | 2,020 kWh |
+| 15 (75%) | 46 h | 75,243 | 18,836 kWh | 1 | 3,020 kWh |
+| 20 (100%) | 0 h | 65,554 | 17,170 kWh | 0 | 4,080 kWh |
 
 - **Critical loads:** the first quarter of the rollout removes over a third of the critical-site outage hours, because it targets the most overloaded feeders with clinics first. Full adoption removes all of them.
-- **Homes dark:** falls by 44% at full adoption in the stress week. The 30-hour generation shortfall is larger than feeder batteries can cover. Lifeline caps homes at 200 W instead of rotating them off, but real homes already draw little in the evening, so capping frees less than our first, heavier homes suggested (−75% with them).
+- **Homes dark:** −44% at full adoption in the stress week. The 30-hour generation shortfall is larger than feeder batteries can cover. Lifeline caps homes at 200 W instead of rotating them off, but real homes already draw little in the evening, so capping frees less than our first, heavier homes suggested (−75% with them).
 - **Normal week:** at 75% adoption no home is dark at all (45,424 home-hours at 0%), because transformer overload trips, the main cause of outages in a normal week, disappear.
 
 ### Unit commitment study
 
 A day-ahead mixed-integer schedule (PyPSA with HiGHS) against the linear market, stress week:
 - **Coal stays on all week.** Stopping a coal unit overnight saves less than its ₹9 lakh restart.
-- **Gas is started 8 times** for evening peaks and runs 49 hours, against 57 in the linear market.
-- **Peaks cost more than the linear market assumes.** A ₹60,000 start and a 20 MW minimum load make the gas unit too expensive for short spikes, so the schedule sheds 26 MWh more (363 against 337 MWh) and costs ₹11 lakh (0.6%) more. A tighter solver gap does not change this. Flexible demand, such as a GridSetu reserve, is worth more than the linear market suggests.
+- **Gas is started 7 times** for evening peaks and runs 50 hours, against 57 in the linear market.
+- **Peaks cost more than the linear market assumes.** A ₹60,000 start and a 20 MW minimum load make the gas unit too expensive for short spikes, so the schedule sheds more (356 against 337 MWh) and costs ₹10 lakh (0.5%) more. Flexible demand, such as a GridSetu reserve, is worth more than the linear market suggests.
 
 Feeder results use the linear market so they stay comparable with Phase 1.
 
@@ -501,7 +501,7 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 
 <img src="outputs/lv/charts/lv_placement.png" alt="Losses, voltage violations and peak transformer loading for three storage placements" width="100%">
 
-- **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.5 °C.
+- **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.6 °C.
 - **A battery at the transformer cannot cut line losses or voltage drop.** The current on the wires to the homes is the same either way, so technical losses barely move (they rise 2%, because GridSetu serves more energy and recharges the battery over the same wires).
 - **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 5% and lifts the worst voltage from 0.79 to 0.80 pu. This is now the recommended layout.
 - **Voltage stays outside limits on the assumed network in every case.** Long, heavily loaded LT circuits are the cause; GridSetu's bus-level voltage map shows the DISCOM exactly where reconductoring would pay off.
