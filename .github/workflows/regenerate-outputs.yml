@@ -5,6 +5,8 @@ name: Regenerate outputs
 # commit. Outputs made on another OS differ slightly and would fail the reproduce job.
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
 
 jobs:
   regenerate:
@@ -23,13 +25,16 @@ jobs:
       - name: Real-data validation (outputs/real_data/)
         run: PYTHONPATH=src python -m gridsetu real-data --out outputs/real_data > /dev/null
       - name: Business case (outputs/economics/)
-        run: PYTHONPATH=src python -m gridsetu economics --out outputs/economics > /dev/null
+        run: |
+          PYTHONPATH=src python -m gridsetu economics --out outputs/economics > /dev/null
+          PYTHONPATH=src python -m gridsetu ownership --out outputs/economics > /dev/null
       - name: Fleet and unit commitment (outputs/phase2/)
         run: PYTHONPATH=src python -m gridsetu phase2 --out outputs/phase2 > /dev/null
       - name: Rebuild numbers.json and check the README
         id: numbers
         continue-on-error: true      # mismatches are expected after a regeneration; they are listed here
-        run: PYTHONPATH=src python -m gridsetu numbers --check README.md
+        shell: bash                  # bash -eo pipefail, so tee does not hide a failed check
+        run: PYTHONPATH=src python -m gridsetu numbers --check README.md 2>&1 | tee numbers-check.txt
       - name: Upload outputs
         if: always()
         uses: actions/upload-artifact@v4
@@ -41,6 +46,9 @@ jobs:
         if: always()
         run: |
           echo "README check: ${{ steps.numbers.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          cat numbers-check.txt >> "$GITHUB_STEP_SUMMARY" || true
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
           echo '```' >> "$GITHUB_STEP_SUMMARY"
           cat outputs/summary.txt >> "$GITHUB_STEP_SUMMARY" || true
           echo '```' >> "$GITHUB_STEP_SUMMARY"

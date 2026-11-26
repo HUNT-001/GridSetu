@@ -59,7 +59,7 @@ Contradictions that need fixing whatever the team decides:
    from `matlab/results/f07_stress_*_steps.csv`; not yet a committed output.
 6. **Stale loss figures in the docs.** `docs/QA_BANK.md` says the split battery "cuts
    technical losses about 7%, to 2,047 kWh". `docs/TEAM_BRIEF.md` says 7% and 0.83 pu.
-   `matlab/results/summary.json` says 4,480 → 4,202 kWh (−6%, or −4.7% against the
+   `matlab/results/summary.json` says 4,480 → 4,203 kWh (−6%, or −4.7% against the
    baseline's 4,411 kWh) and 0.79 → 0.81 pu. The README agrees with `summary.json`.
 
 ### Every place that assumes a view

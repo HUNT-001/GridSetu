@@ -501,7 +501,7 @@ The simulator above treats the feeder as one point, so it cannot see losses or v
 
 <img src="outputs/lv/charts/lv_placement.png" alt="Losses, voltage violations and peak transformer loading for three storage placements" width="100%">
 
-- **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.5 °C.
+- **GridSetu protects the transformer.** Peak loading falls from 1.37 to 1.20 pu and the hot-spot peak by about 5.6 °C.
 - **A battery at the transformer cannot cut line losses or voltage drop.** The current on the wires to the homes is the same either way, so technical losses barely move (they rise 2%, because GridSetu serves more energy and recharges the battery over the same wires).
 - **Where the storage sits matters.** The same battery split across the middle of each circuit cuts technical losses by about 5% and lifts the worst voltage from 0.79 to 0.80 pu. This is now the recommended layout.
 - **Voltage stays outside limits on the assumed network in every case.** Long, heavily loaded LT circuits are the cause; GridSetu's bus-level voltage map shows the DISCOM exactly where reconductoring would pay off.

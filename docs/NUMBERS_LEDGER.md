@@ -68,7 +68,7 @@ losses in either model.** Only the split battery (one third mid-way along each L
 
 | Figure, stress week | Baseline | GridSetu (battery at the transformer / 11 kV node 3) | GridSetu, battery split across the 3 LV circuits | Key | Status |
 |---|--:|--:|--:|---|---|
-| MATLAB LV model: lines + transformer, kWh | 4,411 | 4,480 (+1.6%) | 4,202 (−4.7%) | `lv.stress.{baseline,gridsetu,gridsetu_distributed}.technical_loss_kwh` ← `matlab/results/summary.json` | CHECKED |
+| MATLAB LV model: lines + transformer, kWh | 4,411 | 4,480 (+1.6%) | 4,203 (−4.7%) | `lv.stress.{baseline,gridsetu,gridsetu_distributed}.technical_loss_kwh` ← `matlab/results/summary.json` | CHECKED |
 | MATLAB LV model: % of energy | 10.40% | 10.33% | 9.75% | `lv.stress.*.technical_loss_pct` | REGISTERED |
 | MATLAB LV model, representative week, kWh (%) | 4,282 (10.01%) | 4,432 (10.03%) | 4,074 (9.29%) | `lv.representative.*` | REGISTERED |
 | Python power flow: pilot's 11 kV line sections, kWh | 129 | 132 | not modelled | `losses.python_11kv.{baseline,gridsetu}.kwh` ← `results.json:power_flow_stress.feeder_11kv_losses.*.loss_kwh` | PROVISIONAL |
@@ -169,7 +169,7 @@ committed file and say "within the solver's 0.5% optimality gap". `phase2` is st
 | **1. Bridge intermittency gaps**: reliable supply when renewable output falls below demand | Quantile forecast → day-ahead Reliability Reserve → battery, fair Tier-3 pauses and lifeline in the evening ramp | Evening unserved −74%, critical outage 16.7 → 0.0 h (CHECKED); SAIDI 16.7 → 2.3 h per home per month, evening availability 91.1% → 98.6% (PROVISIONAL) | Part of the baseline's outages are transformer overloads that a bigger transformer would also remove (TOPOLOGY.md) |
 | **2. Stay local and manageable**: neighbourhood level, minimal grid intervention | One edge controller and one community battery per feeder; the DISCOM sees one Reliability Reserve object; no feeder pushes its burden onto a neighbour | Critical outage stays 0.0 h with 60% message loss (`comms_60pct_loss.critical_outage_h`, REGISTERED); fleet: 18 of 20 overloaded feeders served without new wires (PROVISIONAL) | The island needs an interlocked breaker and a dedicated critical circuit (HOW_IT_WORKS_PHYSICALLY.md) |
 | **3. Be genuinely affordable** for low-income communities | Battery as a service at the benchmark tariff, owned by a resident cooperative; homes pay through the DISCOM, not up front | ₹69 per home per month, break-even ₹21.8 per avoided kWh vs diesel about ₹33 (CHECKED); ₹5.55 per household-hour of outage avoided (PROVISIONAL) | A battery kWh costs about ₹10.9, above the ₹10 IEX ceiling: the value is reliability, not trading. The capex method and the transformer deferral are PENDING_SOURCE |
-| **4. Support the DISCOM**: data, forecasts, demand-response signals; manage feeder loads **and reduce technical losses** | Calibrated day-ahead reserve with a call capacity and confidence, published to the ADMS; per-bus LV model | Peak 340 → 291 kW, overload trips 13 → 0 (CHECKED); transformer peak loading 1.37 → 1.20 pu, hot-spot 89.0 → 83.5 °C (`lv.stress.*`, CHECKED) | **Losses are not reduced** with the battery at the transformer (LV 4,411 → 4,480 kWh; 11 kV 0.34% both). Only the split battery cuts them (−4.7%). Voltage violations are computed but not on the dashboard (BRIEF_GAPS.md (a)) |
+| **4. Support the DISCOM**: data, forecasts, demand-response signals; manage feeder loads **and reduce technical losses** | Calibrated day-ahead reserve with a call capacity and confidence, published to the ADMS; per-bus LV model | Peak 340 → 291 kW, overload trips 13 → 0 (CHECKED); transformer peak loading 1.37 → 1.20 pu, hot-spot 89.0 → 83.4 °C (`lv.stress.*`, CHECKED) | **Losses are not reduced** with the battery at the transformer (LV 4,411 → 4,480 kWh; 11 kV 0.34% both). Only the split battery cuts them (−4.7%). Voltage violations are computed but not on the dashboard (BRIEF_GAPS.md (a)) |
 | Required: **measurable reliability improvement against a defined baseline** | Baseline sentence in section 1; SAIDI, SAIFI, ENS, evening availability | Section 2 | Report the seed range with each headline |
 
 ## 9. Known issues with the numbers themselves
@@ -187,16 +187,17 @@ committed file and say "within the solver's 0.5% optimality gap". `phase2` is st
 
 ## To finish this ledger (needs Linux, Python 3.13, `requirements-lock.txt`)
 
-Run the **Regenerate outputs** workflow (`.github/workflows/regenerate-outputs.yml`, Actions tab →
-Run workflow) and commit the `outputs/` artifact it uploads. It runs:
+The **Regenerate outputs** workflow (`.github/workflows/regenerate-outputs.yml`) runs on every PR to main and from Actions tab →
+Run workflow; commit the `outputs/` artifact it uploads. It runs:
 
 ```bash
 pip install -r requirements-lock.txt
 python -m gridsetu run --seeds 3 --out outputs           # ~3 min
 python -m gridsetu real-data --out outputs/real_data     # ~1 min; real_data.json stores every feeder metric
 python -m gridsetu economics --out outputs/economics     # ~5 min
+python -m gridsetu ownership --out outputs/economics     # seconds; reads economics.json
 python -m gridsetu phase2 --out outputs/phase2           # ~6 min
 python -m gridsetu numbers --check README.md             # fix each MISMATCH in the README
 ```
-After committing, CI's `reproduce` job must print REPRODUCED three times. Then change PROVISIONAL to
+After committing, CI's `reproduce` job must print REPRODUCED four times. Then change PROVISIONAL to
 the committed values in this file.
