@@ -319,8 +319,8 @@
     "n_evenings": 60,
     "share_of_all_evenings_pct": 14.3,
     "held_pct": 0.0,
-    "request_over_reserve_median": 2.37,
-    "request_over_reserve_min": 1.59,
+    "request_over_reserve_median": 2.35,
+    "request_over_reserve_min": 1.62,
     "request_over_reserve_max": 4.54,
     "stated_confidence_mean_pct": 100.0,
     "within_offer_n": 0,
@@ -330,7 +330,7 @@
     "all_calls_met_pct": 0.0,
     "call_confidence_mean_pct": 90.0,
     "request_over_call_capacity_median": 2.15,
-    "request_over_call_capacity_max": 2.84
+    "request_over_call_capacity_max": 2.82
   },
   "call_confidence": {
     "within_offer": {

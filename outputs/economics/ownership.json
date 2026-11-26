@@ -1,0 +1,65 @@
+{
+  "about": {
+    "label": "SIMULATION-based costs; funding model for one feeder (1 battery, 1090 homes). Rs per year unless stated.",
+    "inputs": {
+      "local_operator_inr_per_month": {
+        "value": 8000,
+        "tag": "ASSUMED",
+        "note": "a part-time trained local operator (for example from a women's self-help group): daily checks, first-line faults, the residents' help desk"
+      },
+      "transformer_augmentation_inr": {
+        "value": 1998900.0,
+        "tag": "SOURCED",
+        "note": "MSEDCL activity rates (Nov 2024), item 1305, augmentation of an existing distribution transformer centre from 315 to 630 kVA, DPR rate (Rs lakh)",
+        "url": "https://mahadiscom.in/supplier/wp-content/uploads/2024/11/Activity_Rates.pdf"
+      },
+      "discom_cost_of_capital": {
+        "value": 0.095,
+        "tag": "ASSUMED",
+        "note": "deferring that augmentation by a year is worth its capital cost x this rate"
+      },
+      "tn_free_power_subsidy_inr_per_year": {
+        "value": 17300000000.0,
+        "tag": "SOURCED",
+        "note": "Tamil Nadu, May 2026: free domestic units raised from 100 to 200 per bill; adds about Rs 1,730 crore a year to the subsidy (DT Next, 10 May 2026; TNERC approved Rs 1,545 crore for 326 days of 2026-27, Mercom, 28 May 2026)",
+        "url": "https://www.dtnext.in/news/tamilnadu/free-power-supply-up-to-200-units-to-benefit-146-cr-domestic-consumers"
+      },
+      "tn_free_power_extra_consumers": {
+        "value": 14600000.0,
+        "tag": "SOURCED",
+        "note": "consumers who gain from the change (DT Next)"
+      },
+      "vgf_inr_per_mwh": {
+        "value": 1800000.0,
+        "tag": "SOURCED",
+        "note": "Ministry of Power viability gap funding, second tranche (June 2025): Rs 1.8 million per MWh of battery storage, 30 GWh (Mercom, 10 June 2025). For grid-scale tenders; community batteries would need to be aggregated into a state tender",
+        "url": "https://mercomindia.com/government-54-billion-vgf-battery-storage"
+      }
+    }
+  },
+  "homes": 1090,
+  "annual_cost_inr": {
+    "battery_service": 552000,
+    "smart_plugs": 327000,
+    "controller_comms": 25000,
+    "local_operator": 96000,
+    "total": 1000000
+  },
+  "per_home_per_month_inr": 76.5,
+  "who_pays": {
+    "discom_availability_fee": 673000,
+    "plug_grant_one_off_inr": 1635000,
+    "plug_grant_annualised": 327000,
+    "homes_extra": 0
+  },
+  "discom_gets_back": {
+    "transformer_upgrade_deferred": 189896,
+    "technical_losses_avoided_kwh": 10741,
+    "technical_losses_avoided_inr": 42962
+  },
+  "discom_net_cost": 440142,
+  "discom_net_cost_per_avoided_outage_kwh": 8.45,
+  "unserved_avoided_kwh_per_year": 52081,
+  "vgf_if_aggregated_inr_one_off": 360000,
+  "tn_free_power_increase_per_home_per_month_inr": 98.7
+}

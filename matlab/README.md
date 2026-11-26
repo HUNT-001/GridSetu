@@ -60,20 +60,22 @@ the same model as a plain loop. It prints the key numbers and writes
 
 **The sequence (compressed outage, 9 s):**
 
-| Time | Event | GridSetu | Baseline |
-|---|---|---|---|
-| 1.00 s | Feeder breaker opens | Inverter cannot hold the whole feeder: voltage collapses to 0.55 pu | Critical bus dark |
-| +40 ms | Undervoltage confirmed (2 cycles) | Static switch told to open the tie | |
-| +100 ms | Tie open | Inverter becomes grid-forming; 0.99 pu within 50 ms | |
-| 2.5 s | Water pump starts (direct-on-line, 5× current) | Voltage dips to 0.965 pu, frequency to 49.84 Hz, secondary control restores 50 Hz | |
-| 5.0 s | Grid returns, 115° out of phase | Island speeds up 0.3 Hz to catch the grid's phase | Critical bus back on |
-| 6.94 s | Within 10° and 0.1 Hz for 0.2 s | Tie closes in phase; battery ramps back to its 90 kW dispatch | |
+Three variants: 0 baseline (no battery), 1 GridSetu with an inverter that follows the grid and an
+ordinary island switch, 2 GridSetu with an inverter that is always grid-forming and a static
+transfer switch (recommended).
 
-Critical loads see under 0.9 pu for 115 ms, then stay on: in the baseline they are dark for the
-whole outage. The 100 ms at 0.55 pu is a flicker that lights, fans and the pump ride through, but
-it is outside the ITIC/CBEMA curve for sensitive electronics (below 70 % for more than 20 ms), so
-the clinic's equipment needs a small UPS or a faster transfer. An inverter that stays
-grid-forming while connected would remove the dip; that is the next variant to model.
+| Time | Event | Variant 1 | Variant 2 (recommended) | Baseline |
+|---|---|---|---|---|
+| 1.00 s | Feeder breaker opens | Voltage collapses to 0.55 pu | Inverter holds 0.34 pu at its current limit | Critical bus dark |
+| | Island formed | after 100 ms (40 ms detect + 60 ms switch) | after 4 ms (static switch, ABB published sense + transfer < 4 ms) | |
+| | Below 0.7 pu / below 0.9 pu | 100 ms / 115 ms | 12 ms / 23 ms | |
+| | ITIC ride-through for sensitive electronics | outside | **within** | |
+| 2.5 s | Water pump starts (direct-on-line, 5× current) | Voltage dips to 0.965 pu, frequency to 49.84 Hz, secondary control restores 50 Hz | same | |
+| 5.0 s | Grid returns, 115° out of phase | Island speeds up 0.3 Hz to catch the grid's phase | same | Critical bus back on |
+| 6.94 s | Within 10° and 0.1 Hz for 0.2 s | Tie closes in phase; battery ramps back to its 90 kW dispatch | same | |
+
+The recommended design needs a grid-forming inverter and a static transfer switch, whose extra
+cost is still to be quoted.
 
 **How it is built.** `build_islanding_model.m` generates the Simulink model as code: a Digital
 Clock, a MATLAB Function block (`GridSetu critical bus`) that calls `islanding_step.m`, a Unit
@@ -83,7 +85,8 @@ power, battery current). `islanding_reference.m` runs the same step function as 
 
 **What it is, and is not.** An average-value (RMS) model: the inverter is a controlled voltage
 source behind its control loops (1 % frequency droop, 5 % voltage droop, secondary frequency
-restoration, 1.1× current limit), loads are constant impedance, and the pump start is a decaying
+restoration, 1.1× current limit), loads are constant impedance (ITIC is the CBEMA curve for IT
+equipment, used as a guide), and the pump start is a decaying
 inrush current. It does not model switching ripple or individual phases. Detection, switch and
 control settings are assumptions in `islanding_params.m`, each marked, to be confirmed with an
 inverter vendor and against the DISCOM's protection settings.

@@ -50,6 +50,12 @@ p.ramp_back = 60;      % kW/s, ramp back to the dispatch after reconnection
 p.uv_detect  = 0.88;   % pu, undervoltage that signals loss of grid
 p.t_detect   = 0.04;   % s, two cycles below it
 p.t_switch   = 0.06;   % s, three cycles for the static switch to open the tie
+% Variant 2: the inverter stays grid-forming while connected, so it sees the grid go at once
+% (it hits its current limit), and a thyristor static transfer switch separates the critical bus.
+% SOURCED: ABB Cyberex SuperSwitch 4 data sheet, "sense + transfer time (in phase) < 4 ms";
+% split here as 2 ms to sense and 2 ms to open.
+p.t_detect_fast = 0.002;  % s
+p.t_switch_fast = 0.002;  % s
 
 % ---- grid -----------------------------------------------------------------------------------
 p.f0 = 50;  p.v_grid = 1.0;

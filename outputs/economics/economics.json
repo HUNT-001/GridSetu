@@ -31,10 +31,10 @@
         "battery_discharge_kwh": 0.0
       },
       "gridsetu": {
-        "unserved_kwh": 903.1917135727923,
-        "import_kwh": 38923.62244666991,
-        "energy_cost_inr": 151560.5138087135,
-        "battery_discharge_kwh": 1019.7430276117462
+        "unserved_kwh": 900.4769424624474,
+        "import_kwh": 38925.927956704,
+        "energy_cost_inr": 151609.82848899774,
+        "battery_discharge_kwh": 1015.954739187845
       }
     },
     "representative": {
@@ -45,16 +45,16 @@
         "battery_discharge_kwh": 0.0
       },
       "gridsetu": {
-        "unserved_kwh": 3.551292652368345,
-        "import_kwh": 39310.102974348345,
-        "energy_cost_inr": 158836.5531487964,
-        "battery_discharge_kwh": 955.5531123879
+        "unserved_kwh": 2.0711226259803097,
+        "import_kwh": 39312.33297017301,
+        "energy_cost_inr": 158687.5486048336,
+        "battery_discharge_kwh": 962.4938075976106
       }
     }
   },
   "annual": {
-    "unserved_avoided_kwh_per_year": 51988,
-    "extra_energy_cost_inr_per_year": 229284,
+    "unserved_avoided_kwh_per_year": 52081,
+    "extra_energy_cost_inr_per_year": 224114,
     "avg_purchase_price_inr_per_kwh": {
       "baseline": 4.0,
       "gridsetu": 4.0
@@ -66,19 +66,19 @@
     },
     "total_cost_inr_per_year": 904000,
     "cost_per_home_per_month_inr": 69.1,
-    "breakeven_value_inr_per_kwh": 21.8,
+    "breakeven_value_inr_per_kwh": 21.66,
     "at_reference_values": {
       "iex_ceiling": {
         "value_inr_per_kwh": 10.0,
-        "reliability_value_inr": 519876,
-        "net_inr_per_year": -613408,
+        "reliability_value_inr": 520806,
+        "net_inr_per_year": -607308,
         "benefit_cost_ratio": 0.46
       },
       "diesel_backup": {
         "value_inr_per_kwh": 33.18,
-        "reliability_value_inr": 1725123,
-        "net_inr_per_year": 591839,
-        "benefit_cost_ratio": 1.52
+        "reliability_value_inr": 1728210,
+        "net_inr_per_year": 600095,
+        "benefit_cost_ratio": 1.53
       }
     }
   },
@@ -87,33 +87,33 @@
       "assumption": "Community-scale battery premium",
       "low_setting": "1x (utility price)",
       "high_setting": "3x",
-      "breakeven_low": 16.49,
-      "breakeven_high": 27.11,
-      "base": 21.8
+      "breakeven_low": 16.36,
+      "breakeven_high": 26.96,
+      "base": 21.66
     },
     {
       "assumption": "Battery tariff",
       "low_setting": "\u20b91.48 lakh (lowest 2025 bid)",
       "high_setting": "\u20b93.0 lakh",
-      "breakeven_low": 18.01,
-      "breakeven_high": 25.03,
-      "base": 21.8
+      "breakeven_low": 17.88,
+      "breakeven_high": 24.89,
+      "base": 21.66
     },
     {
       "assumption": "Stress weeks per year",
       "low_setting": "26",
       "high_setting": "4",
-      "breakeven_low": 19.95,
-      "breakeven_high": 23.35,
-      "base": 21.8
+      "breakeven_low": 19.87,
+      "breakeven_high": 23.17,
+      "base": 21.66
     },
     {
       "assumption": "Smart plug cost per home",
       "low_setting": "\u20b9750",
       "high_setting": "\u20b93,000",
-      "breakeven_low": 18.65,
-      "breakeven_high": 28.09,
-      "base": 21.8
+      "breakeven_low": 18.52,
+      "breakeven_high": 27.94,
+      "base": 21.66
     }
   ]
 }

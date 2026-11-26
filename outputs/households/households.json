@@ -95,12 +95,12 @@
         "overload_trips": 13.0
       },
       "gridsetu": {
-        "evening_window_unserved_kwh": 576.5,
-        "total_unserved_kwh": 913.8,
+        "evening_window_unserved_kwh": 574.3,
+        "total_unserved_kwh": 906.7,
         "critical_outage_hours": 0.0,
         "feeder_outage_hours": 2.2,
-        "dark_home_hours": 2483.9,
-        "lifeline_home_hours": 1017.4,
+        "dark_home_hours": 2483.2,
+        "lifeline_home_hours": 1002.2,
         "overload_trips": 0.0
       },
       "home_kwh_per_day": 4.89
@@ -116,12 +116,12 @@
         "overload_trips": 10.0
       },
       "gridsetu": {
-        "evening_window_unserved_kwh": 483.5,
-        "total_unserved_kwh": 620.5,
+        "evening_window_unserved_kwh": 482.3,
+        "total_unserved_kwh": 619.3,
         "critical_outage_hours": 0.0,
         "feeder_outage_hours": 0.5,
-        "dark_home_hours": 291.2,
-        "lifeline_home_hours": 2137.6,
+        "dark_home_hours": 290.9,
+        "lifeline_home_hours": 2137.9,
         "overload_trips": 0.0
       },
       "home_kwh_per_day": 8.64

@@ -42,6 +42,8 @@ def main(argv=None):
     hc.add_argument("--sensitivity", action="store_true", help="also re-run with 720 and 1,030 homes (~10 min)")
     ec = sub.add_parser("economics", help="rupee business case priced with real IEX prices")
     ec.add_argument("--out", default="outputs/economics")
+    ow = sub.add_parser("ownership", help="who owns, runs and pays: the funding model for one feeder")
+    ow.add_argument("--out", default="outputs/economics")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
     rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
@@ -121,6 +123,11 @@ def main(argv=None):
         print(json.dumps(r["annual"], indent=2))
         for srow in r["sensitivity"]:
             print(f"  {srow['assumption']}: break-even {srow['breakeven_low']} .. {srow['breakeven_high']} INR/kWh")
+        return
+    if args.cmd == "ownership":
+        from .ownership import run_study as run_own
+        r = run_own(args.out)
+        print(json.dumps({k: v for k, v in r.items() if k != "about"}, indent=1))
         return
     if args.cmd == "real-data":
         from .realstudy import run_study
