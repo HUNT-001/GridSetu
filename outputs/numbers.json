@@ -815,10 +815,10 @@
     },
     "fleet.stress.0.critical_site_hours": {
       "value": 310,
-      "unit": "h/stress week",
-      "display": "310",
+      "unit": "site-hours/stress week",
+      "display": "310 h",
       "source": "phase2/phase2.json:fleet.stress.curve[adoption=0].critical_site_hours",
-      "check": false
+      "check": true
     },
     "fleet.stress.0.home_hours_dark": {
       "value": 116088,
@@ -836,10 +836,10 @@
     },
     "fleet.stress.5.critical_site_hours": {
       "value": 194,
-      "unit": "h/stress week",
-      "display": "194",
+      "unit": "site-hours/stress week",
+      "display": "194 h",
       "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.25].critical_site_hours",
-      "check": false
+      "check": true
     },
     "fleet.stress.5.home_hours_dark": {
       "value": 98940,
@@ -864,10 +864,10 @@
     },
     "fleet.stress.10.critical_site_hours": {
       "value": 104,
-      "unit": "h/stress week",
-      "display": "104",
+      "unit": "site-hours/stress week",
+      "display": "104 h",
       "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.5].critical_site_hours",
-      "check": false
+      "check": true
     },
     "fleet.stress.10.home_hours_dark": {
       "value": 83976,
@@ -892,10 +892,10 @@
     },
     "fleet.stress.15.critical_site_hours": {
       "value": 46,
-      "unit": "h/stress week",
-      "display": "46",
+      "unit": "site-hours/stress week",
+      "display": "46 h",
       "source": "phase2/phase2.json:fleet.stress.curve[adoption=0.75].critical_site_hours",
-      "check": false
+      "check": true
     },
     "fleet.stress.15.home_hours_dark": {
       "value": 75243,
@@ -920,8 +920,8 @@
     },
     "fleet.stress.20.critical_site_hours": {
       "value": 0,
-      "unit": "h/stress week",
-      "display": "0",
+      "unit": "site-hours/stress week",
+      "display": "0 h",
       "source": "phase2/phase2.json:fleet.stress.curve[adoption=1.0].critical_site_hours",
       "check": false
     },

@@ -137,7 +137,7 @@ Regenerate outputs workflow. "Before" is what the README said until that file wa
 | Figure (stress week) | Committed | README before | Key | Status |
 |---|--:|--:|---|---|
 | Transformers overloaded at the evening peak | 18 of 20 | 18 of 20 | `fleet.feeders_overloaded` | CHECKED |
-| Critical-site hours dark, 0/5/10/15/20 feeders | 310 / 194 / 104 / 46 / 0 | 311 / 195 / 105 / 46 / 0 | `fleet.stress.N.critical_site_hours` | REGISTERED. Same data (310.5, 194.5, 104.5, 46.25, 0): the README rounds half up, Python half to even |
+| Critical-site hours dark, 0/5/10/15/20 feeders | 310 / 194 / 104 / 46 / 0 h | 311 / 195 / 105 / 46 / 0 | `fleet.stress.N.critical_site_hours` | CHECKED (not the 0 h row, which would match anywhere). Raw 310.5 / 194.5 / 104.5 / 46.25: the README now uses the registry's rounding (half to even) |
 | Home-hours dark | 116,088 … 65,554 | same | `fleet.stress.N.home_hours_dark` | CHECKED |
 | Unserved energy | 26,861 / 23,346 / 20,259 / 18,836 / 17,170 kWh | 26,861 / 23,349 / 20,268 / 18,845 / 17,182 kWh | `fleet.stress.N.unserved_kwh` | CHECKED; README updated (moves under 0.1%) |
 | Home-hours dark, change at full adoption | −44% | "falls by 44%" | `fleet.stress.home_hours_dark_change` | CHECKED; README wording updated |
@@ -150,7 +150,20 @@ Regenerate outputs workflow. "Before" is what the README said until that file wa
 so the schedule could depend on machine speed and land anywhere inside the 0.5% gap. The README's
 363 MWh / ₹11 lakh came from such a run. The time limit is now removed and HiGHS runs with a fixed seed on one
 thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The README now quotes the
-committed file. `phase2` is still not part of
+committed file.
+
+**Gap sensitivity (26 Nov, same seed, 1 thread, stress week):**
+
+| `mip_rel_gap` | Gas starts | Gas hours (UC vs linear 56.75) | Shed, UC vs linear 337.27 MWh | Extra cost | Run time |
+|---|--:|--:|--:|--:|--:|
+| 0.5% (committed) | 8 | 48.5 | 356.5 | ₹11.96 lakh (0.66%) | 13 s |
+| 0.1% | 7 | 50.0 | 353.9 | ₹9.89 lakh (0.54%) | 12 s |
+| 0.01% | 7 | 50.0 | 356.0 | ₹9.62 lakh (0.53%) | 13 s |
+
+The direction holds at every gap (UC sheds more and costs more than the linear market), but the
+figures do not: a tighter gap gives one start fewer and about ₹2 lakh less. So the README no
+longer says "a tighter solver gap does not change this". These are my Windows runs, not
+registered. `phase2` is still not part of
 `scripts/reproduce.sh`; adding it would cost about 6 minutes of CI per run.
 
 ## 7. Not registered: don't quote until there's a file behind them
@@ -200,4 +213,6 @@ python -m gridsetu phase2 --out outputs/phase2           # ~6 min
 python -m gridsetu numbers --check README.md             # fix each MISMATCH in the README
 ```
 After committing, CI's `reproduce` job must print REPRODUCED four times. The outputs committed on
-26 Nov come from this workflow; every figure that was PROVISIONAL now carries its committed value.
+26 Nov come from this workflow, and every figure that was PROVISIONAL now carries its committed value.
+The workflow runs on PRs to main only when `src/`, `config/`, `data/` or `requirements-lock.txt`
+change, and from Actions → Run workflow on demand.

@@ -310,8 +310,11 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             f"{fs['feeders_overloaded_at_peak']} of {fs['n_feeders']}", f"{src}.feeders_overloaded_at_peak")
         for c in fs["curve"]:
             n, i = c["feeders"], f"{src}.curve[adoption={c['adoption']}]"
-            add(f"fleet.stress.{n}.critical_site_hours", round(c["critical_site_hours"]), "h/stress week",
-                f"{c['critical_site_hours']:,.0f}", f"{i}.critical_site_hours", check=False)   # bare numbers
+            # one rounding (Python's, half to even: 310.5 -> 310) for the value and the README text;
+            # "0 h" is not checked because it would match anywhere
+            crit = round(c["critical_site_hours"])
+            add(f"fleet.stress.{n}.critical_site_hours", crit, "site-hours/stress week",
+                f"{crit:,} h", f"{i}.critical_site_hours", check=crit > 0)
             add(f"fleet.stress.{n}.home_hours_dark", round(c["household_dark_hours"]), "home-hours/stress week",
                 f"{c['household_dark_hours']:,.0f}", f"{i}.household_dark_hours", check=c["household_dark_hours"] >= 1000)
             add(f"fleet.stress.{n}.unserved_kwh", round(c["total_unserved_kwh"]), "kWh/stress week",
