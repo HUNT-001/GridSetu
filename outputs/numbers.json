@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-25T19:36:00+00:00",
-    "git_commit": "00b30ff",
+    "generated_at": "2026-11-26T14:17:43+00:00",
+    "git_commit": "984b00b",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
@@ -92,14 +92,14 @@
     "pilot.gridsetu.feeder_outage_h": {
       "value": 2.2,
       "unit": "h/month",
-      "display": "2.2 h",
+      "display": "2.3 h",
       "source": "results.json:pilot_feeder_monthly.gridsetu.feeder_outage_hours.mean",
       "check": true
     },
     "pilot.change.feeder_outage_h": {
-      "value": "−86%",
+      "value": "−87%",
       "unit": "%",
-      "display": "−86%",
+      "display": "−87%",
       "source": "derived from pilot.baseline/gridsetu.feeder_outage_h",
       "check": false
     },
