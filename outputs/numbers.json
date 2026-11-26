@@ -3,8 +3,8 @@
     "label": "SIMULATION: synthetic data, not field measurement",
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
-    "generated_at": "2026-11-26T14:17:43+00:00",
-    "git_commit": "984b00b",
+    "generated_at": "2026-11-26T15:40:33+00:00",
+    "git_commit": "17c8cde",
     "python": "3.13.18",
     "libraries": {
       "numpy": "2.4.6",
