@@ -12,6 +12,8 @@ the README, deck text and submission answers cannot drift from the simulator.
 """
 from __future__ import annotations
 
+from decimal import ROUND_HALF_UP, Decimal
+
 import json
 import platform
 import subprocess
@@ -29,12 +31,17 @@ def _get(d: dict, path: str):
     return d
 
 
+def _half_up(v: float, dp: int = 0) -> Decimal:
+    """Round halves away from zero (2.25 -> 2.3), as the dashboard does, not to even."""
+    return Decimal(repr(v)).quantize(Decimal(1).scaleb(-dp), rounding=ROUND_HALF_UP)
+
+
 def _num(v: float, dp: int) -> str:
-    return f"{v:,.{dp}f}"
+    return f"{_half_up(v, dp):,.{dp}f}"
 
 
 def _pct_change(b: float, p: float) -> str:
-    c = round((p - b) / b * 100) if b else 0
+    c = int(_half_up((p - b) / b * 100)) if b else 0
     return f"{MINUS}{abs(c)}%" if c < 0 else f"+{c}%"
 
 

@@ -60,12 +60,14 @@ def slide2_profile(week, out: Path, day: int = 1) -> Path:
     win = (hours >= 17.5) & (hours < 19.5)
     ax.fill_between(hours, solar, demand, where=win, color=AMBER, alpha=0.35, step=None,
                     linewidth=0, label="Reliability gap")
-    ax.plot(hours, demand, color=GREY, lw=2.4, label="Feeder demand")
+    net = demand - solar
+    ax.plot(hours, demand, color=GREY, lw=2.0, label="Feeder demand")
+    ax.plot(hours, net, color=INK, lw=2.4, label="Drawn from the grid (demand − solar)")
     ax.plot(hours, solar, color=TEAL, lw=2.4, label="Solar (rooftop + community)")
     ax.axhline(cap, color=INK, lw=1, ls=(0, (4, 3)))
     ax.text(0.3, cap + 6, f"Transformer rating {cap:.0f} kW", color=INK, fontsize=10)
-    pk = int(np.argmax(demand))
-    ax.annotate(f"{demand[pk]:.0f} kW", (hours[pk], demand[pk]), xytext=(8, 6),
+    pk = int(np.argmax(net))           # the grid sees demand net of solar: its peak is the evening
+    ax.annotate(f"{net[pk]:.0f} kW from the grid", (hours[pk], net[pk]), xytext=(10, 8),
                 textcoords="offset points", color=INK, fontsize=10, fontweight="bold")
     ax.text(18.5, max(demand[win].min() * 0.55, 40), "Reliability\nGap", ha="center",
             color=INK, fontsize=12, fontweight="bold")
@@ -78,7 +80,7 @@ def slide2_profile(week, out: Path, day: int = 1) -> Path:
     ax.set_ylabel("kW")
     ax.set_ylim(0, max(demand.max(), cap) * 1.15)
     ax.set_title(f"Pilot feeder, one day ({idx[0]:%a %d %b}): demand vs solar")
-    ax.legend(loc="upper left", ncol=3, bbox_to_anchor=(0, -0.1))
+    ax.legend(loc="upper left", ncol=2, bbox_to_anchor=(0, -0.1))
     fig.text(0.995, 0.93, SIM_LABEL, ha="right", fontsize=8.5, color=MUTED)
     return _save(fig, out / "slide2_24h_profile.png")
 

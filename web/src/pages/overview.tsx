@@ -139,7 +139,7 @@ function MonthlyKpis() {
       <CardHeader>
         <div>
           <CardTitle>A typical month on F07</CardTitle>
-          <CardDescription>Three normal weeks and one stress week{seeds ? ", averaged over seeds" : ""}. Simulated on synthetic data.</CardDescription>
+          <CardDescription>Three normal weeks and one stress week{seeds ? ", averaged over seeds" : ""}. Simulated, with homes fitted to measured Indian smart-meter data.</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="grid grid-cols-2 gap-x-5 gap-y-5">

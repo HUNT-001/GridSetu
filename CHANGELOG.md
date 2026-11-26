@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased: dashboard screenshots retaken (November 2026)
+
+### Changed
+- Every README screenshot and both feeder animations retaken from the current run (1,090 fitted homes): control room (dark, light, phone), city and market, pilot feeder, city map, households, protection, architecture, scenario lab, copilot what-if, live ticker.
+- The one-day chart now also plots what the feeder draws from the grid (demand minus solar). With the fitted homes gross demand peaks mid-morning, but rooftop solar covers it; the draw from the grid peaks in the evening window (337 kW on the chart day).
+- Figures in `numbers.json` round halves up (2.25 h is 2.3 h), as the dashboard does, so the README and the dashboard show the same value. Whole-feeder outage with GridSetu now reads 2.3 h (−87%).
+
 ## Unreleased: fast-transfer islanding, recalibrated forecast band, ownership model (November 2026)
 
 ### Added

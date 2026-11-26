@@ -44,7 +44,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 
 On a peri-urban feeder, rooftop solar fades just as the evening demand peak arrives (17:30 to 19:30). The distribution transformer overloads and trips. On a stressed grid day the DISCOM also sheds whole feeders in rotation. When that happens every home goes dark, including the health sub-centre, the school and the water pump.
 
-![Pilot feeder demand against solar over one day, with the evening reliability gap shaded](docs/images/evening-ramp-gap.png)
+![Pilot feeder over one day: demand, solar and what the feeder draws from the grid, which peaks in the evening reliability gap](docs/images/evening-ramp-gap.png)
 
 Schneider's EcoStruxure ADMS/DERMS already dispatches DERs it has a metered, contracted relationship with. A cooperatively shared community battery serving 1,090 unrelated low-income households has no single customer of record, so it never becomes dispatchable. GridSetu is the missing origination layer: it turns that feeder's shared assets into one forecasted, confidence-scored **Reliability Reserve** and publishes it to the ADMS through its own interfaces.
 
@@ -68,7 +68,7 @@ Schneider's EcoStruxure ADMS/DERMS already dispatches DERs it has a metered, con
 
 ![Baseline and GridSetu feeders side by side through the Thursday evening](docs/images/feeder-rotation.gif)
 
-<sub>The pilot feeder's homes through Thursday evening. Left: the baseline feeder is tripped in rotation and every home goes dark. Right: GridSetu pauses Tier-3 appliances (teal outlines), rotating which homes carry it. When the DISCOM's request exceeds what the feeder can give, it is tripped too, but the clinic, school, pump and street lights stay on the battery. (Recorded with the first, 420-home model and before lifeline mode; now most of those steps keep every home on a 200 W lifeline instead.)</sub>
+<sub>All 1,090 homes on the pilot feeder, Thursday 16:00 to midnight. Left: the baseline feeder is tripped in rotation and every home goes dark. Right: GridSetu pauses Tier-3 appliances (teal), rotating which homes carry it. When the DISCOM's request exceeds what the feeder can give, homes drop to a dim 200 W lifeline (lights and fans) instead of a blackout, and the clinic, school, pump and street lights stay on the battery.</sub>
 
 ---
 
@@ -81,7 +81,7 @@ A React control room over a FastAPI service. Every page is driven by one shared 
 ![Control room at 18:00 on the stress day](docs/images/control-room.png)
 
 - **City scene (canvas):** plants, the 220 kV ring with moving dots whose speed and direction follow the MW, and districts whose windows go dark in proportion to the load shed in that class. The sky follows the simulated hour and cloud cover.
-- **Pilot feeder inset:** all 1,090 homes side by side, baseline against GridSetu. (Screenshots were taken with the first, 420-home model.)
+- **Pilot feeder inset:** all 1,090 homes side by side, baseline against GridSetu.
 - **Month KPIs:** tween to their new values when a different run is selected.
 - **Playback:** Space plays or pauses. Arrow keys step 15 minutes, and Shift+arrow steps an hour. Clicking any chart seeks there.
 
@@ -429,7 +429,7 @@ Monthly composite of three normal weeks and one stress week (a forced 125 MW coa
 | Unserved energy, 17:30 to 19:30 | 2,223 kWh | 574 kWh | −74% | 461 kWh |
 | Unserved energy, all hours (net of rebound) | 4,913 kWh | 907 kWh | −82% | 599 kWh |
 | Critical-load outage | 16.7 h | 0.0 h | −100% | 0.0 h |
-| Whole-feeder outage | 16.7 h | 2.2 h | −86% | 1.2 h |
+| Whole-feeder outage | 16.7 h | 2.3 h | −87% | 1.2 h |
 | Homes fully without supply | 18,167 home-hours | 2,483 home-hours | −86% | 1,298 home-hours |
 | Homes on the 200 W lifeline instead | – | 1,002 home-hours | | 1,204 home-hours |
 | Transformer overload trips | 13 | 0 | −100% | 0 |
@@ -582,7 +582,7 @@ The fitted homes match measured energy, evening load and diversity closely. The 
 |---|--:|--:|
 | Evening unserved energy, baseline → GridSetu | 2,713 → 482 kWh | 2,223 → 574 kWh |
 | Home-hours fully dark, baseline → GridSetu | 5,740 → 291 | 18,167 → 2,483 |
-| Whole-feeder outage with GridSetu | 0.5 h | 2.2 h |
+| Whole-feeder outage with GridSetu | 0.5 h | 2.3 h |
 | Critical-load outage with GridSetu | 0 h | 0 h |
 
 The core results hold on realistic homes: the clinic, school and pump never go dark, overload trips disappear, and evening unserved energy falls by about three quarters. Lifeline helps less than the first model suggested, because real homes already draw little in the evening, so capping them at 200 W frees less power. The headline figures above all use the fitted model.
