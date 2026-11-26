@@ -4,7 +4,9 @@
     "seeds": 3,
     "month_definition": "3 representative weeks + 1 stress week",
     "headline_attribution": "baseline and gridsetu run on the same city signals; gridsetu_coordinated adds city-level solar-hour irrigation and industrial DR",
-    "runtime_s": 178.9
+    "baseline_definition": "today's rotational load-shedding by the DISCOM, with no storage and no demand response on the feeder",
+    "reliability_definitions": "SAIDI and SAIFI per household; interrupted = fully dark (homes on the lifeline allowance are supplied); see src/gridsetu/reliability.py",
+    "runtime_s": 83.6
   },
   "pilot_feeder_monthly": {
     "baseline": {
@@ -78,6 +80,26 @@
         "min": 0.0,
         "max": 0.0
       },
+      "saidi_h": {
+        "mean": 16.666666666666668,
+        "min": 6.5,
+        "max": 25.0
+      },
+      "saifi": {
+        "mean": 23.666666666666668,
+        "min": 14.0,
+        "max": 31.0
+      },
+      "customer_interruptions": {
+        "mean": 25796.666666666668,
+        "min": 15260.0,
+        "max": 33790.0
+      },
+      "evening_dark_home_hours": {
+        "mean": 16259.166666666666,
+        "min": 5722.5,
+        "max": 22890.0
+      },
       "feeder_peak_import_kw": {
         "mean": 340.0,
         "min": 339.9999999999999,
@@ -87,6 +109,16 @@
         "mean": 99.34973706817266,
         "min": 98.32446803651763,
         "max": 99.97921040014549
+      },
+      "caidi_h": {
+        "mean": 0.6607585962424672,
+        "min": 0.4642857142857143,
+        "max": 0.8064516129032258
+      },
+      "evening_supply_availability_pct": {
+        "mean": 91.12103174603175,
+        "min": 87.5,
+        "max": 96.875
       }
     },
     "gridsetu": {
@@ -160,6 +192,26 @@
         "min": 889.25,
         "max": 1060.0
       },
+      "saidi_h": {
+        "mean": 2.2781345565749236,
+        "min": 1.7777522935779817,
+        "max": 3.0252293577981653
+      },
+      "saifi": {
+        "mean": 7.632415902140674,
+        "min": 6.0256880733944955,
+        "max": 8.937614678899083
+      },
+      "customer_interruptions": {
+        "mean": 8319.333333333334,
+        "min": 6568.0,
+        "max": 9742.0
+      },
+      "evening_dark_home_hours": {
+        "mean": 2483.1666666666665,
+        "min": 1937.75,
+        "max": 3297.5
+      },
       "feeder_peak_import_kw": {
         "mean": 291.0,
         "min": 291.0,
@@ -169,6 +221,16 @@
         "mean": 99.99517780660504,
         "min": 99.99066651497759,
         "max": 100.0
+      },
+      "caidi_h": {
+        "mean": 0.2965178817517641,
+        "min": 0.25604185938945423,
+        "max": 0.338482857729419
+      },
+      "evening_supply_availability_pct": {
+        "mean": 98.64396752584825,
+        "min": 98.19926823940585,
+        "max": 98.94181411096548
       }
     },
     "gridsetu_coordinated": {
@@ -242,6 +304,26 @@
         "min": 1033.25,
         "max": 1380.25
       },
+      "saidi_h": {
+        "mean": 1.1910550458715596,
+        "min": 1.0190366972477065,
+        "max": 1.5330275229357797
+      },
+      "saifi": {
+        "mean": 4.668501529051988,
+        "min": 4.0009174311926605,
+        "max": 5.998165137614679
+      },
+      "customer_interruptions": {
+        "mean": 5088.666666666667,
+        "min": 4361.0,
+        "max": 6538.0
+      },
+      "evening_dark_home_hours": {
+        "mean": 1298.25,
+        "min": 1110.75,
+        "max": 1671.0
+      },
       "feeder_peak_import_kw": {
         "mean": 291.0,
         "min": 291.0,
@@ -251,6 +333,16 @@
         "mean": 99.99958450095441,
         "min": 99.99923513187443,
         "max": 100.0
+      },
+      "caidi_h": {
+        "mean": 0.25505008445047395,
+        "min": 0.2543508129150447,
+        "max": 0.2555827470174365
+      },
+      "evening_supply_availability_pct": {
+        "mean": 99.2910386631717,
+        "min": 99.08748361730014,
+        "max": 99.39343053735256
       }
     }
   },
@@ -274,7 +366,14 @@
         "dark_home_hours": 7085.0,
         "dark_home_hours_evening": 3270.0,
         "lifeline_home_hours": 0.0,
-        "lifeline_steps": 0
+        "lifeline_steps": 0,
+        "saidi_h": 6.5,
+        "saifi": 14.0,
+        "caidi_h": 0.4642857142857143,
+        "customer_interruptions": 15260,
+        "evening_supply_availability_pct": 84.52380952380952,
+        "evening_dark_home_hours": 7085.0,
+        "customers": 1090
       },
       "gridsetu": {
         "evening_window_unserved_kwh": 650.8504616703442,
@@ -294,7 +393,14 @@
         "dark_home_hours": 3297.5,
         "dark_home_hours_evening": 1917.5,
         "lifeline_home_hours": 1057.5,
-        "lifeline_steps": 16
+        "lifeline_steps": 16,
+        "saidi_h": 3.0252293577981653,
+        "saifi": 8.937614678899083,
+        "caidi_h": 0.338482857729419,
+        "customer_interruptions": 9742,
+        "evening_supply_availability_pct": 92.79707295762341,
+        "evening_dark_home_hours": 3297.5,
+        "customers": 1090
       },
       "gridsetu_coordinated": {
         "evening_window_unserved_kwh": 561.0774497170221,
@@ -314,7 +420,14 @@
         "dark_home_hours": 1671.0,
         "dark_home_hours_evening": 1379.25,
         "lifeline_home_hours": 1380.25,
-        "lifeline_steps": 21
+        "lifeline_steps": 21,
+        "saidi_h": 1.5330275229357797,
+        "saifi": 5.998165137614679,
+        "caidi_h": 0.2555827470174365,
+        "customer_interruptions": 6538,
+        "evening_supply_availability_pct": 96.34993446920052,
+        "evening_dark_home_hours": 1671.0,
+        "customers": 1090
       }
     },
     "representative": {
@@ -336,7 +449,14 @@
         "dark_home_hours": 4360.0,
         "dark_home_hours_evening": 1907.5,
         "lifeline_home_hours": 0.0,
-        "lifeline_steps": 0
+        "lifeline_steps": 0,
+        "saidi_h": 4.0,
+        "saifi": 4.0,
+        "caidi_h": 1.0,
+        "customer_interruptions": 4360,
+        "evening_supply_availability_pct": 90.47619047619048,
+        "evening_dark_home_hours": 4360.0,
+        "customers": 1090
       },
       "gridsetu": {
         "evening_window_unserved_kwh": 0.0,
@@ -356,7 +476,14 @@
         "dark_home_hours": 0.0,
         "dark_home_hours_evening": 0.0,
         "lifeline_home_hours": 0.0,
-        "lifeline_steps": 0
+        "lifeline_steps": 0,
+        "saidi_h": 0.0,
+        "saifi": 0.0,
+        "caidi_h": 0.0,
+        "customer_interruptions": 0,
+        "evening_supply_availability_pct": 100.0,
+        "evening_dark_home_hours": 0.0,
+        "customers": 1090
       },
       "gridsetu_coordinated": {
         "evening_window_unserved_kwh": 0.0,
@@ -376,7 +503,14 @@
         "dark_home_hours": 0.0,
         "dark_home_hours_evening": 0.0,
         "lifeline_home_hours": 0.0,
-        "lifeline_steps": 0
+        "lifeline_steps": 0,
+        "saidi_h": 0.0,
+        "saifi": 0.0,
+        "caidi_h": 0.0,
+        "customer_interruptions": 0,
+        "evening_supply_availability_pct": 100.0,
+        "evening_dark_home_hours": 0.0,
+        "customers": 1090
       }
     }
   },
@@ -449,7 +583,14 @@
       "dark_home_hours": 3824.0,
       "dark_home_hours_evening": 2180.25,
       "lifeline_home_hours": 555.75,
-      "lifeline_steps": 8
+      "lifeline_steps": 8,
+      "saidi_h": 3.508256880733945,
+      "saifi": 10.986238532110091,
+      "caidi_h": 0.3193319415448852,
+      "customer_interruptions": 11975,
+      "evening_supply_availability_pct": 91.64700742682395,
+      "evening_dark_home_hours": 3824.0,
+      "customers": 1090
     },
     "slices": [
       {
@@ -879,6 +1020,19 @@
     "v_33kV_range_pu": [
       0.9914322972314787,
       1.0310523675587377
-    ]
+    ],
+    "feeder_11kv_losses": {
+      "baseline": {
+        "loss_kwh": 128.57690839036016,
+        "energy_in_kwh": 37592.90268085081,
+        "loss_pct": 0.3420244227532211
+      },
+      "gridsetu": {
+        "loss_kwh": 132.39373238016177,
+        "energy_in_kwh": 38654.67272178319,
+        "loss_pct": 0.34250382439676824
+      }
+    },
+    "sample_every_steps": 2
   }
 }

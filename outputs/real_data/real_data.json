@@ -457,7 +457,14 @@
           "dark_home_hours": 7085.0,
           "dark_home_hours_evening": 3270.0,
           "lifeline_home_hours": 0.0,
-          "lifeline_steps": 0.0
+          "lifeline_steps": 0.0,
+          "saidi_h": 6.5,
+          "saifi": 14.0,
+          "caidi_h": 0.464,
+          "customer_interruptions": 15260.0,
+          "evening_supply_availability_pct": 84.524,
+          "evening_dark_home_hours": 7085.0,
+          "customers": 1090.0
         },
         "gridsetu": {
           "evening_window_unserved_kwh": 650.85,
@@ -477,7 +484,14 @@
           "dark_home_hours": 3297.5,
           "dark_home_hours_evening": 1917.5,
           "lifeline_home_hours": 1057.5,
-          "lifeline_steps": 16.0
+          "lifeline_steps": 16.0,
+          "saidi_h": 3.025,
+          "saifi": 8.938,
+          "caidi_h": 0.338,
+          "customer_interruptions": 9742.0,
+          "evening_supply_availability_pct": 92.797,
+          "evening_dark_home_hours": 3297.5,
+          "customers": 1090.0
         },
         "gridsetu_coordinated": {
           "evening_window_unserved_kwh": 561.077,
@@ -497,7 +511,14 @@
           "dark_home_hours": 1671.0,
           "dark_home_hours_evening": 1379.25,
           "lifeline_home_hours": 1380.25,
-          "lifeline_steps": 21.0
+          "lifeline_steps": 21.0,
+          "saidi_h": 1.533,
+          "saifi": 5.998,
+          "caidi_h": 0.256,
+          "customer_interruptions": 6538.0,
+          "evening_supply_availability_pct": 96.35,
+          "evening_dark_home_hours": 1671.0,
+          "customers": 1090.0
         }
       },
       "forecast_net_load": {
@@ -525,7 +546,14 @@
           "dark_home_hours": 8175.0,
           "dark_home_hours_evening": 2997.5,
           "lifeline_home_hours": 0.0,
-          "lifeline_steps": 0.0
+          "lifeline_steps": 0.0,
+          "saidi_h": 7.5,
+          "saifi": 15.0,
+          "caidi_h": 0.5,
+          "customer_interruptions": 16350.0,
+          "evening_supply_availability_pct": 86.905,
+          "evening_dark_home_hours": 5995.0,
+          "customers": 1090.0
         },
         "gridsetu": {
           "evening_window_unserved_kwh": 464.625,
@@ -545,7 +573,14 @@
           "dark_home_hours": 1932.0,
           "dark_home_hours_evening": 1098.25,
           "lifeline_home_hours": 1143.25,
-          "lifeline_steps": 17.0
+          "lifeline_steps": 17.0,
+          "saidi_h": 1.772,
+          "saifi": 5.974,
+          "caidi_h": 0.297,
+          "customer_interruptions": 6512.0,
+          "evening_supply_availability_pct": 95.78,
+          "evening_dark_home_hours": 1932.0,
+          "customers": 1090.0
         },
         "gridsetu_coordinated": {
           "evening_window_unserved_kwh": 403.556,
@@ -565,7 +600,14 @@
           "dark_home_hours": 1112.75,
           "dark_home_hours_evening": 828.0,
           "lifeline_home_hours": 1167.25,
-          "lifeline_steps": 17.0
+          "lifeline_steps": 17.0,
+          "saidi_h": 1.021,
+          "saifi": 4.025,
+          "caidi_h": 0.254,
+          "customer_interruptions": 4387.0,
+          "evening_supply_availability_pct": 97.569,
+          "evening_dark_home_hours": 1112.75,
+          "customers": 1090.0
         }
       },
       "forecast_net_load": {
@@ -593,7 +635,14 @@
           "dark_home_hours": 8447.5,
           "dark_home_hours_evening": 2997.5,
           "lifeline_home_hours": 0.0,
-          "lifeline_steps": 0.0
+          "lifeline_steps": 0.0,
+          "saidi_h": 7.75,
+          "saifi": 15.0,
+          "caidi_h": 0.517,
+          "customer_interruptions": 16350.0,
+          "evening_supply_availability_pct": 86.31,
+          "evening_dark_home_hours": 6267.5,
+          "customers": 1090.0
         },
         "gridsetu": {
           "evening_window_unserved_kwh": 512.912,
@@ -613,7 +662,14 @@
           "dark_home_hours": 2204.5,
           "dark_home_hours_evening": 1368.5,
           "lifeline_home_hours": 1084.25,
-          "lifeline_steps": 16.0
+          "lifeline_steps": 16.0,
+          "saidi_h": 2.022,
+          "saifi": 6.971,
+          "caidi_h": 0.29,
+          "customer_interruptions": 7598.0,
+          "evening_supply_availability_pct": 95.185,
+          "evening_dark_home_hours": 2204.5,
+          "customers": 1090.0
         },
         "gridsetu_coordinated": {
           "evening_window_unserved_kwh": 387.42,
@@ -633,7 +689,14 @@
           "dark_home_hours": 838.75,
           "dark_home_hours_evening": 826.0,
           "lifeline_home_hours": 1179.0,
-          "lifeline_steps": 17.0
+          "lifeline_steps": 17.0,
+          "saidi_h": 0.769,
+          "saifi": 3.038,
+          "caidi_h": 0.253,
+          "customer_interruptions": 3311.0,
+          "evening_supply_availability_pct": 98.168,
+          "evening_dark_home_hours": 838.75,
+          "customers": 1090.0
         }
       },
       "forecast_net_load": {

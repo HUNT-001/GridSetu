@@ -10,6 +10,9 @@ Whole-feeder outage                               h/month       16.7        2.2 
 Feeder peak import                                     kW      340.0      291.0     -14%        291.0
 Solar utilisation                                       %       99.3      100.0      +1%        100.0
 Battery cycles                                  per month        0.0       23.0      n/a         22.8
+SAIDI (dark hours per household)                  h/month       16.7        2.3     -86%          1.2
+SAIFI (interruptions per household)             per month       23.7        7.6     -68%          4.7
+Evening supply availability 17:00-23:00                 %       91.1       98.6      +8%         99.3
 
 Fairness (stress week): 830 households shared Tier-3 curtailment, max 5.50 h each, Gini 0.22, 1486 user overrides honoured
 Forecast (stress week): q10-q90 coverage 78% (nominal 80%), MAPE 4.4%
@@ -18,4 +21,4 @@ WAMS case A (G1B trip): SPS shed 62 MW baseline -> 57 MW with GridSetu FFR; case
 Comms degraded (60 % loss, stress week): critical outage 0.0 h, whole-feeder outage 3.5 h (vs 3.0 h nominal)
 Isolated microgrid: unserved 613 -> 114 kWh/week, diesel hours 139 -> 116
 Power flow: max 220 kV line loading 110% (8 samples over 100%)
-Runtime 178.9 s
+Runtime 83.6 s

@@ -50,11 +50,11 @@ interruption is at least one 15-minute step, so all count as sustained (IEEE 136
 
 | Figure | Baseline | GridSetu | + city DR | Key | Status |
 |---|--:|--:|--:|---|---|
-| SAIDI, h per household per month | 16.7 | 2.3 | 1.3 | `reliability.{baseline,gridsetu,coordinated}.saidi_h` ← `pilot_feeder_monthly.*.saidi_h.mean` | PROVISIONAL |
-| SAIDI, h per household per year (if the simulated month repeats all year) | 200 | 27 | | `reliability.*.saidi_h_per_year` | PROVISIONAL |
-| SAIFI, interruptions per household per month | 23.7 | 7.6 | 5.0 | `reliability.*.saifi` | PROVISIONAL |
-| CAIDI, h per interruption | 0.66 | 0.30 | 0.25 | `reliability.*.caidi_h` | PROVISIONAL |
-| Evening supply availability, 17:00–23:00 | 91.1% | 98.6% | 99.2% | `reliability.*.evening_availability_pct` | PROVISIONAL |
+| SAIDI, h per household per month | 16.7 | 2.3 | 1.2 | `reliability.{baseline,gridsetu,coordinated}.saidi_h` ← `pilot_feeder_monthly.*.saidi_h.mean` | REGISTERED |
+| SAIDI, h per household per year (if the simulated month repeats all year) | 200 | 27 | | `reliability.*.saidi_h_per_year` | REGISTERED |
+| SAIFI, interruptions per household per month | 23.7 | 7.6 | 4.7 | `reliability.*.saifi` | REGISTERED |
+| CAIDI, h per interruption | 0.66 | 0.30 | 0.26 | `reliability.*.caidi_h` | REGISTERED |
+| Evening supply availability, 17:00–23:00 | 91.1% | 98.6% | 99.3% | `reliability.*.evening_availability_pct` | REGISTERED |
 | Lifeline home-hours (supplied, but capped) | 0 | 1,015 | 1,184 | `pilot.*.lifeline_home_hours` | CHECKED (committed: 1,017 / 1,185) |
 
 Notes:
@@ -71,8 +71,8 @@ losses in either model.** Only the split battery (one third mid-way along each L
 | MATLAB LV model: lines + transformer, kWh | 4,411 | 4,480 (+1.6%) | 4,203 (−4.7%) | `lv.stress.{baseline,gridsetu,gridsetu_distributed}.technical_loss_kwh` ← `matlab/results/summary.json` | CHECKED |
 | MATLAB LV model: % of energy | 10.40% | 10.33% | 9.75% | `lv.stress.*.technical_loss_pct` | REGISTERED |
 | MATLAB LV model, representative week, kWh (%) | 4,282 (10.01%) | 4,432 (10.03%) | 4,074 (9.29%) | `lv.representative.*` | REGISTERED |
-| Python power flow: pilot's 11 kV line sections, kWh | 129 | 132 | not modelled | `losses.python_11kv.{baseline,gridsetu}.kwh` ← `results.json:power_flow_stress.feeder_11kv_losses.*.loss_kwh` | PROVISIONAL |
-| Python power flow: % of energy into the feeder | 0.34% | 0.34% | not modelled | `losses.python_11kv.*.pct` | PROVISIONAL |
+| Python power flow: pilot's 11 kV line sections, kWh | 129 | 132 | not modelled | `losses.python_11kv.{baseline,gridsetu}.kwh` ← `results.json:power_flow_stress.feeder_11kv_losses.*.loss_kwh` | REGISTERED |
+| Python power flow: % of energy into the feeder | 0.34% | 0.34% | not modelled | `losses.python_11kv.*.pct` | REGISTERED |
 
 **Do the two models agree?** On the direction, yes. Both say a battery at the head of the network
 doesn't cut losses. Losses rise slightly in kWh because GridSetu supplies energy that the baseline
@@ -100,9 +100,9 @@ All inputs are in `config/city.yaml` under `economics:`, each sourced or marked 
 | Cost per home per month | ₹69 | `economics.cost_per_home_month` | CHECKED | **~₹10,000 per household** (one-off capex, 420 homes) |
 | Break-even value of an avoided outage kWh | ₹21.8 | `economics.breakeven_inr_per_kwh` | CHECKED | none |
 | Outage avoided per year | 51,988 kWh | `economics.unserved_avoided_kwh` | CHECKED | none |
-| Cost per household-hour of outage avoided | ₹5.55 | `economics.cost_per_avoided_home_outage_hour` | PROVISIONAL | **~₹11,300 per avoided outage-hour** (feeder-hour, assuming 30 h a year; different unit and an assumed outage count) |
-| Household outage-hours avoided per year | 203,874 | `economics.home_outage_hours_avoided` | PROVISIONAL | none |
-| What a kWh from the battery costs at the tariff | ₹10.9 | `economics.battery_cost_per_kwh_delivered` | PROVISIONAL | **~₹4.8 per kWh of reserve delivered** |
+| Cost per household-hour of outage avoided | ₹5.5 | `economics.cost_per_avoided_home_outage_hour` | REGISTERED | **~₹11,300 per avoided outage-hour** (feeder-hour, assuming 30 h a year; different unit and an assumed outage count) |
+| Household outage-hours avoided per year | 203,886 | `economics.home_outage_hours_avoided` | REGISTERED | none |
+| What a kWh from the battery costs at the tariff | ₹10.9 | `economics.battery_cost_per_kwh_delivered` | REGISTERED | **~₹4.8 per kWh of reserve delivered** |
 | Build cost + running cost method (₹/kWh at 1 cycle/day and at the model's cycling, ₹/home/month, ₹/avoided home-outage-hour) | not computed | `economics.json:capex_method` | **PENDING_SOURCE** (8 inputs in `config/city.yaml`, `economics.capex_method`) | the hand calculation in the 25 Nov brief (₹17 and ₹30 per kWh, ₹150 per home per month, ₹14 per home-outage-hour). Not reproduced: it used 420 homes and the Phase 1 capex |
 | Value of the transformer upgrade deferred | not computed | `economics.json:deferral` | **PENDING_SOURCE** | none |
 | Reserve price quoted to the DISCOM | ₹3.5/kWh (degradation 1.5 + adder 2.0) | `config/city.yaml:pilot_feeder.reserve_price` | ASSUMPTION, build-up slots PENDING_SOURCE | none |
@@ -131,26 +131,26 @@ All registered and checked against the README as of this branch (they were only 
 ## 6. Fleet and unit commitment (new committed source, `python -m gridsetu phase2`)
 
 Before this branch these existed only in the API run cache. `src/gridsetu/phase2.py` now writes
-them to `outputs/phase2/phase2.json` (seed 42, same as the reference run). The registry checks them once
-that file is committed. Values below come from my run (PROVISIONAL), compared with what the README says today.
+them to `outputs/phase2/phase2.json` (seed 42, same as the reference run), regenerated on Linux by the
+Regenerate outputs workflow. "Before" is what the README said until that file was committed.
 
-| Figure (stress week) | My run | README today | Key | Note |
+| Figure (stress week) | Committed | README before | Key | Status |
 |---|--:|--:|---|---|
-| Transformers overloaded at the evening peak | 18 of 20 | 18 of 20 | `fleet.feeders_overloaded` | match |
-| Critical-site hours dark, 0/5/10/15/20 feeders | 310.5 / 194.5 / 104.5 / 46.25 / 0 | 311 / 195 / 105 / 46 / 0 | `fleet.stress.N.critical_site_hours` | same data; the dashboard rounds half up, Python rounds half to even. Registered unchecked |
-| Home-hours dark | 116,088 … 65,554 | same | `fleet.stress.N.home_hours_dark` | match |
-| Unserved energy | 26,861 / 23,348 / 20,268 / 18,844 / 17,181 kWh | 26,861 / 23,349 / 20,268 / 18,845 / 17,182 kWh | `fleet.stress.N.unserved_kwh` | 1 kWh apart: update the README from the committed file |
-| Home-hours dark, change at full adoption | −44% | −44% | `fleet.stress.home_hours_dark_change` | match |
-| Normal week, home-hours dark at 0% | 45,424 | 45,424 | `fleet.representative.0.home_hours_dark` | match |
-| Gas starts / hours on (UC vs linear) | 8 / 49 h vs 57 h | 8 / 49 vs 57 | `uc.gas_starts`, `uc.gas_hours_*` | match |
-| Shedding, UC vs linear market | 356 vs 337 MWh | 363 vs 337 MWh | `uc.shed_uc_mwh`, `uc.shed_lp_mwh` | **differs** |
-| Extra cost of UC | ₹12 lakh (0.7%) | ₹11 lakh (0.6%) | `uc.extra_cost_lakh`, `uc.extra_cost_pct` | **differs** |
+| Transformers overloaded at the evening peak | 18 of 20 | 18 of 20 | `fleet.feeders_overloaded` | CHECKED |
+| Critical-site hours dark, 0/5/10/15/20 feeders | 310 / 194 / 104 / 46 / 0 | 311 / 195 / 105 / 46 / 0 | `fleet.stress.N.critical_site_hours` | REGISTERED. Same data (310.5, 194.5, 104.5, 46.25, 0): the README rounds half up, Python half to even |
+| Home-hours dark | 116,088 … 65,554 | same | `fleet.stress.N.home_hours_dark` | CHECKED |
+| Unserved energy | 26,861 / 23,346 / 20,259 / 18,836 / 17,170 kWh | 26,861 / 23,349 / 20,268 / 18,845 / 17,182 kWh | `fleet.stress.N.unserved_kwh` | CHECKED; README updated (moves under 0.1%) |
+| Home-hours dark, change at full adoption | −44% | "falls by 44%" | `fleet.stress.home_hours_dark_change` | CHECKED; README wording updated |
+| Normal week, home-hours dark at 0% | 45,424 | 45,424 | `fleet.representative.0.home_hours_dark` | CHECKED |
+| Gas starts / hours on (UC vs linear) | 8 / 48 h vs 57 h | 8 / 49 vs 57 | `uc.gas_starts`, `uc.gas_hours_*` | CHECKED; 48.5 h, rounded half to even |
+| Shedding, UC vs linear market | 356 vs 337 MWh | 363 vs 337 MWh | `uc.shed_uc_mwh`, `uc.shed_lp_mwh` | 356 REGISTERED (unchecked), 337 CHECKED; README updated |
+| Extra cost of UC | ₹12 lakh (0.7%) | ₹11 lakh (0.6%) | `uc.extra_cost_lakh`, `uc.extra_cost_pct` | CHECKED; README updated |
 
 **Why UC differs:** until this branch, `uc.py` solved with `mip_rel_gap: 0.005` and a 60 s `time_limit`,
 so the schedule could depend on machine speed and land anywhere inside the 0.5% gap. The README's
 363 MWh / ₹11 lakh came from such a run. The time limit is now removed and HiGHS runs with a fixed seed on one
-thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The README should quote the
-committed file and say "within the solver's 0.5% optimality gap". `phase2` is still not part of
+thread, so the schedule depends only on the inputs (one UC run takes about 15 s). The README now quotes the
+committed file. `phase2` is still not part of
 `scripts/reproduce.sh`; adding it would cost about 6 minutes of CI per run.
 
 ## 7. Not registered: don't quote until there's a file behind them
@@ -166,9 +166,9 @@ committed file and say "within the solver's 0.5% optimality gap". `phase2` is st
 
 | Goal (Challenge 03) | Our answer | Figures (status) | Weak spot to be ready for |
 |---|---|---|---|
-| **1. Bridge intermittency gaps**: reliable supply when renewable output falls below demand | Quantile forecast → day-ahead Reliability Reserve → battery, fair Tier-3 pauses and lifeline in the evening ramp | Evening unserved −74%, critical outage 16.7 → 0.0 h (CHECKED); SAIDI 16.7 → 2.3 h per home per month, evening availability 91.1% → 98.6% (PROVISIONAL) | Part of the baseline's outages are transformer overloads that a bigger transformer would also remove (TOPOLOGY.md) |
-| **2. Stay local and manageable**: neighbourhood level, minimal grid intervention | One edge controller and one community battery per feeder; the DISCOM sees one Reliability Reserve object; no feeder pushes its burden onto a neighbour | Critical outage stays 0.0 h with 60% message loss (`comms_60pct_loss.critical_outage_h`, REGISTERED); fleet: 18 of 20 overloaded feeders served without new wires (PROVISIONAL) | The island needs an interlocked breaker and a dedicated critical circuit (HOW_IT_WORKS_PHYSICALLY.md) |
-| **3. Be genuinely affordable** for low-income communities | Battery as a service at the benchmark tariff, owned by a resident cooperative; homes pay through the DISCOM, not up front | ₹69 per home per month, break-even ₹21.8 per avoided kWh vs diesel about ₹33 (CHECKED); ₹5.55 per household-hour of outage avoided (PROVISIONAL) | A battery kWh costs about ₹10.9, above the ₹10 IEX ceiling: the value is reliability, not trading. The capex method and the transformer deferral are PENDING_SOURCE |
+| **1. Bridge intermittency gaps**: reliable supply when renewable output falls below demand | Quantile forecast → day-ahead Reliability Reserve → battery, fair Tier-3 pauses and lifeline in the evening ramp | Evening unserved −74%, critical outage 16.7 → 0.0 h (CHECKED); SAIDI 16.7 → 2.3 h per home per month, evening availability 91.1% → 98.6% (REGISTERED) | Part of the baseline's outages are transformer overloads that a bigger transformer would also remove (TOPOLOGY.md) |
+| **2. Stay local and manageable**: neighbourhood level, minimal grid intervention | One edge controller and one community battery per feeder; the DISCOM sees one Reliability Reserve object; no feeder pushes its burden onto a neighbour | Critical outage stays 0.0 h with 60% message loss (`comms_60pct_loss.critical_outage_h`, REGISTERED); fleet: 18 of 20 overloaded feeders served without new wires (CHECKED) | The island needs an interlocked breaker and a dedicated critical circuit (HOW_IT_WORKS_PHYSICALLY.md) |
+| **3. Be genuinely affordable** for low-income communities | Battery as a service at the benchmark tariff, owned by a resident cooperative; homes pay through the DISCOM, not up front | ₹69 per home per month, break-even ₹21.8 per avoided kWh vs diesel about ₹33 (CHECKED); ₹5.5 per household-hour of outage avoided (REGISTERED) | A battery kWh costs about ₹10.9, above the ₹10 IEX ceiling: the value is reliability, not trading. The capex method and the transformer deferral are PENDING_SOURCE |
 | **4. Support the DISCOM**: data, forecasts, demand-response signals; manage feeder loads **and reduce technical losses** | Calibrated day-ahead reserve with a call capacity and confidence, published to the ADMS; per-bus LV model | Peak 340 → 291 kW, overload trips 13 → 0 (CHECKED); transformer peak loading 1.37 → 1.20 pu, hot-spot 89.0 → 83.4 °C (`lv.stress.*`, CHECKED) | **Losses are not reduced** with the battery at the transformer (LV 4,411 → 4,480 kWh; 11 kV 0.34% both). Only the split battery cuts them (−4.7%). Voltage violations are computed but not on the dashboard (BRIEF_GAPS.md (a)) |
 | Required: **measurable reliability improvement against a defined baseline** | Baseline sentence in section 1; SAIDI, SAIFI, ENS, evening availability | Section 2 | Report the seed range with each headline |
 
@@ -199,5 +199,5 @@ python -m gridsetu ownership --out outputs/economics     # seconds; reads econom
 python -m gridsetu phase2 --out outputs/phase2           # ~6 min
 python -m gridsetu numbers --check README.md             # fix each MISMATCH in the README
 ```
-After committing, CI's `reproduce` job must print REPRODUCED four times. Then change PROVISIONAL to
-the committed values in this file.
+After committing, CI's `reproduce` job must print REPRODUCED four times. The outputs committed on
+26 Nov come from this workflow; every figure that was PROVISIONAL now carries its committed value.
