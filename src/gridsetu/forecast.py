@@ -79,21 +79,34 @@ class FeederForecaster:
             m.fit(X, y)
             self.models[name][q] = m
 
-    def fit(self, history: list, n_calib_weeks: int = 2) -> "FeederForecaster":
-        """Conformalised quantile regression: fit on the older weeks, then widen the
-        q10-q90 band so it reaches its nominal 80 % coverage on the newest weeks."""
-        calib, train = history[:n_calib_weeks], history[n_calib_weeks:]
-        self._fit_models(train)
-        for name in ("net_load", "community_pv"):
-            scores = []
-            for fl in calib:
-                fc = self._predict_raw(fl)[name]
-                y = fl.net_load if name == "net_load" else fl.community_pv
-                scores.append(np.maximum(fc[0] - y, y - fc[2]))
-            s = np.concatenate(scores)
-            n = len(s)
-            level = min(1.0, np.ceil((n + 1) * 0.8) / n)
-            self.conformal[name] = float(max(0.0, np.quantile(s, level)))
+    def fit(self, history: list, n_folds: int = 4, adapt_rate: float = 0.5) -> "FeederForecaster":
+        """Cross-conformal quantile regression with daily adaptation.
+
+        1. The history weeks are split into ``n_folds`` folds. For each fold a model is fitted
+           on the other weeks and scored on the held-out ones, so every history week gives
+           out-of-sample conformity scores (how far the actual fell outside q10-q90).
+        2. The final models are fitted on all weeks.
+        3. ``predict`` widens q10-q90 by the score quantile for 80 % coverage, and after each
+           day moves that quantile level by ``adapt_rate`` x (yesterday's miss rate - 20 %)
+           (adaptive conformal inference, Gibbs & Candes 2021), using only data already seen.
+        """
+        self.adapt_rate = adapt_rate
+        k = max(2, min(n_folds, len(history)))
+        folds = [list(map(int, c)) for c in np.array_split(np.arange(len(history)), k)]
+        self.scores = {"net_load": [], "community_pv": []}
+        for idx in folds:
+            train = [w for j, w in enumerate(history) if j not in idx]
+            self._fit_models(train)
+            for j in idx:
+                fl = history[j]
+                raw = self._predict_raw(fl)
+                for name in self.scores:
+                    y = fl.net_load if name == "net_load" else fl.community_pv
+                    fc = raw[name]
+                    self.scores[name].append(np.maximum(fc[0] - y, y - fc[2]))
+        self.scores = {n: np.concatenate(v) for n, v in self.scores.items()}
+        self._fit_models(history)
+        self.conformal = {n: _conformal_q(v, 0.8) for n, v in self.scores.items()}
         return self
 
     def _fit_models(self, history: list):
@@ -122,14 +135,30 @@ class FeederForecaster:
     def predict(self, fl, last_history=None) -> dict[str, QuantileForecast]:
         raw = self._predict_raw(fl, last_history)
         out = {}
+        spd = self.spd
         for name, preds in raw.items():
-            q = self.conformal.get(name, 0.0)
             preds = preds.copy()
-            preds[0] -= q
-            preds[2] += q
+            actual = fl.net_load if name == "net_load" else fl.community_pv
+            scores = getattr(self, "scores", {}).get(name)
+            level = 0.8
+            n_days = int(np.ceil(preds.shape[1] / spd))
+            for d in range(n_days):
+                sl = slice(d * spd, min((d + 1) * spd, preds.shape[1]))
+                q = _conformal_q(scores, level) if scores is not None else self.conformal.get(name, 0.0)
+                preds[0, sl] -= q
+                preds[2, sl] += q
+                if scores is not None:      # adapt from the day just observed (data the operator has)
+                    miss = 1 - np.mean((actual[sl] >= preds[0, sl]) & (actual[sl] <= preds[2, sl]))
+                    level = float(np.clip(level + self.adapt_rate * (miss - 0.2), 0.5, 0.99))
             if name == "community_pv":
                 preds = np.clip(preds, 0, None)
                 night = fl.weather["ghi_clear"].values < 1
                 preds[:, night] = 0
             out[name] = QuantileForecast(*preds)
         return out
+
+
+def _conformal_q(scores: np.ndarray, level: float) -> float:
+    """Finite-sample conformal quantile of the conformity scores."""
+    n = len(scores)
+    return float(max(0.0, np.quantile(scores, min(1.0, np.ceil((n + 1) * level) / n))))

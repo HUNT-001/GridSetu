@@ -338,6 +338,32 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
         pct = 100 * d / u["cost_lp_inr"]["total"]
         add("uc.extra_cost_pct", round(pct, 1), "%", f"{pct:.1f}%", f"{src}.cost_uc_inr.total / cost_lp_inr.total - 1")
 
+    # who owns, runs and pays (python -m gridsetu ownership)
+    ow_path = out / "economics" / "ownership.json"
+    if ow_path.exists():
+        o = json.loads(ow_path.read_text(encoding="utf-8"))
+        src = "economics/ownership.json"
+        lk = lambda x: f"₹{x / 1e5:.2f} lakh"
+        add("ownership.discom_fee_lakh", round(o["who_pays"]["discom_availability_fee"] / 1e5, 2), "INR lakh/year",
+            lk(o["who_pays"]["discom_availability_fee"]), f"{src}:who_pays.discom_availability_fee")
+        add("ownership.plug_grant_lakh", round(o["who_pays"]["plug_grant_one_off_inr"] / 1e5, 1), "INR lakh",
+            f"₹{o['who_pays']['plug_grant_one_off_inr'] / 1e5:.1f} lakh", f"{src}:who_pays.plug_grant_one_off_inr")
+        add("ownership.deferral_lakh", round(o["discom_gets_back"]["transformer_upgrade_deferred"] / 1e5, 2),
+            "INR lakh/year", lk(o["discom_gets_back"]["transformer_upgrade_deferred"]),
+            f"{src}:discom_gets_back.transformer_upgrade_deferred")
+        add("ownership.losses_lakh", round(o["discom_gets_back"]["technical_losses_avoided_inr"] / 1e5, 2),
+            "INR lakh/year", lk(o["discom_gets_back"]["technical_losses_avoided_inr"]),
+            f"{src}:discom_gets_back.technical_losses_avoided_inr")
+        add("ownership.discom_net_lakh", round(o["discom_net_cost"] / 1e5, 2), "INR lakh/year",
+            lk(o["discom_net_cost"]), f"{src}:discom_net_cost")
+        add("ownership.discom_net_per_kwh", o["discom_net_cost_per_avoided_outage_kwh"], "INR/kWh",
+            f"₹{o['discom_net_cost_per_avoided_outage_kwh']:.2f} per kWh", f"{src}:discom_net_cost_per_avoided_outage_kwh")
+        add("ownership.per_home_month", o["per_home_per_month_inr"], "INR/home/month",
+            f"₹{o['per_home_per_month_inr']:.1f} per home per month", f"{src}:per_home_per_month_inr")
+        add("ownership.tn_free_power_per_home_month", o["tn_free_power_increase_per_home_per_month_inr"],
+            "INR/home/month", f"₹{o['tn_free_power_increase_per_home_per_month_inr']:.0f}",
+            f"{src}:tn_free_power_increase_per_home_per_month_inr", check=False)
+
     # households against real Indian smart-meter data (python -m gridsetu household-check)
     hh_path = out / "households" / "households.json"
     if hh_path.exists():

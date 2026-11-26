@@ -44,6 +44,8 @@ def main(argv=None):
     ec.add_argument("--out", default="outputs/economics")
     p2 = sub.add_parser("phase2", help="20-feeder fleet and unit-commitment studies into outputs/ (~minutes)")
     p2.add_argument("--out", default="outputs/phase2")
+    ow = sub.add_parser("ownership", help="who owns, runs and pays: the funding model for one feeder")
+    ow.add_argument("--out", default="outputs/economics")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
     rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
@@ -129,6 +131,11 @@ def main(argv=None):
         r = run_studies(args.out)
         print(json.dumps({"fleet_curve_stress": r["fleet"]["stress"]["curve"], "uc": r["uc"]["stress"]},
                          indent=1, default=float))
+        return
+    if args.cmd == "ownership":
+        from .ownership import run_study as run_own
+        r = run_own(args.out)
+        print(json.dumps({k: v for k, v in r.items() if k != "about"}, indent=1))
         return
     if args.cmd == "real-data":
         from .realstudy import run_study

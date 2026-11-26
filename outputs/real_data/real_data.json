@@ -332,106 +332,106 @@
         "weather": "synthetic",
         "test_week_start": "2026-08-31",
         "net_load": {
-          "coverage_q10_q90_pct": 74.3,
-          "mape_q50_pct": 4.6,
-          "mae_q50_kw": 10.84
+          "coverage_q10_q90_pct": 78.1,
+          "mape_q50_pct": 4.5,
+          "mae_q50_kw": 10.71
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 87.8,
-          "mape_q50_pct": 55.2,
-          "mae_q50_kw": 2.14
+          "coverage_q10_q90_pct": 81.5,
+          "mape_q50_pct": 41.4,
+          "mae_q50_kw": 2.16
         }
       },
       {
         "weather": "synthetic",
         "test_week_start": "2026-09-07",
         "net_load": {
-          "coverage_q10_q90_pct": 73.8,
-          "mape_q50_pct": 4.6,
-          "mae_q50_kw": 10.89
+          "coverage_q10_q90_pct": 77.5,
+          "mape_q50_pct": 4.5,
+          "mae_q50_kw": 10.6
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 85.9,
-          "mape_q50_pct": 59.5,
-          "mae_q50_kw": 2.18
+          "coverage_q10_q90_pct": 82.6,
+          "mape_q50_pct": 43.5,
+          "mae_q50_kw": 2.06
         }
       },
       {
         "weather": "synthetic",
         "test_week_start": "2026-09-14",
         "net_load": {
-          "coverage_q10_q90_pct": 74.7,
-          "mape_q50_pct": 4.6,
-          "mae_q50_kw": 10.9
+          "coverage_q10_q90_pct": 78.3,
+          "mape_q50_pct": 4.5,
+          "mae_q50_kw": 10.71
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 86.9,
-          "mape_q50_pct": 61.8,
-          "mae_q50_kw": 2.22
+          "coverage_q10_q90_pct": 82.1,
+          "mape_q50_pct": 44.5,
+          "mae_q50_kw": 2.04
         }
       },
       {
         "weather": "nasa_power",
         "test_week_start": "2026-08-31",
         "net_load": {
-          "coverage_q10_q90_pct": 74.3,
+          "coverage_q10_q90_pct": 79.3,
           "mape_q50_pct": 4.2,
-          "mae_q50_kw": 10.7
+          "mae_q50_kw": 10.68
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 93.2,
-          "mape_q50_pct": 16.7,
-          "mae_q50_kw": 1.11
+          "coverage_q10_q90_pct": 80.1,
+          "mape_q50_pct": 28.7,
+          "mae_q50_kw": 1.79
         }
       },
       {
         "weather": "nasa_power",
         "test_week_start": "2026-09-07",
         "net_load": {
-          "coverage_q10_q90_pct": 72.3,
-          "mape_q50_pct": 4.5,
-          "mae_q50_kw": 11.33
+          "coverage_q10_q90_pct": 78.1,
+          "mape_q50_pct": 4.4,
+          "mae_q50_kw": 10.95
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 74.4,
-          "mape_q50_pct": 20.7,
-          "mae_q50_kw": 1.93
+          "coverage_q10_q90_pct": 75.7,
+          "mape_q50_pct": 19.0,
+          "mae_q50_kw": 1.9
         }
       },
       {
         "weather": "nasa_power",
         "test_week_start": "2026-09-14",
         "net_load": {
-          "coverage_q10_q90_pct": 74.3,
-          "mape_q50_pct": 3.9,
-          "mae_q50_kw": 9.69
+          "coverage_q10_q90_pct": 80.1,
+          "mape_q50_pct": 4.2,
+          "mae_q50_kw": 10.44
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 90.6,
-          "mape_q50_pct": 18.7,
-          "mae_q50_kw": 1.19
+          "coverage_q10_q90_pct": 82.9,
+          "mape_q50_pct": 19.2,
+          "mae_q50_kw": 1.3
         }
       }
     ],
     "mean": {
       "synthetic": {
         "net_load": {
-          "coverage_q10_q90_pct": 74.3,
-          "mape_q50_pct": 4.6
+          "coverage_q10_q90_pct": 78.0,
+          "mape_q50_pct": 4.5
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 86.9,
-          "mape_q50_pct": 58.8
+          "coverage_q10_q90_pct": 82.1,
+          "mape_q50_pct": 43.1
         }
       },
       "nasa_power": {
         "net_load": {
-          "coverage_q10_q90_pct": 73.6,
-          "mape_q50_pct": 4.2
+          "coverage_q10_q90_pct": 79.2,
+          "mape_q50_pct": 4.3
         },
         "community_pv": {
-          "coverage_q10_q90_pct": 86.1,
-          "mape_q50_pct": 18.7
+          "coverage_q10_q90_pct": 79.6,
+          "mape_q50_pct": 22.3
         }
       }
     }
@@ -460,49 +460,49 @@
           "lifeline_steps": 0.0
         },
         "gridsetu": {
-          "evening_window_unserved_kwh": 652.389,
-          "total_unserved_kwh": 1089.256,
-          "gross_unserved_kwh": 1247.37,
+          "evening_window_unserved_kwh": 650.85,
+          "total_unserved_kwh": 1086.315,
+          "gross_unserved_kwh": 1247.594,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 3.0,
           "solar_utilisation_pct": 99.963,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 6.322,
-          "battery_discharge_kwh": 1074.66,
-          "tier3_curtailed_kwh": 204.694,
-          "tier2_curtailed_kwh": 35.298,
+          "battery_cycles": 6.336,
+          "battery_discharge_kwh": 1077.093,
+          "tier3_curtailed_kwh": 206.21,
+          "tier2_curtailed_kwh": 37.554,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 3298.25,
+          "dark_home_hours": 3297.5,
           "dark_home_hours_evening": 1917.5,
-          "lifeline_home_hours": 1052.0,
+          "lifeline_home_hours": 1057.5,
           "lifeline_steps": 16.0
         },
         "gridsetu_coordinated": {
-          "evening_window_unserved_kwh": 561.446,
-          "total_unserved_kwh": 752.883,
-          "gross_unserved_kwh": 931.389,
+          "evening_window_unserved_kwh": 561.077,
+          "total_unserved_kwh": 752.58,
+          "gross_unserved_kwh": 932.736,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 1.5,
           "solar_utilisation_pct": 99.998,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 6.012,
-          "battery_discharge_kwh": 1022.081,
-          "tier3_curtailed_kwh": 230.811,
+          "battery_cycles": 5.985,
+          "battery_discharge_kwh": 1017.387,
+          "tier3_curtailed_kwh": 233.559,
           "tier2_curtailed_kwh": 40.02,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 1670.0,
-          "dark_home_hours_evening": 1379.0,
-          "lifeline_home_hours": 1375.75,
+          "dark_home_hours": 1671.0,
+          "dark_home_hours_evening": 1379.25,
+          "lifeline_home_hours": 1380.25,
           "lifeline_steps": 21.0
         }
       },
       "forecast_net_load": {
-        "coverage_q10_q90_pct": 72.5,
-        "mape_q50_pct": 4.7
+        "coverage_q10_q90_pct": 77.7,
+        "mape_q50_pct": 4.4
       }
     },
     "real_weather": {
@@ -528,49 +528,49 @@
           "lifeline_steps": 0.0
         },
         "gridsetu": {
-          "evening_window_unserved_kwh": 462.175,
-          "total_unserved_kwh": 728.106,
-          "gross_unserved_kwh": 891.009,
+          "evening_window_unserved_kwh": 464.625,
+          "total_unserved_kwh": 730.923,
+          "gross_unserved_kwh": 894.76,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 1.75,
           "solar_utilisation_pct": 100.0,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 6.404,
-          "battery_discharge_kwh": 1088.72,
-          "tier3_curtailed_kwh": 202.695,
-          "tier2_curtailed_kwh": 41.286,
+          "battery_cycles": 6.35,
+          "battery_discharge_kwh": 1079.574,
+          "tier3_curtailed_kwh": 204.652,
+          "tier2_curtailed_kwh": 41.047,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 1931.75,
-          "dark_home_hours_evening": 1097.75,
-          "lifeline_home_hours": 1144.0,
+          "dark_home_hours": 1932.0,
+          "dark_home_hours_evening": 1098.25,
+          "lifeline_home_hours": 1143.25,
           "lifeline_steps": 17.0
         },
         "gridsetu_coordinated": {
-          "evening_window_unserved_kwh": 394.764,
-          "total_unserved_kwh": 516.922,
-          "gross_unserved_kwh": 682.813,
+          "evening_window_unserved_kwh": 403.556,
+          "total_unserved_kwh": 524.133,
+          "gross_unserved_kwh": 688.59,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 1.0,
           "solar_utilisation_pct": 100.0,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 6.085,
-          "battery_discharge_kwh": 1034.426,
-          "tier3_curtailed_kwh": 211.897,
-          "tier2_curtailed_kwh": 38.753,
+          "battery_cycles": 6.015,
+          "battery_discharge_kwh": 1022.479,
+          "tier3_curtailed_kwh": 209.528,
+          "tier2_curtailed_kwh": 38.741,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 1110.75,
-          "dark_home_hours_evening": 826.0,
-          "lifeline_home_hours": 1164.75,
+          "dark_home_hours": 1112.75,
+          "dark_home_hours_evening": 828.0,
+          "lifeline_home_hours": 1167.25,
           "lifeline_steps": 17.0
         }
       },
       "forecast_net_load": {
-        "coverage_q10_q90_pct": 76.3,
-        "mape_q50_pct": 3.8
+        "coverage_q10_q90_pct": 80.1,
+        "mape_q50_pct": 4.1
       }
     },
     "real_weather_and_prices": {
@@ -596,49 +596,49 @@
           "lifeline_steps": 0.0
         },
         "gridsetu": {
-          "evening_window_unserved_kwh": 516.808,
-          "total_unserved_kwh": 812.41,
-          "gross_unserved_kwh": 982.257,
+          "evening_window_unserved_kwh": 512.912,
+          "total_unserved_kwh": 804.582,
+          "gross_unserved_kwh": 966.2,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 2.0,
           "solar_utilisation_pct": 100.0,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 5.608,
-          "battery_discharge_kwh": 953.373,
-          "tier3_curtailed_kwh": 228.266,
-          "tier2_curtailed_kwh": 32.888,
+          "battery_cycles": 5.644,
+          "battery_discharge_kwh": 959.489,
+          "tier3_curtailed_kwh": 214.445,
+          "tier2_curtailed_kwh": 32.951,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 2203.75,
-          "dark_home_hours_evening": 1369.0,
-          "lifeline_home_hours": 1085.25,
+          "dark_home_hours": 2204.5,
+          "dark_home_hours_evening": 1368.5,
+          "lifeline_home_hours": 1084.25,
           "lifeline_steps": 16.0
         },
         "gridsetu_coordinated": {
-          "evening_window_unserved_kwh": 392.233,
-          "total_unserved_kwh": 467.217,
-          "gross_unserved_kwh": 664.087,
+          "evening_window_unserved_kwh": 387.42,
+          "total_unserved_kwh": 460.232,
+          "gross_unserved_kwh": 645.82,
           "critical_outage_hours": 0.0,
           "critical_unserved_kwh": 0.0,
           "feeder_outage_hours": 0.75,
           "solar_utilisation_pct": 100.0,
           "feeder_peak_import_kw": 291.0,
-          "battery_cycles": 5.421,
-          "battery_discharge_kwh": 921.571,
-          "tier3_curtailed_kwh": 263.235,
-          "tier2_curtailed_kwh": 38.929,
+          "battery_cycles": 5.42,
+          "battery_discharge_kwh": 921.457,
+          "tier3_curtailed_kwh": 244.384,
+          "tier2_curtailed_kwh": 38.958,
           "overload_trips": 0.0,
           "days": 7.0,
-          "dark_home_hours": 839.75,
-          "dark_home_hours_evening": 828.0,
-          "lifeline_home_hours": 1237.0,
-          "lifeline_steps": 18.0
+          "dark_home_hours": 838.75,
+          "dark_home_hours_evening": 826.0,
+          "lifeline_home_hours": 1179.0,
+          "lifeline_steps": 17.0
         }
       },
       "forecast_net_load": {
-        "coverage_q10_q90_pct": 76.3,
-        "mape_q50_pct": 3.8
+        "coverage_q10_q90_pct": 80.1,
+        "mape_q50_pct": 4.1
       }
     }
   }

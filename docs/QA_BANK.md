@@ -28,7 +28,7 @@ We report the count rather than claim "never".
 On what it measures, no: across 1,260 published forecasts the feeder held its own evening peak
 every time. The DISCOM's call is a separate promise, so it now has its own number: a firm call
 capacity with a 90% confidence. When calls are bounded by our day-ahead offer, as in an ADMS
-dispatch contract, the call was met on 52 of 60 evenings and the 90% held 89.7% of the time.
+dispatch contract, the call was met on 53 of 60 evenings and the 90% held 90.8% of the time.
 
 **Q: And if the DISCOM asks for more than you offered?**
 That is how our model's DISCOM behaves today: it asks for the feeder's full share of the
@@ -91,8 +91,9 @@ assumed.
 
 **Q: How good is the forecast on real weather?**
 Backtested on three real weeks with only yesterday's weather as the weather forecast, the
-actual load fell inside our 80% range 79% of the time. On synthetic weather it was 85%, so
-the synthetic number was slightly flattering, and we report the real one.
+actual load fell inside our 80% range 79.2% of the time (78.0% on synthetic weather). The
+range calibrates itself on all past weeks and adjusts each day to the previous day's misses,
+so it stays close to 80% even on spiky real homes.
 
 **Q: How did you get the IEX data?**
 From IEX's public market snapshot page, 15-minute blocks. Each day's 96 prices average exactly
@@ -104,7 +105,7 @@ to IEX's published daily figure, and a test checks it.
 When the DISCOM needs more relief than the battery and flexible loads can give, a normal feeder
 is switched off. GridSetu instead sets a load limit on every home's smart meter, as low as
 200 W: lights, a fan, phone charging. The DISCOM gets its relief and the homes are not dark.
-Over a month, home-hours without supply fall from 18,167 to 2,484.
+Over a month, home-hours without supply fall from 18,167 to 2,483.
 
 **Q: Can smart meters really do that?**
 Indian prepaid smart-meter specifications (for example MSEDCL's, which follows IS 16444)
@@ -126,8 +127,28 @@ Its meter disconnects it, as prepaid meters already do when a load limit is exce
 **Q: What does it cost, and who pays?**
 About ₹9.0 lakh a year for one 1,090-home feeder, or ₹69 per home per month. Most of it is the
 battery, priced from the 2025 Indian benchmark for 2-hour storage and doubled for small scale.
-It pays for itself if an avoided outage is worth more than ₹21.8 per kWh. Diesel backup costs
+It pays for itself if an avoided outage is worth more than ₹21.7 per kWh. Diesel backup costs
 about ₹33/kWh, so for anyone who would otherwise run a generator, it pays.
+
+**Q: Who owns the battery and who runs it?**
+We recommend the DISCOM buys feeder reliability as a service: a local operator owns the battery
+and is paid a fixed monthly availability fee, the same contract form as India's 2025 utility
+battery tenders. A trained local operator, for example from a women's self-help group, does the
+daily checks and the help desk; the residents' committee sets the fairness rules; the vendor
+maintains the battery. The Electricity (Amendment) Rules, 2025 allow an independent storage
+provider to own a battery and lease its capacity to a DISCOM. Details in docs/OWNERSHIP.md.
+
+**Q: Will low-income homes have to pay?**
+No. The DISCOM pays the availability fee and the smart plugs are a one-off grant. The whole
+cost is about ₹76 per home per month; Tamil Nadu's recent move to 200 free units costs about
+₹99 per benefiting home per month, so reliability costs less than the subsidy the state already
+chose to pay.
+
+**Q: Why would the DISCOM pay?**
+It gets a transformer upgrade put off (₹20 lakh, worth about ₹1.9 lakh a year), fewer
+technical losses, no overload trips, the clinic and pump always on, and a day-ahead reserve it
+can count on. Net of those savings it pays about ₹8.45 for each kWh of outage avoided, below the
+₹10 exchange ceiling it faces on short evenings.
 
 **Q: At ₹10/kWh it doesn't pay. Isn't that a problem?**
 On energy value alone, no, it doesn't: benefit ÷ cost is 0.46 at the IEX ceiling. We say so.

@@ -35,7 +35,7 @@ what it covers. In the first version, on all 60 evenings with a DISCOM call the 
 far above the published reserve and the call was not met. That led to lifeline mode and the
 second (call) confidence, scored by `call_met`: see "Lifeline mode and the second confidence"
 below. With the fitted homes, 0 of 60 calls are met in full as the DISCOM calls today, and
-52 of 60 when calls are bounded by our offer.
+53 of 60 when calls are bounded by our offer.
 
 **Scores.** Brier score = mean of (stated probability − outcome)², 0 is perfect. With every
 forecast at 100%, a reliability diagram collapses to one point, so the chart shows stated vs
@@ -119,8 +119,8 @@ Tests re-check all of this. The synthetic case inside the study equals the headl
 **What it found.**
 - **Prices:** real evening prices sat at the ₹10 ceiling on 6 of 7 days. Our curve stops at ₹9.8, and real midday prices were much lower than ours (₹1.17 vs ₹2.6/kWh). The real market favours storage more than our scenario does.
 - **Sunshine:** real sunshine was about 20% lower than our synthetic weather and steadier.
-- **Forecast:** on real weather it covered 79% of outcomes with its 80% range.
-- **Stress week:** on the real week GridSetu cut evening unserved energy by half (808 → 408 kWh), because the real week had no deeply overcast day. We keep the harsher synthetic week for the headline.
+- **Forecast:** on real weather it covered 79.2% of outcomes with its 80% range (78.0% on synthetic weather).
+- **Stress week:** on the real week GridSetu cut evening unserved energy by about 40% (800 → 465 kWh), because the real week had no deeply overcast day. We keep the harsher synthetic week for the headline.
 
 **Likely question.** *Is your household load real?* No. Weather and prices are real; load is synthetic until we get smart-meter data. The data card lists every input with its label.
 
@@ -143,8 +143,8 @@ enough, the feeder is switched off as before, with the critical loads islanded o
 The calibration scores it on calls inside the offer.
 
 **What it found.**
-- Monthly home-hours without supply fall from 18,167 to 2,484, and whole-feeder outage from 16.7 h to 2.2 h (fitted homes).
-- With calls bounded by the day-ahead offer, 52 of 60 call evenings are met, and the 90% call confidence held 89.7% of the time: well calibrated.
+- Monthly home-hours without supply fall from 18,167 to 2,483, and whole-feeder outage from 16.7 h to 2.2 h (fitted homes).
+- With calls bounded by the day-ahead offer, 53 of 60 call evenings are met, and the 90% call confidence held 90.8% of the time: well calibrated.
 - With calls as the DISCOM makes them today (median 2.15 times our offer), 0 of 60 are met in full.
 - Across 20 feeders, home-hours without supply in the stress week fall 44% at full adoption (75% with the first, heavier homes; 26% before lifeline).
 
@@ -169,8 +169,8 @@ covered.
 - **Smart plugs:** ₹1,500 per home over 5 years. Every home in the model has some Tier-3 load, so every home is costed one; eMARC suggests only 41% own an AC or water heater.
 - **Controller and comms:** ₹25,000 a year.
 
-**Result.** ₹9.0 lakh a year (₹69 per home per month); break-even ₹21.8 per kWh; benefit ÷ cost
-0.46 at the IEX ceiling and 1.52 at diesel-backup cost. The sensitivity chart shows the battery price matters
+**Result.** ₹9.0 lakh a year (₹69 per home per month); break-even ₹21.7 per kWh; benefit ÷ cost
+0.46 at the IEX ceiling and 1.53 at diesel-backup cost. The sensitivity chart shows the battery price matters
 most.
 
 **Likely question.** *Why not just assume a value of lost load?* There's no solid Indian
