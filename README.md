@@ -30,6 +30,7 @@ Schneider Electric Yuva Yodha Energy Tech Hackathon · Challenge 03: Grid reliab
 - [What GridSetu does](#what-gridsetu-does)
 - [The dashboard](#the-dashboard)
 - [How it works](#how-it-works)
+- [Power-system studies](#power-system-studies)
 - [Results](#results)
   - [Who owns it, who runs it, who pays](#who-owns-it-who-runs-it-who-pays)
 - [Run it locally](#run-it-locally)
@@ -418,6 +419,40 @@ Data flows one way. The server payloads are immutable, so each is fetched once a
 
 ---
 
+## Power-system studies
+
+Every study behind the results, with its method, tool and standard. Each row links to its detailed section; every figure is in `outputs/numbers.json` or in the output file named. Settings we chose ourselves are marked ASSUMPTION in the parameter files.
+
+| # | Study | Question | Method | Tool | Standard or reference | Key result |
+|---|---|---|---|---|---|---|
+| 1 | [City AC power flow](#results) | Does the 220 kV ring stay within limits through the coal outage? | Newton–Raphson AC load flow at every dispatch step | pandapower | Thermal ratings of the 220 kV lines | Most-loaded line peaked at 110% of rating in 8 samples; feeder voltages 0.99 to 1.03 pu |
+| 2 | [Market and unit commitment](#unit-commitment-study) | Which plants run, and what does the shortage cost? | Linear economic dispatch; day-ahead mixed-integer unit commitment with start costs and minimum loads | Pyomo + HiGHS; PyPSA + HiGHS | Regional prices capped at the IEX ₹10/kWh ceiling | Gas started 8 times; the mixed-integer schedule sheds 26 MWh more than the linear market |
+| 3 | [LV feeder load flow, voltage and losses](#losses-voltage-and-transformer-ageing-matlab-low-voltage-model) | Where on the 415 V feeder is voltage lost, and what are the technical losses? | Backward/forward sweep load flow, 21 buses, every 15 minutes; Python twin as a cross-check | MATLAB (Octave-compatible); Python | ±6% LT voltage limit (ASSUMPTION pending the TN supply code); IS 1180 Level-2 transformer; Apar ACSR Rabbit datasheet | MATLAB and Python agree to 5 parts in a billion. Storage split across the circuits cuts technical losses about 5%. **The assumed layout is being revised** (voltage is outside limits most of the time; see Limitations) |
+| 4 | [Line model](#line-model-short-line) | Is a series R + jX (short-line) model enough? | Shunt capacitance from conductor geometry; charging current and Ferranti rise | Hand calculation | Short-line criterion (lines well under 80 km) | Charging current 0.6 mA per phase against about 160 A of load; Ferranti rise about 2 × 10⁻⁷ pu. Shunt capacitance is negligible, so π and T models give the same answer |
+| 5 | [Transformer heating and ageing](#losses-voltage-and-transformer-ageing-matlab-low-voltage-model) | Does GridSetu keep the transformer cool? | Top-oil and hot-spot difference equations, 1-minute sub-steps; relative ageing rate | MATLAB; Python | IEC 60076-7 (loading guide for oil-immersed transformers) | Stress-week hot-spot peak 89.0 → 83.4 °C; ageing 6.7 → 6.4 equivalent hours over the 168-hour week |
+| 6 | [Frequency dynamics (WAMS)](#protection-wams) | How deep does frequency fall after a generator trip or islanding? | Two-area swing equation (city and national grid) with inertia, governor and load damping; special protection scheme and under-frequency load shedding | Python | PMU reporting at 50 frames/s (IEEE C37.118) | Case A nadir 49.70 Hz, protection shedding cut from 62 to 57 MW by GridSetu's fast response; Case B (islanding) nadir 49.16 Hz with two shedding stages |
+| 7 | [Islanding of the critical bus](#the-critical-bus-at-millisecond-resolution-simulink) | Does the clinic ride through a feeder trip, and does the island reconnect safely? | Average-value inverter, switch and load model at 0.1 ms; droop and secondary control; synchronism check | Simulink (MATLAB R2025a), verified against a plain-MATLAB loop | IEEE 1547-2018-style island detection; ITIC (CBEMA) curve; ABB static-switch data sheet | Grid-forming inverter + static switch: island in 4 ms, within ITIC. Island 49.84 to 50.30 Hz, voltage ≥ 0.965 pu; tie closed within 10° and 0.1 Hz |
+| 8 | [Isolated microgrid](#results) | What does a community battery do for a hamlet with no grid tie? | Dispatch of PV, battery and diesel | Python | – | Unserved energy 613 → 114 kWh a week; diesel hours 139 → 116 |
+| 9 | [Forecasting and the Reliability Reserve](#does-the-reliability-reserve-keep-its-word) | Can the feeder promise relief a day ahead and keep the promise? | Quantile gradient boosting with cross-conformal, self-adjusting bands; reserve confidence checked on 1,260 forecasts | LightGBM; Python | IEC 61968-5 (DER group forecast to ADMS/DERMS) | Band covers 78% of outcomes (target 80%); calls bounded by the offer met on 53 of 60 evenings |
+| 10 | Communication loss | What if 60% of control messages are lost? | Stress week rerun with message loss on the control slice | Python | – | Critical-load outage still 0.0 h |
+
+### Line model (short line)
+
+LT lines here are 600 m long, so we model them as series R + jX. To check that, we computed the shunt capacitance of the ACSR Rabbit line on a 0.3 m cross-arm from its geometry: about 0.013 µF/km. At 240 V and 50 Hz, 600 m of line draws 0.6 mA of charging current against about 160 A of evening load, and the Ferranti voltage rise at the open end is about 2 × 10⁻⁷ pu. A nominal-π or T model would change no result, so we use the short-line model, as is standard for lines well under 80 km.
+
+### In progress (added by 2 December)
+
+Each item gets its own row in the table above when it is done.
+
+- **Revised LV layout and technical losses:** the brief asks for a loss reduction, and the current assumed layout (3 circuits × 600 m for 1,090 homes) gives unrealistic voltage drops.
+- **Fault study:** fault current at every bus in grid mode and in island mode, and how a fault is detected when only the inverter feeds it.
+- **Lineworker safety and earthing:** proof that the feeder side stays dead while the critical bus is islanded; the reconnection transient; neutral–earth bonding of the island.
+- **Signed control commands:** authenticated, time-stamped commands; unsigned, altered or replayed commands rejected.
+- **2× and 3× rooftop solar:** the battery absorbing midday surplus; reverse power flow and overvoltage on the LV feeder.
+- **Peer-to-peer sharing:** surplus solar credited to its owners and shared with neighbours through the community battery.
+- **Battery capacity fade and second-life batteries** in the business case.
+- **Household data privacy** (DPDP Act 2023 and Rules 2025), **battery fire safety** (CEA safety regulations, 2026 amendment), **phase unbalance** sensitivity, and **theft and tamper detection** from transformer and meter energy balance.
+
 ## Results
 
 Monthly composite of three normal weeks and one stress week (a forced 125 MW coal outage and two overcast monsoon days), averaged over three weather and load seeds.
@@ -773,7 +808,7 @@ All values live in [`config/city.yaml`](config/city.yaml).
 - The fitted homes use 4.9 kWh a day, close to measured homes in Maharashtra and Uttar Pradesh (4.6) but above the Tamil Nadu average (3.5), and the median home is lighter than measured. The forecast's 80% range covers the actual only about 73% of the time on these spikier homes. The dashboard screenshots still show the first, 420-home model.
 - The business case uses one real IEX week (September 2025) for all 52 weeks, a 2x premium for community-scale storage and assumed smart-plug and controller costs. It does not count avoided transformer failures, diesel saved at the clinic, or the DISCOM's revenue on the extra energy sold.
 - Lifeline needs the smart meter's load limit to be set remotely in real time. Indian prepaid specifications include a utility-set load limit with automatic disconnect and reconnect; remote real-time changes must be confirmed with the DISCOM or meter vendor. Rationing homes to a lifeline in a shortage would also need the state regulator's approval.
-- The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
+- On the assumed low-voltage layout the voltage is outside ±6% in 93% to over 99% of 15-minute steps, which is not credible for a working feeder; the layout is being revised (see Power-system studies, in progress). The low-voltage network (circuit lengths, conductor, bus positions, power factor) is assumed, not surveyed, and the voltage limit awaits confirmation against the Tamil Nadu supply code. Each assumption is marked in `matlab/f07_params.json`.
 - With loose library versions (`requirements.txt`) the headline figures move by 1 to 3%. Use `requirements-lock.txt` to reproduce them exactly.
 
 ## Roadmap
