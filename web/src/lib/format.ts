@@ -3,6 +3,13 @@ const nf1 = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 1, minimumFr
 const nf2 = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 
 export const f0 = (x: number | null | undefined) => (x == null || Number.isNaN(x) ? "–" : nf0.format(x));
+/** Round half to even, as Python's round() and the numbers.json registry do (310.5 -> 310). */
+export const roundHalfEven = (x: number) => {
+  const f = Math.floor(x);
+  return x - f === 0.5 ? (f % 2 === 0 ? f : f + 1) : Math.round(x);
+};
+/** Like f0, but with the registry's rounding, for figures the README quotes from numbers.json. */
+export const f0Even = (x: number | null | undefined) => (x == null || Number.isNaN(x) ? "–" : nf0.format(roundHalfEven(x)));
 export const f1 = (x: number | null | undefined) => (x == null || Number.isNaN(x) ? "–" : nf1.format(x));
 export const f2 = (x: number | null | undefined) => (x == null || Number.isNaN(x) ? "–" : nf2.format(x));
 export const pct = (x: number | null | undefined, d = 0) =>

@@ -103,8 +103,10 @@ def _solve(n):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         # No time limit, a fixed seed and one thread: the schedule then depends only on the inputs and the
-        # 0.5 % optimality gap, not on how fast or how many-cored the machine is.
-        status, cond = n.optimize(solver_name="highs", solver_options={"mip_rel_gap": 0.005, "random_seed": 0,
+        # 0.01 % optimality gap, not on how fast or how many-cored the machine is. A 0.5 % gap gave one
+        # gas start more and about 2 lakh more cost on the stress week (NUMBERS_LEDGER.md); 0.01 % solves
+        # in the same ~13 s.
+        status, cond = n.optimize(solver_name="highs", solver_options={"mip_rel_gap": 0.0001, "random_seed": 0,
                                                                         "threads": 1, "output_flag": False})
     if status != "ok":
         raise RuntimeError(f"PyPSA solve failed: {status} {cond}")
