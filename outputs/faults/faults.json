@@ -1,0 +1,228 @@
+{
+  "about": {
+    "label": "SIMULATION: IEC 60909-0 style fault calculation on the assumed F07 network (matlab/f07_params.json); not a protection design.",
+    "inputs": {
+      "source_fault_level_mva": {
+        "value": 250.0,
+        "tag": "ASSUMED",
+        "note": "short-circuit level at the 11 kV side of the transformer; LV results move little with it because the transformer impedance dominates (sensitivity: 100 and 500 MVA)"
+      },
+      "source_x_over_r": {
+        "value": 10.0,
+        "tag": "ASSUMED",
+        "note": "11 kV network X/R"
+      },
+      "c_max": {
+        "value": 1.1,
+        "tag": "SOURCED",
+        "note": "IEC 60909-0 voltage factor, LV 230/400 V, maximum"
+      },
+      "c_min": {
+        "value": 0.95,
+        "tag": "SOURCED",
+        "note": "IEC 60909-0 voltage factor, LV, minimum"
+      },
+      "temp_max_fault_c": {
+        "value": 20.0,
+        "tag": "SOURCED",
+        "note": "IEC 60909-0: conductor resistance at 20 C for maximum currents"
+      },
+      "temp_min_fault_c": {
+        "value": 80.0,
+        "tag": "ASSUMED",
+        "note": "conductor temperature at the end of the fault, for minimum currents"
+      },
+      "transformer_z0_over_z1": {
+        "value": 1.0,
+        "tag": "ASSUMED",
+        "note": "Dyn11 transformer: zero-sequence impedance about equal to positive"
+      },
+      "inverter_rating_kva": {
+        "value": 100.0,
+        "tag": "SOURCED",
+        "note": "config/city.yaml battery inverter"
+      },
+      "inverter_current_limit_pu": {
+        "value": 1.1,
+        "tag": "ASSUMED",
+        "note": "same short-term current limit as the islanding model (matlab/islanding/islanding_params.m)"
+      },
+      "street_breaker_ir_a": {
+        "value": 200.0,
+        "tag": "ASSUMED",
+        "note": "long-time setting of each street circuit's breaker, above its evening peak current"
+      },
+      "trip_isd_range_x_ir": {
+        "value": [
+          1.5,
+          10.0
+        ],
+        "tag": "SOURCED",
+        "note": "Schneider ComPacT NSX MicroLogic 2.2 user guide: Isd adjustable 1.5 to 10 x Ir, precision +/-15 %, non-trip time 20 ms, maximum breaking time 80 ms",
+        "url": "https://productinfo.se.com/compactnsxuserguide/doca0187-compact-nsx-user-guide/"
+      },
+      "trip_tolerance": {
+        "value": 0.15,
+        "tag": "SOURCED",
+        "note": "same user guide, Isd precision"
+      },
+      "critical_leg_ir_a": {
+        "value": 36.0,
+        "tag": "ASSUMED",
+        "note": "40 A trip unit set to 0.9 x 40 A on each critical-circuit leg"
+      },
+      "critical_legs": {
+        "value": {
+          "health_subcentre": {
+            "m": 342.9,
+            "kw": 12.0,
+            "pf": 0.95
+          },
+          "school": {
+            "m": 342.9,
+            "kw": 8.0,
+            "pf": 0.9
+          },
+          "water_pumping": {
+            "m": 600.0,
+            "kw": 15.0,
+            "pf": 0.85
+          }
+        },
+        "tag": "ASSUMED",
+        "note": "dedicated critical-load circuit from the battery yard, one leg per site, same cable; distances as the sites' street buses; loads from config/city.yaml (school at its daytime peak)"
+      },
+      "pump_dol_start_x_flc": {
+        "value": 5.0,
+        "tag": "ASSUMED",
+        "note": "direct-on-line start, as in the islanding model"
+      },
+      "pump_soft_start_x_flc": {
+        "value": 2.5,
+        "tag": "ASSUMED",
+        "note": "soft starter current limit (typical settings 2 to 4 x FLC)"
+      },
+      "meter_voltage_noise_pct": {
+        "value": 1.0,
+        "tag": "ASSUMED",
+        "note": "accuracy of the smart meter's voltage reading during a sag"
+      }
+    }
+  },
+  "grid_mode": {
+    "street_buses": [
+      {
+        "position_m": 85.7,
+        "ik3_max": 5527,
+        "ik3_min": 4338,
+        "ik1_max": 3077,
+        "ik1_min": 2260
+      },
+      {
+        "position_m": 171.4,
+        "ik3_max": 3597,
+        "ik3_min": 2694,
+        "ik1_max": 1702,
+        "ik1_min": 1219
+      },
+      {
+        "position_m": 257.1,
+        "ik3_max": 2627,
+        "ik3_min": 1927,
+        "ik1_max": 1170,
+        "ik1_min": 832
+      },
+      {
+        "position_m": 342.9,
+        "ik3_max": 2059,
+        "ik3_min": 1495,
+        "ik1_max": 890,
+        "ik1_min": 630
+      },
+      {
+        "position_m": 428.6,
+        "ik3_max": 1691,
+        "ik3_min": 1219,
+        "ik1_max": 719,
+        "ik1_min": 508
+      },
+      {
+        "position_m": 514.3,
+        "ik3_max": 1434,
+        "ik3_min": 1029,
+        "ik1_max": 602,
+        "ik1_min": 425
+      },
+      {
+        "position_m": 600.0,
+        "ik3_max": 1244,
+        "ik3_min": 890,
+        "ik1_max": 518,
+        "ik1_min": 365
+      }
+    ],
+    "transformer_terminals_ik3_max_a": 9406,
+    "tail_ik1_min_a": 365,
+    "tail_ik1_min_sensitivity_a": {
+      "100_mva": 365,
+      "500_mva": 365
+    },
+    "street_breaker": {
+      "ir_a": 200.0,
+      "isd_a": 300.0,
+      "isd_highest_a": 345,
+      "clears_every_street_fault_fast": true,
+      "tail_fault_over_10x_ir": 0.18
+    }
+  },
+  "island_mode": {
+    "inverter_rated_current_a": 139.1,
+    "fault_current_a": 153.0,
+    "fault_current_over_grid_tail_min": 0.419,
+    "street_breaker_sees_it": false,
+    "critical_legs": {
+      "health_subcentre": {
+        "length_m": 342.9,
+        "full_load_a": 17.6,
+        "start_current_dol_a": 17.6,
+        "start_current_soft_a": 17.6,
+        "grid_fault_min_a": 630,
+        "isd_with_dol_start_a": 54,
+        "isd_with_soft_start_a": 54,
+        "island_fault_cleared_with_dol_start": true,
+        "island_fault_cleared_with_soft_start": true,
+        "grid_fault_cleared": true
+      },
+      "school": {
+        "length_m": 342.9,
+        "full_load_a": 12.4,
+        "start_current_dol_a": 12.4,
+        "start_current_soft_a": 12.4,
+        "grid_fault_min_a": 630,
+        "isd_with_dol_start_a": 54,
+        "isd_with_soft_start_a": 54,
+        "island_fault_cleared_with_dol_start": true,
+        "island_fault_cleared_with_soft_start": true,
+        "grid_fault_cleared": true
+      },
+      "water_pumping": {
+        "length_m": 600.0,
+        "full_load_a": 24.6,
+        "start_current_dol_a": 122.8,
+        "start_current_soft_a": 61.4,
+        "grid_fault_min_a": 365,
+        "isd_with_dol_start_a": 162,
+        "isd_with_soft_start_a": 90,
+        "island_fault_cleared_with_dol_start": false,
+        "island_fault_cleared_with_soft_start": true,
+        "grid_fault_cleared": true
+      }
+    }
+  },
+  "fault_location": {
+    "buses": 7,
+    "trials": 1400,
+    "located_on_right_bus_pct": 99.1,
+    "highest_meter_voltage_during_fault_pu": 0.841
+  }
+}

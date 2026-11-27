@@ -234,6 +234,21 @@ def build_numbers(out_dir: str | Path = "outputs") -> dict:
             "INR/home/month", f"₹{o['tn_free_power_increase_per_home_per_month_inr']:.0f}",
             f"{src}:tn_free_power_increase_per_home_per_month_inr", check=False)
 
+    # fault study (python -m gridsetu fault-study)
+    fs_path = out / "faults" / "faults.json"
+    if fs_path.exists():
+        f = json.loads(fs_path.read_text(encoding="utf-8"))
+        src = "faults/faults.json"
+        g, isl = f["grid_mode"], f["island_mode"]
+        add("faults.transformer_ik3_max_a", g["transformer_terminals_ik3_max_a"], "A",
+            f"{_num(g['transformer_terminals_ik3_max_a'] / 1e3, 1)} kA", f"{src}:grid_mode.transformer_terminals_ik3_max_a")
+        add("faults.tail_ik1_min_a", g["tail_ik1_min_a"], "A", f"{g['tail_ik1_min_a']} A",
+            f"{src}:grid_mode.tail_ik1_min_a")
+        add("faults.island_fault_a", isl["fault_current_a"], "A", f"{isl['fault_current_a']:.0f} A",
+            f"{src}:island_mode.fault_current_a")
+        add("faults.located_pct", f["fault_location"]["located_on_right_bus_pct"], "%",
+            f"{f['fault_location']['located_on_right_bus_pct']:.1f}%", f"{src}:fault_location.located_on_right_bus_pct")
+
     # households against real Indian smart-meter data (python -m gridsetu household-check)
     hh_path = out / "households" / "households.json"
     if hh_path.exists():

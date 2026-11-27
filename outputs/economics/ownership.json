@@ -54,11 +54,11 @@
   },
   "discom_gets_back": {
     "transformer_upgrade_deferred": 189896,
-    "technical_losses_avoided_kwh": 10741,
-    "technical_losses_avoided_inr": 42962
+    "technical_losses_avoided_kwh": 4665,
+    "technical_losses_avoided_inr": 18662
   },
-  "discom_net_cost": 440142,
-  "discom_net_cost_per_avoided_outage_kwh": 8.45,
+  "discom_net_cost": 464443,
+  "discom_net_cost_per_avoided_outage_kwh": 8.92,
   "unserved_avoided_kwh_per_year": 52081,
   "vgf_if_aggregated_inr_one_off": 360000,
   "tn_free_power_increase_per_home_per_month_inr": 98.7
