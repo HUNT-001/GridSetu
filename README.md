@@ -823,6 +823,4 @@ All values live in [`config/city.yaml`](config/city.yaml).
 
 ---
 
-<div align="center">
-<sub>Built by Vakkalagadda Tanush Pavan (<a href="https://github.com/HUNT-001">@HUNT-001</a>) · Amrita Vishwa Vidyapeetham, Coimbatore</sub>
-</div>
+
