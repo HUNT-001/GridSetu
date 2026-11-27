@@ -195,4 +195,13 @@ def run_study(in_dir: str | Path = "outputs/matlab", out_dir: str | Path = "outp
             df.to_csv(out / f"f07_{week}_{name}_steps.csv")
             summary[f"{week}/{name}"] = summarise(df)
     (out / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    if "line_bare_acsr_rabbit" in p:          # sensitivity: the earlier bare-conductor layout
+        pb = {**p, "line": p["line_bare_acsr_rabbit"]}
+        sens = {}
+        for week in WEEKS:
+            for name, sc in p["scenarios"].items():
+                loads = pd.read_csv(ind / f"f07_loads_{week}_{sc['variant']}.csv", index_col=0, parse_dates=True)
+                feeder = pd.read_csv(ind / f"f07_feeder_{week}_{sc['variant']}.csv", index_col=0, parse_dates=True)
+                sens[f"{week}/{name}"] = summarise(run_case(loads, feeder, pb, sc["storage_buses"]))
+        (out / "sensitivity_bare_rabbit.json").write_text(json.dumps(sens, indent=2), encoding="utf-8")
     return summary

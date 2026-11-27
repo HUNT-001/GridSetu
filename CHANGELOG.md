@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased: realistic LV network, fault study (November 2026)
+
+### Changed
+- LV feeder reconductored to 3x95 mm2 LT aerial bunched cable (MSEDCL specification, IS 14255; CEA guidelines recommend ABC for congested, theft-prone lanes). The earlier bare ACSR Rabbit layout, which put voltage outside limits in 93% to over 99% of steps, is kept as a sensitivity (`outputs/lv/sensitivity_bare_rabbit.json`). Stress week: losses about 6%; storage split across the circuits cuts losses about 4% and voltage violations 42%; peak transformer loading 1.26 -> 1.10 pu. MATLAB and Python still agree to 5e-9.
+- Ownership: losses avoided now worth Rs 0.19 lakh a year (was 0.43), so the DISCOM's net cost is Rs 8.92 per kWh of outage avoided (was 8.45).
+- Line-model check redone for the cable: charging current at most 24 mA, Ferranti rise about 2.5e-6 pu.
+
+### Added
+- `python -m gridsetu fault-study` (`src/gridsetu/faults.py`, `tests/test_faults.py`): IEC 60909-0 fault currents in grid and island mode, breaker pickups (MicroLogic 2.2 ranges), fault location from meter voltages. Grid 9.4 kA at the transformer to 365 A at the tail; island 153 A; the pump leg needs a soft starter for island faults to clear; faulted bus found in 99.1% of trials. Added to `scripts/reproduce.sh` and the number registry.
+- README: Power-system studies rows 3, 4, 5 updated and row 11 (faults) added; new section "Faults: grid mode against island mode".
+
 ## Unreleased: dashboard screenshots retaken (November 2026)
 
 ### Changed

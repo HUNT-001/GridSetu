@@ -30,7 +30,7 @@ That number should be around 1e-8 or smaller. If the Python twin's results are m
 
 ## The model
 
-- **Network:** the 315 kVA transformer (IS 1180 Level 2: 4.5 % impedance; losses 1,025 W at half load, 3,100 W at full load) feeds three radial circuits of 600 m, ACSR Rabbit, seven buses each, with the 1,090 homes spread evenly (about 52 per bus). The clinic is on bus 4, the school on bus 11, the water pump at the far end of circuit C.
+- **Network:** the 315 kVA transformer (IS 1180 Level 2: 4.5 % impedance; losses 1,025 W at half load, 3,100 W at full load) feeds three radial circuits of 600 m of 3×95 mm² LT aerial bunched cable (MSEDCL specification, IS 14255), seven buses each, with the 1,090 homes spread evenly (about 52 per bus). The clinic is on bus 4, the school on bus 11, the water pump at the far end of circuit C.
 - **Load flow:** `bfs_loadflow.m`, a backward/forward sweep, balanced, per unit on 315 kVA / 415 V. One solve per 15-minute step.
 - **Transformer thermal model:** `dt_thermal.m`, the IEC 60076-7 difference equations with 1-minute sub-steps; relative ageing V = 2^((θh − 98)/6).
 - **Scenarios** (`f07_params.json`): baseline; GridSetu with the battery and community PV at the transformer; GridSetu with the same storage split across the middle bus of each circuit.

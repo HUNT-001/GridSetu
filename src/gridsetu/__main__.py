@@ -44,6 +44,8 @@ def main(argv=None):
     ec.add_argument("--out", default="outputs/economics")
     ow = sub.add_parser("ownership", help="who owns, runs and pays: the funding model for one feeder")
     ow.add_argument("--out", default="outputs/economics")
+    fs = sub.add_parser("fault-study", help="fault current in grid and island mode, protection and fault location")
+    fs.add_argument("--out", default="outputs/faults")
     rd = sub.add_parser("real-data", help="validate the scenario against real weather (NASA POWER) and prices (IEX)")
     rd.add_argument("--out", default="outputs/real_data")
     sv = sub.add_parser("serve", help="start the API (and the built dashboard, if web/dist exists)")
@@ -127,6 +129,11 @@ def main(argv=None):
     if args.cmd == "ownership":
         from .ownership import run_study as run_own
         r = run_own(args.out)
+        print(json.dumps({k: v for k, v in r.items() if k != "about"}, indent=1))
+        return
+    if args.cmd == "fault-study":
+        from .faults import run_study as run_faults
+        r = run_faults(args.out)
         print(json.dumps({k: v for k, v in r.items() if k != "about"}, indent=1))
         return
     if args.cmd == "real-data":

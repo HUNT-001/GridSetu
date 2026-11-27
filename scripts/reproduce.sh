@@ -16,6 +16,7 @@ python -m gridsetu real-data --out "$OUT/real_data" > /dev/null
 echo "Running the business case (about a minute) ..."
 python -m gridsetu economics --out "$OUT/economics" > /dev/null
 python -m gridsetu ownership --out "$OUT/economics" > /dev/null
+python -m gridsetu fault-study --out "$OUT/faults" > /dev/null
 python - "$OUT" <<'EOF'
 import json, math, sys
 
@@ -33,7 +34,7 @@ def diff(a, b, path=""):
         yield path, a, b
 
 failed = False
-for rel in ("results.json", "real_data/real_data.json", "economics/economics.json", "economics/ownership.json"):
+for rel in ("results.json", "real_data/real_data.json", "economics/economics.json", "economics/ownership.json", "faults/faults.json"):
     new = json.load(open(f"{sys.argv[1]}/{rel}"))
     old = json.load(open(f"outputs/{rel}"))
     for doc in (new, old):

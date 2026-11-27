@@ -74,7 +74,7 @@ evenly. These go on the MATLAB slide as assumptions.
 ## The low-voltage model: `matlab/run_f07.m` and its Python twin `lvnetwork.py`
 
 **What it does.** Places the exported bus loads on a radial 415 V network (3 circuits × 7
-buses, 600 m of ACSR Rabbit each, a 315 kVA IS 1180 Level-2 transformer) and, for every
+buses, 600 m of 3×95 mm² aerial bunched cable each, a 315 kVA IS 1180 Level-2 transformer) and, for every
 15-minute step, solves a backward/forward-sweep load flow: start every voltage at the source
 value, compute each bus's current from its load, add the currents up the tree (backward), then
 subtract each branch's voltage drop down the tree (forward), and repeat until nothing changes.
@@ -85,16 +85,17 @@ temperature and an ageing rate V = 2^((θh − 98)/6).
 up to the Python simulator's import at every step; MATLAB and the independent Python twin agree
 to 1e-8 at every step of every case.
 
-**What it found.** GridSetu cuts the transformer's peak loading from 1.37 to 1.19 pu and its
-hot-spot peak by about 9 °C. A battery at the transformer cannot reduce line losses or voltage
-drop; splitting the same storage across the circuits cuts losses about 7% and lifts the worst
-voltage from 0.79 to 0.83 pu. Voltage is outside ±6% on the assumed network in every case.
+**What it found.** GridSetu cuts the transformer's peak loading from 1.26 to 1.10 pu and its
+hot-spot peak by about 5 °C. A battery at the transformer cannot reduce line losses or voltage
+drop; splitting the same storage across the circuits cuts losses about 4%, voltage violations
+42%, and lifts the worst voltage from 0.906 to 0.914 pu. Losses are about 6% of energy.
 
-**Likely question.** *Your voltages look terrible. Is the model wrong?* Three 600 m circuits
-each carry about 113 kW at the evening peak: roughly 166 A per phase, above Rabbit's 156 A
-rating. Hand estimate of the drop: 166 A × 0.67 Ω/km × 0.3 km ≈ 33 V of 240 V, about 14%, plus
-the transformer drop, minus the 433 V tap boost. The model agrees. The answer is the network,
-and GridSetu's per-bus map shows where.
+**Likely question.** *Why aerial bunched cable, and did you change it to get better numbers?*
+Our first layout used bare ACSR Rabbit; it put voltage outside limits in 93% to over 99% of
+steps, which no working feeder shows, because 166 A per phase at the peak is above Rabbit's
+156 A rating. The CEA guidelines recommend aerial bunched cable for congested, theft-prone lanes
+like this one, so the feeder is modelled reconductored. The bare-conductor case is still run as a
+sensitivity, and the conclusions on storage placement and the transformer are the same.
 
 ## Real data: `realdata.py` and `realstudy.py`
 

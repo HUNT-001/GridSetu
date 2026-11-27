@@ -51,10 +51,10 @@ or in part, to a DISCOM or any other person.
 | | ₹ |
 |---|--:|
 | A transformer upgrade put off: augmenting 315 kVA to 630 kVA costs ₹20.0 lakh (MSEDCL activity rate); deferring it is worth 9.5% of that a year | 1.90 lakh |
-| Technical losses avoided with the battery split across the circuits (10,741 kWh at ₹4.00) | 0.43 lakh |
-| **DISCOM net cost** | **4.40 lakh** |
+| Technical losses avoided with the battery split across the circuits (4,665 kWh at ₹4.00) | 0.19 lakh |
+| **DISCOM net cost** | **4.64 lakh** |
 
-That is **₹8.45 for each kWh of outage avoided**. For scale, the exchange's price ceiling is
+That is **₹8.92 for each kWh of outage avoided**. For scale, the exchange's price ceiling is
 ₹10/kWh, and in our real IEX week the evening hit it on 6 of 7 days, so a kWh at those hours was
 worth at least that. (The community's own value of an avoided outage is higher: about ₹33/kWh
 against diesel backup.)
@@ -81,7 +81,7 @@ flowchart LR
     D -->|"power as today, no extra charge"| H["1,090 homes<br/>35 workshops<br/>clinic, school, pump"]
     H -->|"bills as today (first 200 units free in TN)"| D
     R["Residents' committee"] -->|"fairness rules, complaints"| OP
-    D -.->|"keeps"| G["Savings: transformer upgrade deferred ₹1.90 lakh,<br/>losses ₹0.43 lakh a year"]
+    D -.->|"keeps"| G["Savings: transformer upgrade deferred ₹1.90 lakh,<br/>losses ₹0.19 lakh a year"]
 ```
 
 ## Operations and maintenance

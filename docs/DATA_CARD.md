@@ -89,7 +89,9 @@ These come from documents, not from our feeder. Details and links are in
 | Parameter | Source |
 |---|---|
 | 315 kVA distribution transformer: impedance 4.5%, losses 1,025 W at 50% load and 3,100 W at 100% | WBSEDCL specification to IS 1180 (Part 1) Energy Efficiency Level 2 |
-| ACSR Rabbit conductor resistance 0.5426 Ω/km at 20 °C | Apar Industries ACSR datasheet |
+| LT aerial bunched cable, 95 mm² phase 0.320 Ω/km and 70 mm² messenger 0.492 Ω/km at 20 °C | MSEDCL technical specification CE/T&QC/MSC-I/A.B CABLE/2019 (IS 14255), Table 1 |
+| Aerial bunched cable for congested, theft-prone LT areas | CEA, Guidelines for distribution (overhead vs underground) |
+| ACSR Rabbit conductor resistance 0.5426 Ω/km at 20 °C (bare-conductor sensitivity only) | Apar Industries ACSR datasheet |
 | Transformer thermal model and ageing law | IEC 60076-7. Distribution-transformer default constants are used and marked as still to be confirmed against the standard. |
 | Static transfer switch: sense + transfer time under 4 ms (islanding model, variant 2) | ABB Cyberex SuperSwitch 4 technical data (a data-centre switch; the same thyristor technology would separate the critical bus) |
 | ₹10/kWh exchange price ceiling | IEX day-ahead market rules (confirmed in the IEX data above) |

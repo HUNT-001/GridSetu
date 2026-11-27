@@ -66,7 +66,7 @@ fewer overload trips and headroom, not years of life.
 
 **Q: Where do your network parameters come from?**
 `matlab/f07_params.json`: transformer data from a DISCOM specification to IS 1180 Level 2,
-conductor resistance from a manufacturer's ACSR datasheet, and every assumption (lengths,
+conductor resistance from MSEDCL's aerial bunched cable specification (IS 14255), and every assumption (lengths,
 spacing, power factor, voltage limit) marked as one.
 
 ## Real data
@@ -146,7 +146,7 @@ chose to pay.
 **Q: Why would the DISCOM pay?**
 It gets a transformer upgrade put off (₹20 lakh, worth about ₹1.9 lakh a year), fewer
 technical losses, no overload trips, the clinic and pump always on, and a day-ahead reserve it
-can count on. Net of those savings it pays about ₹8.45 for each kWh of outage avoided, below the
+can count on. Net of those savings it pays about ₹8.92 for each kWh of outage avoided, below the
 ₹10 exchange ceiling it faces on short evenings.
 
 **Q: At ₹10/kWh it doesn't pay. Isn't that a problem?**
